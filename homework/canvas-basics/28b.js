@@ -5,6 +5,7 @@
         height = canvas.height,
         width = canvas.width,
         offset = 70,
+        // JD: Ouch---you *know* that there are better variable names than these!
         linearGradient1 = renderingContext.createLinearGradient(0, 0, 0, height),
         linearGradient2 = renderingContext.createLinearGradient(0, 0, 0, height),
         linearGradient3 = renderingContext.createLinearGradient(0, 200, 0, height);

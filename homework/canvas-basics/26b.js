@@ -10,6 +10,8 @@
     renderingContext.strokeStyle = "#99FF99"; 
     
     // use a for loop to automate drawing lines 30 pixels apart from both axes
+    // JD: Ideally, even loop variables should be declared in the
+    //     var statement up top.
     for (var i = 0; i < width; i+=30) {
         renderingContext.moveTo(i,0);
         renderingContext.lineTo(i, height);

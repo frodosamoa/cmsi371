@@ -1,3 +1,4 @@
+// JD: Same note here as in other files re: var declarations.
 (function () {
     // declare all variables
     var canvas = document.getElementById("canvas"),
@@ -28,6 +29,8 @@
     renderingContext.beginPath();
     renderingContext.fillStyle = "black";
     for (var i = 0; i < 2; i++) {
+        // JD: The if-else statement below reads better as a conditional
+        //     assignment----> change = i ? xShifted : x;
         if (i==0) var change = x;
         else var change = xShifted;
         renderingContext.moveTo(change, y);
@@ -92,5 +95,5 @@
     renderingContext.fill();
 
     // bloodstain?
-
+    // JD: LOL I see what you are gunning for there :)
 }());

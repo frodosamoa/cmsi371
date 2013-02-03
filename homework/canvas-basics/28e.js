@@ -33,14 +33,30 @@
         for (var j = 0; j < 2; j++) {
             for (var k = 0; k < randomHeight; k+=20) {
                 var randomColor = Math.floor(Math.random()*4);
-                if (randomColor == 0) renderingContext.fillStyle = "rgb(255,255,0)";   
+
+                // JD: Even for 1-line clauses, it is more readable to
+                //     (a) always use braces and (b) start the clauses
+                //     on new lines:
+                //
+                // if (condition) {
+                //     statement;
+                // } else if (condition) {
+                //     statement;
+                // } else if (condition) {
+                //     statement;
+                // } else {
+                //     statement;
+                // }
+                //
+                if (randomColor == 0) renderingContext.fillStyle = "rgb(255,255,0)";
                 else if (randomColor == 1) renderingContext.fillStyle = "rgb(153,153,0)";
                 else if (randomColor == 2) renderingContext.fillStyle = "rgb(33,33,0)";
                 else renderingContext.fillStyle = "rgb(0,0,0)";
-                
+
+                // JD: This guy is screaming for better spacing and
+                //     multiline formatting!
                 renderingContext.fillRect((i*offset+20)+8+j*25, height-randomHeight+8+k, 15, 15);
             }
         } 
     }
-    
 }());
