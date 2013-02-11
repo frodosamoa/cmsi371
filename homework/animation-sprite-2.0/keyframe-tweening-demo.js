@@ -8,9 +8,9 @@
         width = canvas.width,        
         radius = 40,                            //radius of the balls
         middleX = width/2,                      //middle x coordinate of the cradle
-        middleY = (height / 3) * 1.5,           //the y coordinate of the cradle
-        offsetX = 2,                            //x coordinate offset between the balls when hit
-        offsetY = 0.25,                         //y coordinate offset between the balls when hit
+        middleY = (height / 3) * 1.7,           //the y coordinate of the cradle
+        offsetX = 4,                            //x coordinate offset between the balls when hit
+        offsetY = 0.5,                         //y coordinate offset between the balls when hit
         frameLength = 15,
         frame = [0 * frameLength, 1 * frameLength, 2 * frameLength,
                  3 * frameLength, 4 * frameLength, 5 * frameLength,
@@ -81,6 +81,18 @@
             renderingContext.closePath();
         },
 
+        ballString = function (renderingContext) {
+
+            renderingContext.beginPath();
+            renderingContext.strokeStyle = "rgb(0,0,0)";
+            renderingContext.lineWidth = 2;
+            renderingContext.moveTo(0, 0);
+            renderingContext.lineTo(0, middleY - (height / 5));
+            renderingContext.stroke();
+            renderingContext.closePath();
+
+        },
+
         // this function will generate the part of the frame of the Newton's
         // cradle that is "in front" of the metallic balls
         cradleFrame = function (renderingContext) {
@@ -100,13 +112,226 @@
         
         
         sprites = [
-            // BALL 1
+
+            // ball 2 back string
+            {
+                draw: ballString,
+                keyframes: [
+                    {
+                        frame: frame[0],
+                        tx: middleX - (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 3.5,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[2],
+                        tx: middleX - (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[4],
+                        tx: middleX - (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: -1,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[6],
+                        tx: middleX - (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[8],
+                        tx: middleX - (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 3.5,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    }
+
+                ]
+            },
+
+            // ball 3 back string
+            {
+                draw: ballString,
+                keyframes: [
+                    {
+                        frame: frame[0],
+                        tx: middleX - radius,
+                        ty: (width / 7) + 15,
+                        rotate: 2.6,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[2],
+                        tx: middleX - radius,
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[4],
+                        tx: middleX - radius,
+                        ty: (width / 7) + 15,
+                        rotate: -2,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[6],
+                        tx: middleX - radius,
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[8],
+                        tx: middleX - radius,
+                        ty: (width / 7) + 15,
+                        rotate: 2.6,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    }
+
+                ]
+            },
+
+            // ball 4 back string
+            {
+                draw: ballString,
+                keyframes: [
+                    {
+                        frame: frame[0],
+                        tx: middleX + radius,
+                        ty: (width / 7) + 15,
+                        rotate: 2,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[2],
+                        tx: middleX + radius,
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[4],
+                        tx: middleX + radius,
+                        ty: (width / 7) + 15,
+                        rotate: -2.6,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[6],
+                        tx: middleX + radius,
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[8],
+                        tx: middleX + radius,
+                        ty: (width / 7) + 15,
+                        rotate: 2,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    }
+
+                ]
+            },
+
+            // ball 5 back string
+            {
+                draw: ballString,
+                keyframes: [
+                    {
+                        frame: frame[0],
+                        tx: middleX + (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 1,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[2],
+                        tx: middleX + (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[4],
+                        tx: middleX + (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: -3.5,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    },
+
+                    {
+                        frame: frame[6],
+                        tx: middleX + (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 0,
+                        ease: KeyframeTweener.cubicEaseOut
+
+                    },
+
+                    {
+                        frame: frame[8],
+                        tx: middleX + (radius * 3),
+                        ty: (width / 7) + 15,
+                        rotate: 1,
+                        ease: KeyframeTweener.cubicEaseIn
+
+                    }
+
+                ]
+            },
+
+
+
+
+
+            // ball 1
             {
                 draw: metallicBall,
                 keyframes: [
                     {
                         frame: frame[0],
-                        tx: middleX - (radius * 10),
+                        tx: middleX - (radius * 8),
                         ty: middleY - radius,
                         ease: KeyframeTweener.cubicEaseIn
                     },
@@ -134,13 +359,13 @@
 
                     {
                         frame: frame[8],
-                        tx: middleX - (radius * 10),
+                        tx: middleX - (radius * 8),
                         ty: middleY - radius
                     }
                 ]
             },
             
-            // BALL 2
+            // ball 2
             {
 				draw: metallicBall,
 					keyframes: [
@@ -181,7 +406,7 @@
 					]
 				},
 			
-			// BALL 3	
+			// ball 3	
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -223,7 +448,7 @@
                 ]
             },
             
-            // BALL 4
+            // ball 4
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -266,7 +491,7 @@
                 ]
             },
             
-            // BALL 5
+            // ball 5
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -309,7 +534,7 @@
                 ]
             },
             
-            // BALL 6
+            // ball 6
             {
                 draw: metallicBall,
                 keyframes: [
@@ -329,7 +554,7 @@
 
                     {
                         frame: frame[4],
-                        tx: middleX + (radius * 10),
+                        tx: middleX + (radius * 8),
                         ty: middleY - radius,
                         ease: KeyframeTweener.cubicEaseIn
                     },
@@ -369,6 +594,7 @@
 
                 ]
             }
+
 
         ];
 
