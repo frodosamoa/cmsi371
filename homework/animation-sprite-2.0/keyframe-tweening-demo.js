@@ -11,7 +11,7 @@
         middleY = (height / 3) * 1.5,           //the y coordinate of the cradle
         offsetX = 2,                            //x coordinate offset between the balls when hit
         offsetY = 0.25,                         //y coordinate offset between the balls when hit
-        frameLength =10,
+        frameLength = 15,
         frame = [0 * frameLength, 1 * frameLength, 2 * frameLength,
                  3 * frameLength, 4 * frameLength, 5 * frameLength,
                  6 * frameLength, 7 * frameLength, 8 * frameLength],
@@ -48,16 +48,16 @@
             renderingContext.beginPath();
             renderingContext.strokeStyle = "rgb(50,50,50)";
             renderingContext.lineCap = "round";
-            renderingContext.lineWidth = 13;
-            renderingContext.moveTo((width / 4), (height / 3) * 2.2);
-            renderingContext.lineTo((width / 4), (height / 4) * 1.2);
-            renderingContext.moveTo((width / 4), (height / 4) * 1.2);
-            renderingContext.lineTo(width - (width / 4), (height / 4) * 1.2);
-            renderingContext.moveTo(width - (width / 4), (height / 4) * 1.2);
-            renderingContext.lineTo(width - (width / 4), (height / 3) * 2.2);
+            renderingContext.lineWidth = 15;
+            renderingContext.moveTo((width / 4), (height / 5));
+            renderingContext.lineTo((width / 4), height - (height / 3.5));
+            renderingContext.moveTo((width / 4), (height / 5));
+            renderingContext.lineTo(width - (width / 4), (height / 5));
+            renderingContext.moveTo(width - (width / 4), (height / 5));
+            renderingContext.lineTo(width - (width / 4), height - (height / 3.5));
 
-            renderingContext.moveTo(middleX - (radius * 10.7), (height / 4) * 1.1);
-            renderingContext.lineTo(middleX + (radius * 10.7), (height / 4) * 1.1);
+            renderingContext.moveTo((width / 6), (height / 7));
+            renderingContext.lineTo(width - (width / 6), (height / 7));
             renderingContext.stroke();
         },
 
@@ -80,10 +80,27 @@
             renderingContext.stroke();
             renderingContext.closePath();
         },
+
+        // this function will generate the part of the frame of the Newton's
+        // cradle that is "in front" of the metallic balls
+        cradleFrame = function (renderingContext) {
+            
+            //let's draw the two frames
+            renderingContext.beginPath();
+            renderingContext.strokeStyle = "rgb(50,50,50)";
+            renderingContext.lineCap = "round";
+            renderingContext.lineWidth = 15;
+            renderingContext.moveTo((width / 6), (height / 7));
+            renderingContext.lineTo((width / 6), height - (height / 4));
+            renderingContext.moveTo(width - (width / 6), (height / 7));
+            renderingContext.lineTo(width - (width / 6), height - (height / 4));
+            renderingContext.stroke();
+            renderingContext.closePath();
+        },
         
         
         sprites = [
-            //BALL 1
+            // BALL 1
             {
                 draw: metallicBall,
                 keyframes: [
@@ -123,7 +140,7 @@
                 ]
             },
             
-            //BALL 2
+            // BALL 2
             {
 				draw: metallicBall,
 					keyframes: [
@@ -164,7 +181,7 @@
 					]
 				},
 			
-			//BALL 3	
+			// BALL 3	
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -206,7 +223,7 @@
                 ]
             },
             
-            //BALL 4
+            // BALL 4
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -249,7 +266,7 @@
                 ]
             },
             
-            //BALL 5
+            // BALL 5
             { 
                 draw: metallicBall,
                 keyframes: [
@@ -292,7 +309,7 @@
                 ]
             },
             
-            //BALL 6
+            // BALL 6
             {
                 draw: metallicBall,
                 keyframes: [
@@ -332,7 +349,27 @@
                     }
                     
                 ]
+            },
+
+            // this is the cradle frame!
+            {
+                draw: cradleFrame,
+                keyframes: [
+                    {
+                        frame: frame[0],
+                        tx: 0,
+                        ty: 0
+                    },
+
+                    {
+                        frame: frame[8],
+                        tx: 0,
+                        ty: 0
+                    }
+
+                ]
             }
+
         ];
 
     // Finally, we initialize the engine.  Mainly, it needs
