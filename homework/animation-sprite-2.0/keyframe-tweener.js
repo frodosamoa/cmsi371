@@ -8,9 +8,9 @@ var KeyframeTweener = {
         var percentComplete = currentTime / duration;
         return distance * percentComplete + start;
     },
-
+    
     quadEaseIn: function (currentTime, start, distance, duration) {
-        var percentComplete = currentTime / duration;
+        var percentComplete = currentTime / duration; 
         return distance * percentComplete * percentComplete + start;
     },
 
@@ -26,23 +26,18 @@ var KeyframeTweener = {
                 (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
     }, 
     
-    quinEaseIn: function (currentTime, start, distance, duration) {
+    cubicEaseIn: function (currentTime, start, distance, duration) {
         var percentComplete = currentTime / duration;
-        return distance * percentComplete * percentComplete + start;
+	    return distance * Math.pow(percentComplete, 3) + start;
     },
 
-    quinEaseOut: function (currentTime, start, distance, duration) {
+	cubicEaseOut: function (currentTime, start, distance, duration) {
         var percentComplete = currentTime / duration;
-        return -distance * percentComplete * (percentComplete - 2) + start;
+        percentComplete--;
+	    return distance * (Math.pow(percentComplete, 3) + 1) + start;
     },
-
-    quinEaseInAndOut: function (currentTime, start, distance, duration) {
-        var percentComplete = currentTime / (duration / 2);
-        return (percentComplete < 1) ?
-                (distance / 2) * percentComplete * percentComplete + start :
-                (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
-    },
-
+    
+    
     // The big one: animation initialization.  The settings parameter
     // is expected to be a JavaScript object with the following
     // properties:
@@ -73,15 +68,17 @@ var KeyframeTweener = {
     // Initialization primarily calls setInterval on a custom-built
     // frame-drawing (and updating) function.
     initialize: function (settings) {
-        // We need to keep track of the current frame.
+        // We need to keep track of the current frame.  
         var currentFrame = 0,
 
             // Avoid having to go through settings to get to the
             // rendering context and sprites.
             renderingContext = settings.renderingContext,
+            background = settings.background,
             width = settings.width,
             height = settings.height,
             sprites = settings.sprites;
+         
 
         setInterval(function () {
             // Some reusable loop variables.
@@ -106,7 +103,10 @@ var KeyframeTweener = {
                 duration;
 
             // Clear the canvas.
+            
             renderingContext.clearRect(0, 0, width, height);
+                    background(renderingContext);
+
 
             // For every sprite, go to the current pair of keyframes.
             // Then, draw the sprite based on the current frame.
@@ -114,6 +114,7 @@ var KeyframeTweener = {
                 for (j = 0, maxJ = sprites[i].keyframes.length - 1; j < maxJ; j += 1) {
                     // We look for keyframe pairs such that the current
                     // frame is between their frame numbers.
+
                     if ((sprites[i].keyframes[j].frame <= currentFrame) &&
                             (currentFrame <= sprites[i].keyframes[j + 1].frame)) {
                         // Point to the start and end keyframes.
@@ -122,7 +123,7 @@ var KeyframeTweener = {
 
                         // Save the rendering context state.
                         renderingContext.save();
-
+                        
                         // Set up our start and distance values, using defaults
                         // if necessary.
                         ease = startKeyframe.ease || KeyframeTweener.linear;
@@ -138,7 +139,7 @@ var KeyframeTweener = {
                         rotateDistance = (endKeyframe.rotate || 0) * Math.PI / 180 - rotateStart;
                         currentTweenFrame = currentFrame - startKeyframe.frame;
                         duration = endKeyframe.frame - startKeyframe.frame + 1;
-
+						
                         // Build our transform according to where we should be.
                         renderingContext.translate(
                             ease(currentTweenFrame, txStart, txDistance, duration),
@@ -151,18 +152,22 @@ var KeyframeTweener = {
                         renderingContext.rotate(
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
-
+                          
                         // Draw the sprite.
                         sprites[i].draw(renderingContext);
 
                         // Clean up.
                         renderingContext.restore();
+
                     }
                 }
             }
 
             // Move to the next frame.
             currentFrame += 1;
-        }, 1000 / (settings.frameRate || 40));
+            if (currentFrame > sprites[0].keyframes[4].frame) { 
+                currentFrame = 0;
+            }
+        }, 1000 / (settings.frameRate || 60));
     }
 };
