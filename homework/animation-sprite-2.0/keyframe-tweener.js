@@ -78,6 +78,7 @@ var KeyframeTweener = {
     // Initialization primarily calls setInterval on a custom-built
     // frame-drawing (and updating) function.
     initialize: function (settings) {
+
         // We need to keep track of the current frame.  
         var currentFrame = 0,
 
@@ -88,12 +89,12 @@ var KeyframeTweener = {
             width = settings.width,
             height = settings.height,
             sprites = settings.sprites;
-         
 
         setInterval(function () {
             // Some reusable loop variables.
             var i,
                 j,
+                k,
                 maxI,
                 maxJ,
                 ease,
@@ -110,12 +111,12 @@ var KeyframeTweener = {
                 rotateStart,
                 rotateDistance,
                 currentTweenFrame,
-                duration;
+                duration,
+                whichDraw;
 
             // Clear the canvas.
-            
             renderingContext.clearRect(0, 0, width, height);
-                    background(renderingContext);
+            background(renderingContext);
 
 
             // For every sprite, go to the current pair of keyframes.
@@ -163,8 +164,19 @@ var KeyframeTweener = {
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
                           
-                        // Draw the sprite.
-                        sprites[i].draw(renderingContext);
+                        // Draw the sprite. There is one test condition to see if the draw property is
+                        // an array (basically if it is larger than 1). If it is, we use the keyframes's
+                        // frame property to choose when the metallic balls should change to being "shiny".
+                        //
+                        // A big thank you to Haley Young for helping me with understanding this!
+
+                        if (sprites[i].draw.length > 1) {
+                            whichDraw = (currentFrame === sprites[i].keyframes[1].frame || 
+                                currentFrame === sprites[i].keyframes[3].frame) ? 1 : 0;
+                            sprites[i].draw[whichDraw](renderingContext);
+                        } else {
+                            sprites[i].draw[0](renderingContext);
+                        }
 
                         // Clean up.
                         renderingContext.restore();
