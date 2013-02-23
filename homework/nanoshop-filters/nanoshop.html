@@ -1,0 +1,32 @@
+<!doctype html>
+
+<!-- This page "hosts" a simple demonstration of "Nanoshop,"
+     a tiny image processing module (emphasis on tiny). -->
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Nanoshop Demo</title>
+    </head>
+    <body>
+        <!-- Where the action will happen. -->
+        <canvas id="picture" width="512" height="512">
+            All your <code>canvas</code> are belong to us!
+        </canvas>
+
+        <!-- A little UI to trigger the filter. -->
+        <br>
+        <button id="apply-darkener-button">Apply Darkener</button>
+        <br>
+        <button id="apply-lightener-button">Apply Lightener</button>
+        <br>
+        <button id="apply-rotateleft-button">Rotate RGB Values Left</button>
+        <br>
+        <button id="apply-rotateright-button">Rotate RGB Values Right</button>
+
+        <!-- To at least make the above a little easier, we
+             at least recruit jQuery's services. -->
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="nanoshop.js"></script>
+        <script src="nanoshop-demo.js"></script>
+    </body>
+</html>
