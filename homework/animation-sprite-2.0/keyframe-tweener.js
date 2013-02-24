@@ -170,6 +170,13 @@ var KeyframeTweener = {
                         //
                         // A big thank you to Haley Young for helping me with understanding this!
 
+                        // JD: Well, this is *a* form of internal animation, but not exactly what
+                        //     I had in mind.  That hardcoding of keyframes[1] and keyframes[3] is
+                        //     particularly bothersome...if those have special meaning, then there
+                        //     are better ways of capturing that than a hardcoded array index.
+                        //
+                        //     Refer back to that Pacman cut scene (among others) to see what I
+                        //     had in mind by "internal animation."
                         if (sprites[i].draw.length > 1) {
                             whichDraw = (currentFrame === sprites[i].keyframes[1].frame || 
                                 currentFrame === sprites[i].keyframes[3].frame) ? 1 : 0;

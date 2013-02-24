@@ -150,6 +150,14 @@
         // Here are all of the sprites!
         // The strings of the balls must be drawn first must so that the balls
         // are "above" them in terms of the layering.
+ 
+        // JD: Very meticulously crafted and coordinated---but my one knock is in
+        //     terms of the code: you have quite a few repeated expressions here.
+        //     This doesn't hit you much performance-wise because you pretty much
+        //     just do them at the beginning, but it hurts readability because the
+        //     repetition implies some meaning and alignment, which would be better
+        //     conveyed if the computations were stored in well-named variables and
+        //     those variables are just used in these sprites.
         sprites = [
 
             // Ball 1 back string
