@@ -16,6 +16,16 @@ var NanoshopNeighborhood = {
         ];
     },
 
+    pixelater: function (rgbaNeighborhood) {
+        return [ 
+            rgbaNeighborhood[].r,
+            rgbaNeighborhood[].g,
+            rgbaNeighborhood[].b,
+            rgbaNeighborhood[].a
+        ];
+    },
+
+
     /*
      * A basic "averager"---this one returns the average of all the pixels in the
      * given neighborhood.

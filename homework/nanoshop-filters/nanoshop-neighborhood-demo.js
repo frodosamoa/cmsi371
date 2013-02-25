@@ -88,10 +88,13 @@
             NanoshopNeighborhood.applyFilter(
                 renderingContext,
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
+                //NanoshopNeighborhood.averager
                 //NanoshopNeighborhood.darkener
-                NanoshopNeighborhood.averager // Convenience comment for easy switching.
+                NanoshopNeighborhood.pixelater
             ),
             0, 0
         );
     });
+
+
 }());
