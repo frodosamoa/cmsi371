@@ -37,7 +37,7 @@
             NanoshopNeighborhood.applyFilter(
                 renderingContext,
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                //NanoshopNeighborhood.averager
+                //NanoshopNeighborhood.averager     //commented out for easy switching
                 //NanoshopNeighborhood.darkener
                 //NanoshopNeighborhood.desaturater
                 NanoshopNeighborhood.rgbinverter
