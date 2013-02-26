@@ -3,7 +3,7 @@
  * pixel-level image processing using a pixel's "neighborhood."
  */
 var NanoshopNeighborhood = {
-    
+
     /*
      * A basic "darkener"---this one does not even use the entire pixel neighborhood;
      * just the exact current pixel like the original Nanoshop.
@@ -35,6 +35,11 @@ var NanoshopNeighborhood = {
         ];
     },
 
+    /*
+     * A basic "inverter". This is not to be confused with a "color complementer". This simply
+     * inverts each rgb value on the scale of 0-255.
+     */
+
     rgbinverter: function (rgbaNeighborhood) {                             
 
         return [
@@ -50,6 +55,7 @@ var NanoshopNeighborhood = {
      * A basic "averager"---this one returns the average of all the pixels in the
      * given neighborhood.
      */
+
     averager: function (rgbaNeighborhood) {
         var rTotal = 0,
             gTotal = 0,
