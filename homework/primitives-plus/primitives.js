@@ -279,52 +279,52 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color) {
-        color = color || [0, 0, 0];
-        this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
+    plotCirclePoints: function (context, xc, yc, x, y, color1, color2) {
+        if (color2 == undefined) {
+            color1 = color1 || [0, 0, 0];
+            this.setPixel(context, xc + x, yc + y, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc + x, yc - y, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc + y, yc + x, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc + y, yc - x, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc - x, yc + y, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc - x, yc - y, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc - y, yc + x, color1[0], color1[1], color1[2]);
+            this.setPixel(context, xc - y, yc - x, color1[0], color1[1], color1[2]);
+        } else {
+            var r = x,
+                circleHeight = r * 2,
+                negY = (r - y) / circleHeight,
+                posY = (r + y) / circleHeight,
+                negX = (r - x) / circleHeight,
+                posX = (r + x) / circleHeight,
+
+                colorAverage = function (rgb, negColor1, xORy) {
+                    var signVar = negColor1 ? (xORy ? negX : negY) : (xORy ? posX : posY),
+                        negSignVar = negColor1 ? (xORy ? posX : posY) : (xORy ? negX : negY);
+
+                    return (color1[rgb] * signVar) + (color2[rgb] * negSignVar);
+                };   
+
+            for (var i = -x; i < x; i++) {
+                this.setPixel(context, xc - i, yc + y, colorAverage(0, true, false),
+                                                       colorAverage(1, true, false), 
+                                                       colorAverage(2, true, false));
+                this.setPixel(context, xc - i, yc - y, colorAverage(0, false, false), 
+                                                       colorAverage(1, false, false), 
+                                                       colorAverage(2, false, false));
+            }
+
+            for (var i = -y; i < y; i++) { 
+                this.setPixel(context, xc - i, yc + x, colorAverage(0, true, true), 
+                                                       colorAverage(1, true, true), 
+                                                       colorAverage(2, true, true));
+                this.setPixel(context, xc - i, yc - x, colorAverage(0, false, true), 
+                                                       colorAverage(1, false, true), 
+                                                       colorAverage(2, false, true));
+            }
+        }
     },
 
-    drawCircleGradient: function (context, xc, yc, x, y, r, color1, color2) {
-
-        var circleHeight = r * 2,
-            negY = (r - y) / circleHeight,
-            posY = (r + y) / circleHeight,
-            negX = (r - x) / circleHeight,
-            posX = (r + x) / circleHeight,
-
-            colorAverage = function (rgb, negColor1, xORy) {
-                var signVar = negColor1 ? (xORy ? negX : negY) : (xORy ? posX : posY),
-                    negSignVar = negColor1 ? (xORy ? posX : posY) : (xORy ? negX : negY);
-
-                return (color1[rgb] * signVar) + (color2[rgb] * negSignVar);
-            };   
-
-        for (var i = -x; i < x; i++) {
-            this.setPixel(context, xc - i, yc + y, colorAverage(0, true, false),
-                                                   colorAverage(1, true, false), 
-                                                   colorAverage(2, true, false));
-            this.setPixel(context, xc - i, yc - y, colorAverage(0, false, false), 
-                                                   colorAverage(1, false, false), 
-                                                   colorAverage(2, false, false));
-        }
-
-        for (var i = -y; i < y; i++) { 
-            this.setPixel(context, xc - i, yc + x, colorAverage(0, true, true), 
-                                                   colorAverage(1, true, true), 
-                                                   colorAverage(2, true, true));
-            this.setPixel(context, xc - i, yc - x, colorAverage(0, false, true), 
-                                                   colorAverage(1, false, true), 
-                                                   colorAverage(2, false, true));
-        }
-
-    },
 
     // First, the most naive possible implementation: circle by trigonometry.
     circleTrig: function (context, xc, yc, r, color) {
@@ -346,26 +346,26 @@ var Primitives = {
     },
 
     // Now DDA.
-    circleDDA: function (context, xc, yc, r, color) {
+    circleDDA: function (context, xc, yc, r, color1, color2) {
         var epsilon = 1 / r,
             x = r,
             y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
             x = x - (epsilon * y);
             y = y + (epsilon * x);
         }
     },
 
     // One of three Bresenham-like approaches.
-    circleBres1: function (context, xc, yc, r, color) {
+    circleBres1: function (context, xc, yc, r, color1, color2) {
         var p = 3 - 2 * r,
             x = 0,
             y = r;
 
         while (x < y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
             if (p < 0) {
                 p = p + 4 * x + 6;
             } else {
@@ -380,7 +380,7 @@ var Primitives = {
     },
 
     // And another...
-    circleBres2: function (context, xc, yc, r, color) {
+    circleBres2: function (context, xc, yc, r, color1, color2) {
         var x = 0,
             y = r,
             e = 1 - r,
@@ -388,7 +388,7 @@ var Primitives = {
             v = e - r;
 
         while (x <= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
             if (e < 0) {
                 x += 1;
                 u += 2;
@@ -411,7 +411,7 @@ var Primitives = {
             e = 0;
 
         while (y <= x) {
-            this.drawCircleGradient(context, xc, yc, x, y, r, color1, color2);
+            this.plotCirclePoints(context, xc, yc, x, y, color1, color2);
             y += 1;
             e += (2 * y - 1);
             if (e > x) {
