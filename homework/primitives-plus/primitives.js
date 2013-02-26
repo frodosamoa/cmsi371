@@ -240,6 +240,10 @@ var Primitives = {
 
     // The final, optimized Bresenham algorithm: here, we presave
     // most values, and adjust them to compare only to zero.
+    // This function accepts a dash parameter. This parameter draws a dashed line.  
+    // A dash argument of 5, for example, would draw 5 pixels first, 
+    // then skip a pixel, then another 5, then skip, etc. 
+    
     lineBresenham: function (context, x1, y1, x2, y2, dash, color) {
         var x = x1,
             y = y1,
@@ -278,9 +282,17 @@ var Primitives = {
      * to compute one-eighth of a circle: the other seven portions are
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
+     *
+     * The color1 and color2 parameters are optional. If neither are provided
+     * the function plots the circle's points in black. If only one color
+     * is provided, then the function plots the circle's points in that color.
+     * If two colors are provided, the function fills the circle in with a
+     * vertical gradient starting with the first color up until the second color.
      */
+
     plotCirclePoints: function (context, xc, yc, x, y, color1, color2) {
         if (color2 == undefined) {
+
             color1 = color1 || [0, 0, 0];
             this.setPixel(context, xc + x, yc + y, color1[0], color1[1], color1[2]);
             this.setPixel(context, xc + x, yc - y, color1[0], color1[1], color1[2]);
@@ -290,7 +302,9 @@ var Primitives = {
             this.setPixel(context, xc - x, yc - y, color1[0], color1[1], color1[2]);
             this.setPixel(context, xc - y, yc + x, color1[0], color1[1], color1[2]);
             this.setPixel(context, xc - y, yc - x, color1[0], color1[1], color1[2]);
+
         } else {
+
             var r = x,
                 circleHeight = r * 2,
                 negY = (r - y) / circleHeight,
@@ -298,12 +312,25 @@ var Primitives = {
                 negX = (r - x) / circleHeight,
                 posX = (r + x) / circleHeight,
 
+                // A color averager function to help with assigning color values to
+                // pixels based on their vertical distance from the center of the circle. 
+                // It accepts 3 parameters: rgb (an integer value from 0-2 denoting with
+                // rgb field of the color arrays the function should use), negColor1 
+                // (a boolean value denoting if)
+
                 colorAverage = function (rgb, negColor1, xORy) {
-                    var signVar = negColor1 ? (xORy ? negX : negY) : (xORy ? posX : posY),
-                        negSignVar = negColor1 ? (xORy ? posX : posY) : (xORy ? negX : negY);
+                    var signVar =    negColor1 ? 
+                                        (xORy ? negX : negY) :
+                                        (xORy ? posX : posY),
+                        negSignVar = negColor1 ? 
+                                        (xORy ? posX : posY) :
+                                        (xORy ? negX : negY);
 
                     return (color1[rgb] * signVar) + (color2[rgb] * negSignVar);
                 };   
+
+
+            // This for loop iterates through all of the pixels that 
 
             for (var i = -x; i < x; i++) {
                 this.setPixel(context, xc - i, yc + y, colorAverage(0, true, false),
