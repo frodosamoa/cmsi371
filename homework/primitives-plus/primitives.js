@@ -332,12 +332,12 @@ var Primitives = {
                 };   
 
             // Compared with the first algorithmn, this one uses only four "sections"
-            // of the circle. Each section is a horizontal slice 
-            // The first for loop iterates through all of the pixels that use x to
-            // 
-            // The second for loop does the same but with the y value changing the 
-
-
+            // of the circle. Each section is a horizontal slice.
+            // The first for loop iterates through all of the pixels that use passed x
+            // parameter to change the x values and the passed y parameter to change 
+            // the y values for the setPixel function. The second for loop does the same
+            // but with the passed y parameter changing the x values and the passed
+            // x values to change the y values.
             for (var i = -x; i < x; i++) {
                 this.setPixel(context, xc - i, yc + y, colorAverage(0, true, false),
                                                        colorAverage(1, true, false), 
