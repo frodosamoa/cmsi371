@@ -3,6 +3,7 @@
  * pixel-level image processing using a pixel's "neighborhood."
  */
 var NanoshopNeighborhood = {
+    
     /*
      * A basic "darkener"---this one does not even use the entire pixel neighborhood;
      * just the exact current pixel like the original Nanoshop.
@@ -16,12 +17,31 @@ var NanoshopNeighborhood = {
         ];
     },
 
-    pixelater: function (rgbaNeighborhood) {
+    /*
+     * A basic "desaturater". The hard coded values come from Wikipedia and the coefficients
+     * represent human perception of colors, in particular that humans are more sensitive to
+     * green and least sensitive to blue.
+     */
+
+    desaturater: function (rgbaNeighborhood) {
+        var average = ((rgbaNeighborhood[4].r * 0.299) +
+                       (rgbaNeighborhood[4].g * 0.587) +
+                       (rgbaNeighborhood[4].b * 0.114)) / 3;
         return [ 
-            rgbaNeighborhood[].r,
-            rgbaNeighborhood[].g,
-            rgbaNeighborhood[].b,
-            rgbaNeighborhood[].a
+            average,
+            average,
+            average,
+            rgbaNeighborhood[4].a
+        ];
+    },
+
+    rgbinverter: function (rgbaNeighborhood) {                             
+
+        return [
+            255 - rgbaNeighborhood[4].r,
+            255 - rgbaNeighborhood[4].g,
+            255 - rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
         ];
     },
 
@@ -131,5 +151,6 @@ var NanoshopNeighborhood = {
         }
 
         return result;
-    }
+    } ,   
+
 };
