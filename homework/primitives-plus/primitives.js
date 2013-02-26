@@ -243,7 +243,7 @@ var Primitives = {
     // This function accepts a dash parameter. This parameter draws a dashed line.  
     // A dash argument of 5, for example, would draw 5 pixels first, 
     // then skip a pixel, then another 5, then skip, etc. 
-    
+
     lineBresenham: function (context, x1, y1, x2, y2, dash, color) {
         var x = x1,
             y = y1,
@@ -305,6 +305,10 @@ var Primitives = {
 
         } else {
 
+            // Delcaring variables to help with som of the math.
+            // The negY, posY, negX, and posX variables figure out what the vertical
+            // distance is in regards to the radius of the circle. These values are used
+            // to figure out what "percentage" of each color is used for the gradient.
             var r = x,
                 circleHeight = r * 2,
                 negY = (r - y) / circleHeight,
@@ -314,10 +318,8 @@ var Primitives = {
 
                 // A color averager function to help with assigning color values to
                 // pixels based on their vertical distance from the center of the circle. 
-                // It accepts 3 parameters: rgb (an integer value from 0-2 denoting with
-                // rgb field of the color arrays the function should use), negColor1 
-                // (a boolean value denoting if)
-
+                // It accepts 3 parameters: rgb (an integer value from 0-2, 0 for r, 1 for
+                // g, 2 for b), negColor1 (a boolean value denoting if)
                 colorAverage = function (rgb, negColor1, xORy) {
                     var signVar =    negColor1 ? 
                                         (xORy ? negX : negY) :
@@ -329,8 +331,12 @@ var Primitives = {
                     return (color1[rgb] * signVar) + (color2[rgb] * negSignVar);
                 };   
 
+            // Compared with the first algorithmn, this one uses only four "sections"
+            // of the circle. Each section is a horizontal slice 
+            // The first for loop iterates through all of the pixels that use x to
+            // 
+            // The second for loop does the same but with the y value changing the 
 
-            // This for loop iterates through all of the pixels that 
 
             for (var i = -x; i < x; i++) {
                 this.setPixel(context, xc - i, yc + y, colorAverage(0, true, false),
