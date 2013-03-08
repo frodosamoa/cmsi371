@@ -22,7 +22,9 @@ var NanoshopNeighborhood = {
      * represent human perception of colors, in particular that humans are more sensitive to
      * green and least sensitive to blue.
      */
-
+    // JD: Nice find!  Thank you for documenting your coefficient choices.
+    //     The one glitch...this really is a single-pixel filter, and not
+    //     one that takes the neighborhood into account.
     desaturater: function (rgbaNeighborhood) {
         var average = ((rgbaNeighborhood[4].r * 0.299) +
                        (rgbaNeighborhood[4].g * 0.587) +
@@ -39,7 +41,7 @@ var NanoshopNeighborhood = {
      * A basic "inverter". This is not to be confused with a "color complementer". This simply
      * inverts each rgb value on the scale of 0-255.
      */
-
+    // JD: Same one---no neighborhood here!
     rgbinverter: function (rgbaNeighborhood) {                             
 
         return [
@@ -157,6 +159,6 @@ var NanoshopNeighborhood = {
         }
 
         return result;
-    } ,   
+    } , // JD: Huh, what the comma?
 
 };

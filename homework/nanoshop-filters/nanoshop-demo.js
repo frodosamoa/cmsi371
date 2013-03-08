@@ -45,6 +45,9 @@
         );
     });    
 
+    // JD: Generally nice work, but the expectation was for you to place
+    //     your filter code in the Nanoshop object, as requested in the
+    //     assignment and done in NanoshopNeighborhood.
     $("#apply-lightener-button").click(function () {
         renderingContext.putImageData(
             Nanoshop.applyFilter(

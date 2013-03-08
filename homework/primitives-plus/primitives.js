@@ -309,7 +309,14 @@ var Primitives = {
             // The negY, posY, negX, and posX variables figure out what the vertical
             // distance is in regards to the radius of the circle. These values are used
             // to figure out what "percentage" of each color is used for the gradient.
-            var r = x,
+            var r = x, // JD: Nope, this isn't always r!  r is actually
+                       //     sqrt(x^2 + y^2).  Better yet, you can pass
+                       //     r explicitly so that it is always the same
+                       //     number.
+
+                // JD: This misassigned "r" skews the rest of your numbers, explaining
+                //     why the change in color is not completely linear---notice the
+                //     "concentration" of color at the poles?
                 circleHeight = r * 2,
                 negY = (r - y) / circleHeight,
                 posY = (r + y) / circleHeight,
@@ -320,7 +327,11 @@ var Primitives = {
                 // pixels based on their vertical distance from the center of the circle. 
                 // It accepts 3 parameters: rgb (an integer value from 0-2, 0 for r, 1 for
                 // g, 2 for b), negColor1 (a boolean value denoting if)
+                //
+                // JD: I think the above comment is incomplete.
                 colorAverage = function (rgb, negColor1, xORy) {
+                    // JD: I get what you're doing here, but can't help but think
+                    //     that this can be simpler...
                     var signVar =    negColor1 ? 
                                         (xORy ? negX : negY) :
                                         (xORy ? posX : posY),
