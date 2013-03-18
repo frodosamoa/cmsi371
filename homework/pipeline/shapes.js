@@ -8,13 +8,6 @@ var Shapes = {
     /*
      * Returns the vertices for a small sphere.
      */
-    sphere: function () {
-
-    },
-
-    /*
-     * Returns the vertices for a small sphere.
-     */
     cube: function () {
         var X = 0.5,
             Y = 0.5,
@@ -33,8 +26,82 @@ var Shapes = {
             ],
 
             indices: [
-                [0, 1, 3],
-                [0, 1, 2]
+                [0, 1, 3, 2],
+                [4, 5, 7, 6],
+                [0, 4],
+                [1, 5],
+                [3, 7],
+                [2, 6]
+            ]
+        };
+    },
+
+    /*
+     * Returns the vertices for a small sphere.
+     */
+    cross: function () {
+        var X  = 0.2,
+            X2 = 0.45,
+            Y  = 0.2,
+            Y2 = 0.45,
+            Z  = 0.1;
+
+
+        return {
+            vertices: [
+                [X, Y, Z],
+                [X, Y2, Z],
+                [X, -Y, Z],
+                [X, -Y2, Z],
+                [-X, Y, Z],
+                [-X, Y2, Z],
+                [-X, -Y, Z],
+                [-X, -Y2, Z],
+                [X2, Y, Z],
+                [X2, -Y, Z],
+                [-X2, Y, Z],
+                [-X2, -Y, Z],
+
+                [X, Y, -Z],
+                [X, Y2, -Z],
+                [X, -Y, -Z],
+                [X, -Y2, -Z],
+                [-X, Y, -Z],
+                [-X, Y2, -Z],
+                [-X, -Y, -Z],
+                [-X, -Y2, -Z],
+                [X2, Y, -Z],
+                [X2, -Y, -Z],
+                [-X2, Y, -Z],
+                [-X2, -Y, -Z]
+            ],
+
+            indices: [
+                [0, 1],
+                [1, 5],
+                [2, 3],
+                [2, 9],
+                [3, 7],
+                [4, 5],
+                [4, 10],
+                [6, 7],
+                [6, 11],
+                [8, 9],
+                [8, 0],
+                [10, 11],
+                
+                [12, 13],
+                [13, 17],
+                [14, 15],
+                [14, 21],
+                [3, 7],
+                [4, 5],
+                [4, 10],
+                [6, 7],
+                [6, 11],
+                [8, 9],
+                [8, 0],
+                [22, 23],
             ]
         };
     },
