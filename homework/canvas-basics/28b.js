@@ -5,10 +5,9 @@
         height = canvas.height,
         width = canvas.width,
         offset = 70,
-        // JD: Ouch---you *know* that there are better variable names than these!
-        linearGradient1 = renderingContext.createLinearGradient(0, 0, 0, height),
-        linearGradient2 = renderingContext.createLinearGradient(0, 0, 0, height),
-        linearGradient3 = renderingContext.createLinearGradient(0, 200, 0, height);
+        skyGradient = renderingContext.createLinearGradient(0, 0, 0, height),
+        oceanGradient = renderingContext.createLinearGradient(0, 0, 0, height),
+        sunReflectionGradient = renderingContext.createLinearGradient(0, 200, 0, height);
     
     // draw the sky!
     linearGradient1.addColorStop(0, "rgba(0,0,0,1)");
@@ -32,14 +31,14 @@
     // draw the ocean!
     linearGradient2.addColorStop(0, "rgba(0,0,200,1)");
     linearGradient2.addColorStop(1, "rgba(0,0,0,1)");
-    renderingContext.fillStyle = linearGradient2;      
+    renderingContext.fillStyle = oceanGradient;      
     renderingContext.fillRect(0,300,width,height-300);
     
     //draw the sun's relflection
     renderingContext.beginPath();
     linearGradient3.addColorStop(0, "rgba(250,100,51,1)");
     linearGradient3.addColorStop(1, "rgba(0,0,0,1)"); 
-    renderingContext.fillStyle = linearGradient3;   
+    renderingContext.fillStyle = sunReflectionGradient;   
     renderingContext.moveTo(width/2-radius,height)
     renderingContext.bezierCurveTo(width/2-radius,300,width/2+radius,300,width/2+radius,height);
     renderingContext.closePath();

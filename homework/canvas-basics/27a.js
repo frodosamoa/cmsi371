@@ -6,8 +6,7 @@
     // this is a function for dotted lines, which was taken from:
     // http://vetruvet.blogspot.com/2010/10/drawing-dashed-lines-on-html5-canvas.html
     // thanks Valera!
-    //
-    // JD: Nice find!
+
     CanvasRenderingContext2D.prototype.dashedLine = function(x1, y1, x2, y2, dashLen) {
         if (dashLen == undefined) dashLen = 2;
     
