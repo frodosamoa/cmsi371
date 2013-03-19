@@ -119,6 +119,56 @@ var Shapes = {
      * Returns the vertices for a small sphere.
      */
     sphere: function () {
+        var radius = 1,
+            theta,
+            sinTheta,
+            cosTheta,
+            phi,
+            sinPhi,
+            cosPhi,
+            latitudeBelts = 12,
+            longitudeBelts = 12,
+            vertices = [],
+            indices = [],
+            latitude,
+            longitude,
+            x,
+            y,
+            z,
+            i,
+            j,
+            k;
+
+            for (i = 0; i < latitudeBelts; i += 0) {
+                theta = (i * Math.PI) / latitudeBelts;
+                sinTheta = Math.sin(theta);
+                cosTheta = Math.cos(theta);
+
+                for (j = 0; j < longitudeBelts; j += 0) {
+                    phi = (j * 2 * Math.PI) / longitudeBelts;
+                    sinPhi = Math.sin(phi);
+                    cosPhi = Math.cos(phi);
+
+                    x = cosPhi * sinTheta;
+                    y = cosThetal
+                    z = sinPhi * sinTheta;
+
+
+                }
+            }
+
+            for (i = 0; i < latitudeBelts; i += 0) {
+
+                for (j = 0; j < longitudeBelts; j += 0) {
+
+                    
+                }
+            }
+
+            return {
+                vertices,
+                indices
+            }
 
     },
 
