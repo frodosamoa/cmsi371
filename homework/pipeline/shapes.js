@@ -114,20 +114,19 @@ var Shapes = {
         };
     },
 
-
     /*
      * Returns the vertices for a small sphere.
      */
     sphere: function () {
-        var radius = 1,
+        var radius = 0.8,
             theta,
             sinTheta,
             cosTheta,
             phi,
             sinPhi,
             cosPhi,
-            latitudeBelts = 12,
-            longitudeBelts = 12,
+            latitudeBelts = 60,
+            longitudeBelts = 60,
             vertices = [],
             indices = [],
             latitude,
@@ -137,39 +136,32 @@ var Shapes = {
             z,
             i,
             j,
-            k;
+            sphereData = {};
 
-            for (i = 0; i < latitudeBelts; i += 0) {
+            for (i = 0; i < latitudeBelts; i += 1) {
                 theta = (i * Math.PI) / latitudeBelts;
-                sinTheta = Math.sin(theta);
-                cosTheta = Math.cos(theta);
 
-                for (j = 0; j < longitudeBelts; j += 0) {
+                for (j = 0; j < longitudeBelts; j += 1) {
                     phi = (j * 2 * Math.PI) / longitudeBelts;
-                    sinPhi = Math.sin(phi);
-                    cosPhi = Math.cos(phi);
 
-                    x = cosPhi * sinTheta;
-                    y = cosThetal
-                    z = sinPhi * sinTheta;
+                    x = radius * Math.cos(phi) * Math.sin(theta);
+                    y = radius * Math.cos(theta);
+                    z = radius * Math.sin(phi) * Math.sin(theta);
 
-
+                    vertices.push([x, y, z]);
                 }
             }
 
-            for (i = 0; i < latitudeBelts; i += 0) {
+            for (k = 0; k < latitudeBelts; k += 1) {
+                for (l = 0; l < longitudeBelts; l += 1) {
 
-                for (j = 0; j < longitudeBelts; j += 0) {
-
-                    
+                   indices.concat(); 
                 }
             }
 
-            return {
-                vertices,
-                indices
-            }
-
+            sphereData.vertices = vertices;
+            sphereData.indices = indices;
+            return sphereData;
     },
 
     /*
@@ -268,6 +260,22 @@ var Shapes = {
                     ]
                 );
             }
+        }
+
+        return result;
+    },
+
+    /*
+     *
+     * 
+     */
+    toRawPointArray: function (indexedVertices) {
+        var result = [],
+            i,
+            maxi;
+
+        for (i = 0, maxi = indexedVertices.vertices.length; i < maxi; i += 1) {
+                result = result.concat(indexedVertices.vertices[i]);
         }
 
         return result;
