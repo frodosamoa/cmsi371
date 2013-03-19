@@ -15,7 +15,7 @@
         // The shader program to use.
         shaderProgram,
 
-        //
+        // A function that passes all of the object's vertices to WebGL.
         vertexify,
 
         // Utility variable indicating whether some fatal has occurred.
@@ -28,8 +28,8 @@
         vertexPosition,
         vertexColor,
 
-        // An individual "draw object" function.
-        drawObject,
+        // A function that draws all of the objects.
+        drawObjects,
 
         // The big "draw scene" function.
         drawScene,
@@ -152,7 +152,7 @@
         }*/
     ];
 
-    // Pass the vertices to WebGL.
+    // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
         for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
@@ -217,11 +217,8 @@
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
 
     /*
-     * Displays an individual object.
+     * Displays all of the objects, including any leafs an object has.
      */
-
-     // add leafs also, so both methods combined will work
-     
     drawObjects = function (objectsToDraw) {
         for (i = 0; i < objectsToDraw.length; i += 1) {
             // Set the varying colors.
@@ -256,8 +253,10 @@
         gl.flush();
     };
 
-    // Draw the initial scene.
+    // Send the vertices to WebGL.
     vertexify(objectsToDraw);
+
+    // Draw the initial scene.
     drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
