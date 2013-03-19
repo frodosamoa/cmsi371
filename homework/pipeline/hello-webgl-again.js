@@ -15,6 +15,8 @@
         // The shader program to use.
         shaderProgram,
 
+        vertexify,
+
         // Utility variable indicating whether some fatal has occurred.
         abort = false,
 
@@ -169,7 +171,6 @@
             if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length != 0)) {
                 vertexify(objectsToDraw[i].leafs);
             }
-
         }    
     }
 
