@@ -123,39 +123,39 @@ var Shapes = {
             sinTheta,
             cosTheta,
             phi,
-            sinPhi,
-            cosPhi,
-            latitudeBelts = 60,
-            longitudeBelts = 60,
+            latitudeBelts = 30,
+            longitudeBelts = 30,
             vertices = [],
             indices = [],
-            latitude,
-            longitude,
+            top,
+            bottom,
             x,
             y,
             z,
             i,
             j,
+            k,
+            l,
             sphereData = {};
 
             for (i = 0; i < latitudeBelts; i += 1) {
                 theta = (i * Math.PI) / latitudeBelts;
+                sinTheta = Math.sin(theta);
+                cosTheta = Math.cos(theta);
 
                 for (j = 0; j < longitudeBelts; j += 1) {
                     phi = (j * 2 * Math.PI) / longitudeBelts;
-
-                    x = radius * Math.cos(phi) * Math.sin(theta);
-                    y = radius * Math.cos(theta);
-                    z = radius * Math.sin(phi) * Math.sin(theta);
+                    x = radius * Math.cos(phi) * sinTheta;
+                    y = radius * cosTheta;
+                    z = radius * Math.sin(phi) * sinTheta;
 
                     vertices.push([x, y, z]);
-                }
-            }
 
-            for (k = 0; k < latitudeBelts; k += 1) {
-                for (l = 0; l < longitudeBelts; l += 1) {
+                    //top = (i * (longitudeBelts + 1)) + j;
+                    //bottom = top + longitudeBelts + 1;
 
-                   indices.concat(); 
+                    //indices.push([top, bottom, top + 1]); 
+                    //indices.push([bottom, bottom + 1, top + 1]);
                 }
             }
 
