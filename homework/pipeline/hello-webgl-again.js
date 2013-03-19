@@ -129,14 +129,13 @@
         {
             color: { r: 0.0, g: 0.5, b: 0.0 },
             vertices: Shapes.toRawLineArray(Shapes.cube()),
-            mode: gl.LINES,
-            leafs: [
-                {
-                color: { r: 0.0, g: 0.5, b: 0.0 },
-                vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
-                mode: gl.LINES
-                }
-            ]
+            mode: gl.LINES
+        },
+
+        {
+            color: { r: 0.0, g: 0.5, b: 0.0 },
+            vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
+            mode: gl.LINES
         },
 
         {
@@ -147,32 +146,26 @@
     ];
 
     // Pass the vertices to WebGL.
-    vertexify = function (objectsToDraw) {
-        for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-            objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
-                    objectsToDraw[i].vertices);
+    for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
+        objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
+                objectsToDraw[i].vertices);
 
-            if (!objectsToDraw[i].colors) {
-                // If we have a single color, we expand that into an array
-                // of the same color over and over.
-                objectsToDraw[i].colors = [];
-                for (j = 0, maxj = objectsToDraw[i].vertices.length / 3;
-                        j < maxj; j += 1) {
-                    objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
-                        objectsToDraw[i].color.r,
-                        objectsToDraw[i].color.g,
-                        objectsToDraw[i].color.b
-                    );
-                }
+        if (!objectsToDraw[i].colors) {
+            // If we have a single color, we expand that into an array
+            // of the same color over and over.
+            objectsToDraw[i].colors = [];
+            for (j = 0, maxj = objectsToDraw[i].vertices.length / 3;
+                    j < maxj; j += 1) {
+                objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
+                    objectsToDraw[i].color.r,
+                    objectsToDraw[i].color.g,
+                    objectsToDraw[i].color.b
+                );
             }
-            objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                    objectsToDraw[i].colors);
-
-            if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length != 0)) {
-                vertexify(objectsToDraw[i].leafs);
-            }
-        }    
-    }
+        }
+        objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+                objectsToDraw[i].colors);
+    }  
 
     // Initialize the shaders.
     shaderProgram = GLSLUtilities.initSimpleShaderProgram(
@@ -213,19 +206,17 @@
     /*
      * Displays an individual object.
      */
-    drawObject = function (object) {
-        // Set the varying colors.
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
-        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+    drawObject = function (objectsToDraw) {
 
-        // Set the varying vertex coordinates.
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
-        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.drawArrays(object.mode, 0, object.vertices.length / 3);
-        if (object.leafs) {
-            for (i = 0; i < object.leafs.length; i++) {
-                drawObject(object.leafs[i]);
-            }
+        for (i = 0; i < objectsToDraw.length; i += 1) {
+            // Set the varying colors.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
+            gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+
+            // Set the varying vertex coordinates.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
+            gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
         }
     };
 
@@ -240,16 +231,13 @@
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
 
         // Display the objects.
-        for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-            drawObject(objectsToDraw[i]);
-        }
+        drawObject(objectsToDraw);
 
         // All done.
         gl.flush();
     };
 
     // Draw the initial scene.
-    vertexify(objectsToDraw);
     drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
