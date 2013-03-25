@@ -127,7 +127,7 @@
 
     // Build the objects to display.
     objectsToDraw = [
-        /*{
+        {
             color: { r: 0.0, g: 0.5, b: 0.0 },
             vertices: Shapes.toRawLineArray(Shapes.cube()),
             mode: gl.LINES
@@ -143,12 +143,12 @@
             color: { r: 0.0, g: 0.5, b: 0.0 },
             vertices: Shapes.toRawLineArray(Shapes.cross()),
             mode: gl.LINES
-        },*/
+        },
 
         {
             color: { r: 1.0, g: 0.0, b: 0.0 },
-            vertices: Shapes.toRawPointArray(Shapes.sphere()),
-            mode: gl.TRIANGLE_FAN
+            vertices: Shapes.toRawLineArray(Shapes.sphere()),
+            mode: gl.LINES
         } 
     ];
 
