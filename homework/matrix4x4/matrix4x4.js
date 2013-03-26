@@ -96,6 +96,14 @@ var Matrix4x4 = (function () {
         return this.elements;
     };
 
+    matrix4x4.prototype.rows = function () {
+        return this.elements.length / 4;
+    }
+
+    matrix4x4.prototype.columns = function () {
+        return this.elements.length / 4;
+    }
+
     matrix4x4.prototype.elementAt = function (row, column) {
         if ((row < 0 || row > 4) || (column < 0 || column > 4)) {
             throw "Index out of bounds";
@@ -110,7 +118,7 @@ var Matrix4x4 = (function () {
         this.elements[(row * 4) + column] = value;
     };
 
-    matrix4x4.prototype.row = function (index) {
+    matrix4x4.prototype.rowAt = function (index) {
         if (index < 0 || index > 3) {
             throw "Index out of bounds";
         }
@@ -121,7 +129,7 @@ var Matrix4x4 = (function () {
                 this.elements[3 + (index * 4)]];
     };
 
-    matrix4x4.prototype.column = function (index) {
+    matrix4x4.prototype.columnAt = function (index) {
         if (index < 0 || index > 3) {
             throw "Index out of bounds";
         }
@@ -163,16 +171,21 @@ var Matrix4x4 = (function () {
         return result;
     };
     
-    Function.prototype.construct = function (aArgs) {
-        var fConstructor = this, fNewConstr = function () { fConstructor.apply(this, aArgs); };
+    matrix4x4.prototype.apply = function (arguments) {
+        var fConstructor = this,
+            fNewConstr = function () { 
+                fConstructor.apply(this, aArgs);
+            };
+
         fNewConstr.prototype = fConstructor.prototype;
         return new fNewConstr();
     };
+
     // Matrix multiplication. We do not need to check if the first matrix's width
     // is the same as the second's matrix's height since we are only dealing with
     // 4x4 matrices.
     matrix4x4.prototype.multiply = function (m) {
-        var result,
+        var result = new Matrix4x4(),
             elements = [],
             i,
             j,
@@ -180,17 +193,16 @@ var Matrix4x4 = (function () {
             matrixDimension = 4,
             sum;
 
-        for (i = 0; i < matrixDimension; i += 1) {
-            for (j = 0; j < matrixDimension; j += 1) {
+        for (i = 0; i < this.rows(); i += 1) {
+            for (j = 0; j < m.columns(); j += 1) {
                 sum = 0;
-                for (k = 0; k < matrixDimension; k += 1) {
+                for (k = 0; k < this.rows(); k += 1) {
                     sum += this.elementAt(i, k) * m.elementAt(k, j);
                 }
-                elements.push(sum);
+                result.elements[(i*4) +j] = sum;
             }
         }
-
-        result = new matrix4x4.apply(this, elements);
+        
         return result;
     };
 
