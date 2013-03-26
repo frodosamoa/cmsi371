@@ -12,6 +12,48 @@ $(function () {
              0, 0, 1, 0,
              0, 0, 0, 1],
             "Default matrix constructor");
+
+        m = new Matrix4x4(  0,        1,       2,  3,
+                           90,     1024,      67, 32,
+                          123,  0.12345, Math.PI,  6,
+                          3.2,   444444,       0,  7);
+        deepEqual(m.elements,
+            [  0,        1,       2,  3,
+              90,     1024,      67, 32,
+             123,  0.12345, Math.PI,  6,
+             3.2,   444444,       0,  7],
+            "Matrix constructor with passed values");
+
+        m = new Matrix4x4( 0,  1,  2,  3,
+                           4,  5,  6,  7,
+                           8,  9, 10, 11,
+                          12, 13, 14, 15);
+        deepEqual(m.row(0),
+            [0, 1, 2, 3],
+            "Matrix first row by index");
+        deepEqual(m.row(1),
+            [4, 5, 6, 7],
+            "Matrix second row by index");
+        deepEqual(m.row(2),
+            [8, 9, 10, 11],
+            "Matrix third row by index");
+        deepEqual(m.row(3),
+            [12, 13, 14, 15],
+            "Matrix fourth row by index");
+
+        deepEqual(m.column(0),
+            [0, 4, 8, 12],
+            "Matrix first column by index");
+        deepEqual(m.column(1),
+            [1, 5, 9, 13],
+            "Matrix second column by index");
+        deepEqual(m.column(2),
+            [2, 6, 10, 14],
+            "Matrix third column by index");
+        deepEqual(m.column(3),
+            [3, 7, 11, 15],
+            "Matrix fourth column by index");
+
     });
 
     test("Pure Transformation Matrices", function () {
@@ -31,168 +73,95 @@ $(function () {
              0, 0,  0, 1],
             "Pure scale matrix");
 
-        m = Matrix4x4.getRotationMatrix(Math.PI / 6, 0, 0, 1);
+        m = Matrix4x4.getRotationMatrix(30, 0, 0, 1);
         deepEqual(m.elements,
-            [Math.cos(Math.PI / 6),                  -0.5, 0, 0,
-                               0.5, Math.cos(Math.PI / 6), 0, 0,
-                                 0,                     0, 1, 0,
-                                 0,                     0, 0, 1],
+            [Math.cos(Math.PI / 6), -Math.sin(Math.PI / 6), 0, 0,
+             Math.sin(Math.PI / 6),  Math.cos(Math.PI / 6), 0, 0,
+                                 0,                      0, 1, 0,
+                                 0,                      0, 0, 1],
             "Rotation by 30 degrees about the z-axis");
+
+        m = Matrix4x4.getRotationMatrix(270, 0, 1, 0);
+        deepEqual(m.elements,
+            [ Math.cos(3 * (Math.PI / 2)), 0, Math.sin(3 * (Math.PI / 2)), 0,
+                                        0, 1,                           0, 0,
+             -Math.sin(3 * (Math.PI / 2)), 0, Math.cos(3 * (Math.PI / 2)), 0,
+                                        0, 0,                           0, 1],
+            "Rotation by 270 degrees about the y-axis");
+
+        m = Matrix4x4.getRotationMatrix(87, 1, 0, 0);
+        deepEqual(m.elements,
+            [1,                            0,                             0, 0,
+             0, Math.cos(87 * Math.PI / 180), -Math.sin(87 * Math.PI / 180), 0,
+             0, Math.sin(87 * Math.PI / 180),  Math.cos(87 * Math.PI / 180), 0,
+             0,                            0,                             0, 1],
+            "Rotation by  degrees about the x-axis");
     });
 
-/*
+
     test("Addition and Subtraction", function () {
-        var v1 = new Vector(4, 5),
-            v2 = new Vector(-10, 4),
-            vresult = v1.add(v2);
+        var m1 = new Matrix4x4(  0,       1,        2,  3,
+                                90,     1024,      67, 32,
+                               123,  0.12345, Math.PI,  6,
+                               3.2,   444444,       0,  7),
+            m2 = new Matrix4x4(  56,        8,    Math.cos(90),   3,
+                                0.1,       45,              67,  32,
+                                 13,   34 ^ 3,        -Math.PI,  42,
+                                543,    11144, Math.pow(32, 4),   7);
+            mresult = m1.add(m2);
 
-        equal(vresult.dimensions(), 2, "Vector sum size check");
-        equal(vresult.x(), -6, "Vector sum first element");
-        equal(vresult.y(), 9, "Vector sum second element");
+            equal(mresult.dimensions(), 16, "Matrix sum size check");
 
-        v1 = new Vector(0, -2, 3, 5);
-        v2 = new Vector(-2, 1, 0, 7);
-        vresult = v1.subtract(v2);
-        equal(vresult.dimensions(), 4, "Vector difference size check");
-        equal(vresult.x(), 2, "Vector difference first element");
-        equal(vresult.y(), -3, "Vector difference second element");
-        equal(vresult.z(), 3, "Vector difference third element");
-        equal(vresult.w(), -2, "Vector difference fourth element");
+            deepEqual(mresult.elements,
+                [   56,        9, 1.55192638387083,  6,
+                  90.1,     1069,              134, 64,
+                   136, 33.12345,                0, 48,
+                 546.2,   455588,          1048576, 14],
+                "Matrix sum text")
 
-        // Check for errors.
-        v1 = new Vector(5, 8, 10, 2);
-        v2 = new Vector(1, 2, 2);
+        m1 = new Matrix4x4(   0,       1,       2,  3,
+                             90,     1024,      67, 32,
+                            123,  0.12345, Math.PI,  6,
+                            3.2,   444444,       0,  7),
+        m2 = new Matrix4x4(  56,        8,    Math.cos(90),   3,
+                            0.1,       45,              67,  32,
+                             13,   34 ^ 3,        -Math.PI,  42,
+                            543,    11144, Math.pow(32, 4),   7);
+        mresult = m1.subtract(m2);
+        equal(mresult.dimensions(), 16, "Matrix difference size check");
 
-        // We can actually check for a *specific* exception, but
-        // we won't go that far for now.
-        raises(
-            function () {
-                return v1.add(v2);
-            },
-            "Check for vectors of different sizes"
-        );
+        deepEqual(mresult.elements,
+            [   -56,        -7, 2.4480736161291703,   0,
+               89.9,       979,                  0,   0,
+                110, -32.87655,  6.283185307179586, -36,
+             -539.8,    433300,           -1048576,   0],
+            "Matrix difference text")
+
+
     });
 
-    test("Scalar Multiplication and Division", function () {
-        var v = new Vector(8, 2, 3),
-            vresult = v.multiply(2);
-
-        equal(vresult.x(), 16, "Vector scalar multiplication first element");
-        equal(vresult.y(), 4, "Vector scalar multiplication second element");
-        equal(vresult.z(), 6, "Vector scalar multiplication third element");
-
-        vresult = vresult.divide(4);
-
-        equal(vresult.x(), 4, "Vector scalar division first element");
-        equal(vresult.y(), 1, "Vector scalar division second element");
-        equal(vresult.z(), 1.5, "Vector scalar division third element");
+    test("Matrix Projection", function () {
+        equal(0, 0, "0 is 0");
     });
 
-    test("Dot Product", function () {
-        var v1 = new Vector(-5, -2),
-            v2 = new Vector(-3, 4);
+    test("Matrix conversion and convenience functions", function () {
+        var m1 = new Matrix4x4( 0,  1,  2,  3,
+                                4,  5,  6,  7,
+                                8,  9, 10, 11,
+                               12, 13, 14, 15);
+            m2 = new Matrix4x4( 0,  1,  2,  3,
+                                4,  5,  6,  7,
+                                8,  9, 10, 11,
+                               12, 13, 14, 15);
+            mresult = m1.multiply(m2);
 
-        equal(v1.dot(v2), 7, "2D dot product");
-
-        // Try for a perpendicular.
-        v1 = new Vector(Math.sqrt(2) / 2, Math.sqrt(2) / 2);
-        v2 = new Vector(-Math.sqrt(2) / 2, Math.sqrt(2) / 2);
-        equal(v1.dot(v2), 0, "Perpendicular 2D dot product");
-
-        // Try 3D.
-        v1 = new Vector(3, 2, 5);
-        v2 = new Vector(4, -1, 3);
-        equal(v1.dot(v2), 25, "3D dot product");
-
-        // Check for errors.
-        v1 = new Vector(4, 2);
-        v2 = new Vector(3, 9, 1);
-
-        // We can actually check for a *specific* exception, but
-        // we won't go that far for now.
-        raises(
-            function () {
-                return v1.dot(v2);
-            },
-            "Check for vectors of different sizes"
-        );
+        equal(mresult.dimensions(), 16, "Matrix multiply size check");
+        deepEqual(mresult.elements,
+            [ 56,  62,  68,  74,
+             152, 174, 196, 218,
+             248, 286, 324, 362,
+             344, 398, 452, 506],
+            "4x4 matrix multiplication");
     });
 
-    test("Cross Product", function () {
-        var v1 = new Vector(3, 4),
-            v2 = new Vector(1, 2),
-            vresult;
-
-        // The cross product is restricted to 3D, so we start
-        // with an error check.
-        raises(
-            function () {
-                return v1.cross(v2);
-            },
-            "Check for non-3D vectors"
-        );
-
-        // Yeah, this is a bit of a trivial case.  But it at least
-        // establishes the right-handedness of a cross-product.
-        v1 = new Vector(1, 0, 0);
-        v2 = new Vector(0, 1, 0);
-        vresult = v1.cross(v2);
-
-        equal(vresult.x(), 0, "Cross product first element");
-        equal(vresult.y(), 0, "Cross product second element");
-        equal(vresult.z(), 1, "Cross product third element");
-
-        // This one shows that switching vector order produces
-        // the opposite-pointing normal.
-        vresult = v2.cross(v1);
-
-        equal(vresult.x(), 0, "Cross product first element");
-        equal(vresult.y(), 0, "Cross product second element");
-        equal(vresult.z(), -1, "Cross product third element");
-    });
-
-    test("Magnitude and Unit Vectors", function () {
-        var v = new Vector(3, 4);
-
-        // The classic example.
-        equal(v.magnitude(), 5, "2D magnitude check");
-
-        // Kind of a cheat, but still tests the third dimension.
-        v = new Vector(5, 0, 12);
-        equal(v.magnitude(), 13, "3D magnitude check");
-
-        // Now for unit vectors.
-        v = (new Vector(3, 4)).unit();
-
-        equal(v.magnitude(), 1, "2D unit vector check");
-        equal(v.x(), 3 / 5, "2D unit vector first element");
-        equal(v.y(), 4 / 5, "2D unit vector second element");
-
-        v = (new Vector(0, -7, 24)).unit();
-
-        equal(v.magnitude(), 1, "3D unit vector check");
-        equal(v.x(), 0, "3D unit vector first element");
-        equal(v.y(), -7 / 25, "3D unit vector second element");
-        equal(v.z(), 24 / 25, "3D unit vector third element");
-    });
-
-    test("Projection", function () {
-        var v = new Vector(3, 3, 0),
-            vresult = v.projection(new Vector(5, 0, 0));
-
-        equal(vresult.magnitude(), 3, "3D vector projection magnitude check");
-        equal(vresult.x(), 3, "3D vector projection first element");
-        equal(vresult.y(), 0, "3D vector projection second element");
-        equal(vresult.z(), 0, "3D vector projection third element");
-
-        // Error check: projection only applies to vectors with the same
-        // number of dimensions.
-        raises(
-            function () {
-                (new Vector(5, 2)).projection(new Vector(9, 8, 1));
-            },
-            "Ensure that projection applies only to vectors with the same number of dimensions"
-        );
-    });
-*/
 });
