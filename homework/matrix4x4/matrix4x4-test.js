@@ -28,29 +28,29 @@ $(function () {
                            4,  5,  6,  7,
                            8,  9, 10, 11,
                           12, 13, 14, 15);
-        deepEqual(m.row(0),
+        deepEqual(m.rowAt(0),
             [0, 1, 2, 3],
             "Matrix first row by index");
-        deepEqual(m.row(1),
+        deepEqual(m.rowAt(1),
             [4, 5, 6, 7],
             "Matrix second row by index");
-        deepEqual(m.row(2),
+        deepEqual(m.rowAt(2),
             [8, 9, 10, 11],
             "Matrix third row by index");
-        deepEqual(m.row(3),
+        deepEqual(m.rowAt(3),
             [12, 13, 14, 15],
             "Matrix fourth row by index");
 
-        deepEqual(m.column(0),
+        deepEqual(m.columnAt(0),
             [0, 4, 8, 12],
             "Matrix first column by index");
-        deepEqual(m.column(1),
+        deepEqual(m.columnAt(1),
             [1, 5, 9, 13],
             "Matrix second column by index");
-        deepEqual(m.column(2),
+        deepEqual(m.columnAt(2),
             [2, 6, 10, 14],
             "Matrix third column by index");
-        deepEqual(m.column(3),
+        deepEqual(m.columnAt(3),
             [3, 7, 11, 15],
             "Matrix fourth column by index");
 
