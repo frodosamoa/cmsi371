@@ -89,12 +89,19 @@ var Matrix4x4 = (function () {
                             0.0, 2.0 / height,          0.0, -(top + bottom) / height,
                             0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
                             0.0,          0.0,          0.0,                      0.0);
-
     };
 
-    matrix4x4.frustum = function () {
+    matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
+        var width = right - left,
+            height = top - botom,
+            depth = far - near;
 
-    };
+            return new Matrix4x4 (
+                2.0 * near / width,                 0.0,  (right + left) / width,                            0,
+                               0.0, 2.0 * near / height, (top + bottom) / height,                            0,
+                               0.0,                 0.0,    (far + near) / depth,  (-2.0 * near * far) / depth,
+                               0.0,                 0.0,                    -1.0,                          0.0;
+    }
 
     // Basic methods.
     matrix4x4.prototype.dimensions = function () {
