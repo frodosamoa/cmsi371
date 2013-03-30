@@ -84,11 +84,23 @@ var Matrix4x4 = (function () {
             height = top - botom,
             depth = far - near;
 
-            return new Matrix4x4 (
-                    2.0 / width,          0.0,          0.0,  -(right + left) / width,
-                            0.0, 2.0 / height,          0.0, -(top + bottom) / height,
-                            0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
-                            0.0,          0.0,          0.0,                      0.0);
+            // This is statement check to see if the viewing volume is symmetric.
+            // If it is it returns the matrix as the first Matrix instead of the second.
+            if (r === -l && t === -b) {
+                return new Matrix4x4 (
+                        1.0 / right,       0.0,          0.0,                   0.0,
+                                0.0, 1.0 / top,          0.0,                   0.0,
+                                0.0,       0.0, -2.0 / depth, -(far + near) / depth,
+                                0.0,       0.0,          0.0,                   0.0);
+            } else {
+                return new Matrix4x4 (
+                        2.0 / width,          0.0,          0.0,  -(right + left) / width,
+                                0.0, 2.0 / height,          0.0, -(top + bottom) / height,
+                                0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
+                                0.0,          0.0,          0.0,                      0.0);                
+            }
+
+
     };
 
     matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
