@@ -40,9 +40,10 @@
             attribute vec3 vertexColor;
             varying vec4 finalVertexColor;
             uniform mat4 rotationMatrix;
+            uniform mat4 projectionMatrix;
 
             void main(void) {
-                gl_Position = rotationMatrix * vec4(vertexPosition, 1.0);
+                gl_Position = projectionMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
             }
