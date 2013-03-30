@@ -190,7 +190,10 @@ $(function () {
     });
 
     test("Matrix Projection", function () {
-        equal(0, 0, "0 is 0");
+        deepequal(0, 0, "Matrix ortho projection size check");
+        deepequal(0, 0, "Matrix ortho projection");
+        deepequal(0, 0, "Matrix frustum projection size check");
+        deepequal(0, 0, "Matrix frustum projection");
     });
 
     test("Matrix Multiplication", function () {
