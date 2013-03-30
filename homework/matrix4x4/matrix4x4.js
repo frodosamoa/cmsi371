@@ -190,6 +190,9 @@ var Matrix4x4 = (function () {
             k,
             sum;
 
+        // Dimensionality check.
+        checkDimensions(this, m);
+
         for (i = 0; i < this.rows(); i += 1) {
             for (j = 0; j < m.columns(); j += 1) {
                 sum = 0;
