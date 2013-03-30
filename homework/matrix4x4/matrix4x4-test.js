@@ -193,7 +193,7 @@ $(function () {
         equal(0, 0, "0 is 0");
     });
 
-    test("Matrix multiplication", function () {
+    test("Matrix Multiplication", function () {
         var m1 = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
@@ -212,24 +212,24 @@ $(function () {
              344, 398, 452, 506],
             "4x4 matrix multiplication first test");
 
-        var m1 = new Matrix4x4(   3,   6,   9,  12,
-                                 -1,  -2,  -3,  -4,
-                                0.1, 0.3, 0.5, 0.7,
-                                 20,  40,  60,  80);
-            m2 = new Matrix4x4(  20,  40,  60,  80,
-                                  3,   6,   9,  12,
-                                 -1,  -2,  -3,  -4,
-                                0.1, 0.3, 0.5, 0.7);
+        var m1 = new Matrix4x4(   3,  6,   9, 12,
+                                 -1, -2,  -3, -4,
+                                -10, 20, -30, 40,
+                                 20, 40,  60, 80);
+            m2 = new Matrix4x4(  20, 40,  60, 80,
+                                  3,  6,   9, 12,
+                                 -1, -2,  -3, -4,
+                                -10, 20, -30, 40);
             mresult = m1.multiply(m2);
         deepEqual(mresult.elements,
-            [ 70.2, 141.6,  213, 284.4,
-             -23.4, -47.2,  -71, -94.8,
-               2.5,     5,  7.6,  10.1,
-               468,   944, 1420,  1896],
+            [ -51,  378,  -153,  756,
+               17, -126,    51, -252,
+             -510,  580, -1530, 1160,
+             -340, 2520, -1020, 5040],
             "4x4 matrix multiplication second test");
     });
 
-        test("Matrix conversion and convenience functions", function () {
+        test("Matrix Conversion and Convenience functions", function () {
         var m = new Matrix4x4(  0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
