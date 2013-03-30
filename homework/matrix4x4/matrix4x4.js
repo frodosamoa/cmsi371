@@ -79,7 +79,16 @@ var Matrix4x4 = (function () {
         );
     };
 
-    matrix4x4.ortho = function () {
+    matrix4x4.getOrthoMatrix = function (left, right, bottom, top, near, far) {
+        var width = right - left,
+            height = top - botom,
+            depth = far - near;
+
+            return new Matrix4x4 (
+                    2.0 / width,          0.0,          0.0,  -(right + left) / width,
+                            0.0, 2.0 / height,          0.0, -(top + bottom) / height,
+                            0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
+                            0.0,          0.0,          0.0,                      0.0)
 
     };
 
@@ -204,6 +213,11 @@ var Matrix4x4 = (function () {
         }
         
         return result;
+    };
+
+    matrix4x4.prototype.convertToWebGL = function () {
+        console.log(this.columnAt(0).push(this.columnAt(1).push(this.columnAt(2).push(this.columnAt(3)))));
+        return this.columnAt(0).concat(this.columnAt(1).concat(this.columnAt(2).concat(this.columnAt(3))));
     };
 
     return matrix4x4;
