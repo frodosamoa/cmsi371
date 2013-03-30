@@ -54,6 +54,55 @@ $(function () {
             [3, 7, 11, 15],
             "Matrix fourth column by index");
 
+        equal(m.elementAt(0),
+            0,
+            "Matrix first element");
+        equal(m.elementAt(1),
+            1,
+            "Matrix second element");
+        equal(m.elementAt(2),
+            2,
+            "Matrix third element");
+        equal(m.elementAt(3),
+            3,
+            "Matrix fourth element");
+        equal(m.elementAt(4),
+            4,
+            "Matrix fifth element");
+        equal(m.elementAt(5),
+            5,
+            "Matrix sixth element");
+        equal(m.elementAt(6),
+            6,
+            "Matrix seventh element");
+        equal(m.elementAt(7),
+            7,
+            "Matrix eighth element");
+        equal(m.elementAt(8),
+            8,
+            "Matrix ninth element");
+        equal(m.elementAt(9),
+            9,
+            "Matrix tenth element");
+        equal(m.elementAt(10),
+            10,
+            "Matrix eleventh element");        
+        equal(m.elementAt(11),
+            11,
+            "Matrix twelth element");        
+        equal(m.elementAt(12),
+            12,
+            "Matrix thirteenth element");        
+        equal(m.elementAt(13),
+            13,
+            "Matrix fourteenth element");        
+        equal(m.elementAt(14),
+            14,
+            "Matrix fifteenth element");        
+        equal(m.elementAt(15),
+            15,
+            "Matrix sixteenth element");
+
     });
 
     test("Pure Transformation Matrices", function () {
@@ -161,7 +210,23 @@ $(function () {
              152, 174, 196, 218,
              248, 286, 324, 362,
              344, 398, 452, 506],
-            "4x4 matrix multiplication");
+            "4x4 matrix multiplication first test");
+
+        var m1 = new Matrix4x4(   3,   6,   9,  12,
+                                 -1,  -2,  -3,  -4,
+                                0.1, 0.3, 0.5, 0.7,
+                                 20,  40,  60,  80);
+            m2 = new Matrix4x4(  20,  40,  60,  80,
+                                  3,   6,   9,  12,
+                                 -1,  -2,  -3,  -4,
+                                0.1, 0.3, 0.5, 0.7);
+            mresult = m1.multiply(m2);
+        deepEqual(mresult.elements,
+            [ 70.2, 141.6,  213, 284.4,
+             -23.4, -47.2,  -71, -94.8,
+               2.5,     5,  7.6,  10.1,
+               468,   944, 1420,  1896],
+            "4x4 matrix multiplication second test");
     });
 
         test("Matrix conversion and convenience functions", function () {
@@ -174,7 +239,7 @@ $(function () {
         equal(mconversion.length, m.dimensions(), "Matrix conversion size check");
         deepEqual(mconversion,
             [ 0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15] ,
-            "4x4 matrix multiplication");
+            "Matrix conversion");
     });
 
 });
