@@ -88,7 +88,7 @@ var Matrix4x4 = (function () {
                     2.0 / width,          0.0,          0.0,  -(right + left) / width,
                             0.0, 2.0 / height,          0.0, -(top + bottom) / height,
                             0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
-                            0.0,          0.0,          0.0,                      0.0)
+                            0.0,          0.0,          0.0,                      0.0);
 
     };
 
@@ -113,18 +113,11 @@ var Matrix4x4 = (function () {
         return this.elements.length / 4;
     }
 
-    matrix4x4.prototype.elementAt = function (row, column) {
-        if ((row < 0 || row > 4) || (column < 0 || column > 4)) {
+    matrix4x4.prototype.elementAt = function (index) {
+        if (index < 0 || index > 15) {
             throw "Index out of bounds";
         }
-        return this.elements[(row * 4) + column];
-    };
-
-    matrix4x4.prototype.setElementAt = function (row, column, value) {
-        if ((row < 0 || row > 4) || (column < 0 || column > 4)) {
-            throw "Index out of bounds";
-        }
-        this.elements[(row * 4) + column] = value;
+        return this.elements[index];
     };
 
     matrix4x4.prototype.rowAt = function (index) {
@@ -179,36 +172,25 @@ var Matrix4x4 = (function () {
 
         return result;
     };
-    
-    matrix4x4.prototype.apply = function (arguments) {
-        var fConstructor = this,
-            fNewConstr = function () { 
-                fConstructor.apply(this, aArgs);
-            };
-
-        fNewConstr.prototype = fConstructor.prototype;
-        return new fNewConstr();
-    };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
     // is the same as the second's matrix's height since we are only dealing with
     // 4x4 matrices.
     matrix4x4.prototype.multiply = function (m) {
         var result = new Matrix4x4(),
-            elements = [],
             i,
             j,
             k,
-            matrixDimension = 4,
             sum;
 
         for (i = 0; i < this.rows(); i += 1) {
             for (j = 0; j < m.columns(); j += 1) {
                 sum = 0;
                 for (k = 0; k < this.rows(); k += 1) {
-                    sum += this.elementAt(i, k) * m.elementAt(k, j);
+                    sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
                 }
-                result.elements[(i*4) +j] = sum;
+                console.log(sum);
+                result.elements[(i * 4) + j] = sum;
             }
         }
         
@@ -216,8 +198,10 @@ var Matrix4x4 = (function () {
     };
 
     matrix4x4.prototype.convertToWebGL = function () {
-        console.log(this.columnAt(0).push(this.columnAt(1).push(this.columnAt(2).push(this.columnAt(3)))));
-        return this.columnAt(0).concat(this.columnAt(1).concat(this.columnAt(2).concat(this.columnAt(3))));
+        return this.columnAt(0).concat(
+               this.columnAt(1).concat(
+               this.columnAt(2).concat(
+               this.columnAt(3))));
     };
 
     return matrix4x4;
