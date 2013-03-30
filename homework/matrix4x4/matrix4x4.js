@@ -99,8 +99,6 @@ var Matrix4x4 = (function () {
                                 0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
                                 0.0,          0.0,          0.0,                      0.0);                
             }
-
-
     };
 
     matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
