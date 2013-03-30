@@ -96,11 +96,21 @@ var Matrix4x4 = (function () {
             height = top - botom,
             depth = far - near;
 
+        // This is statement check to see if the viewing volume is symmetric.
+        // If it is it returns the matrix as the first Matrix instead of the second.
+        if (r === -l && t === -b) {
+            return new Matrix4x4 (
+                near / right,        0.0,                   0.0,                          0.0,
+                         0.0, near / top,                   0.0,                          0.0,
+                         0.0,        0.0, -(far + near) / depth,  (-2.0 * near * far) / depth,
+                         0.0,        0.0,                  -1.0,                          0.0;
+        } else {
             return new Matrix4x4 (
                 2.0 * near / width,                 0.0,  (right + left) / width,                            0,
                                0.0, 2.0 * near / height, (top + bottom) / height,                            0,
-                               0.0,                 0.0,    (far + near) / depth,  (-2.0 * near * far) / depth,
+                               0.0,                 0.0,   -(far + near) / depth,  (-2.0 * near * far) / depth,
                                0.0,                 0.0,                    -1.0,                          0.0;
+        }
     }
 
     // Basic methods.
