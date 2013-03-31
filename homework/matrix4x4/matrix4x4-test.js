@@ -109,7 +109,8 @@ $(function () {
     });
 
     test("Pure Transformation Matrices", function () {
-        var m = Matrix4x4.getTranslationMatrix(5, 9, -1);
+        var m = Matrix4x4.getTranslationMatrix(5, 9, -1),
+            v = new Vector (3, 3, 3);
         deepEqual(m.elements,
             [1, 0, 0, 5,
              0, 1, 0, 9,
@@ -125,6 +126,11 @@ $(function () {
              0, 0,  0, 1],
             "Pure scale matrix");
 
+        m = new Matrix4x4( 0,  1,  2,  3,
+                           4,  5,  6,  7,
+                           8,  9, 10, 11,
+                          12, 13, 14, 15);
+      
         m = Matrix4x4.getRotationMatrix(30, 0, 0, 1);
         deepEqual(m.elements,
             [Math.cos(Math.PI / 6), -Math.sin(Math.PI / 6), 0, 0,
@@ -195,14 +201,14 @@ $(function () {
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
                                12, 13, 14, 15);
-            mresult = m.getOrthoMatrix(10, 10, 10, 10, 10, 10);
+            mresult = Matrix4x4.getOrthoMatrix(10, 10, 10, 10, 10, 10);
         equal(mresult.dimensions(), 16, "Matrix ortho projection size check");
         equal(0, 0, "Matrix ortho projection");
         var m = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
                                12, 13, 14, 15);
-            mresult = m.getFrustumMatrix(30, 30, 20, 20, 10, 10);
+            mresult = Matrix4x4.getFrustumMatrix(30, 30, 20, 20, 10, 10);
         equal(0, 0, "Matrix frustum projection size check");
         equal(0, 0, "Matrix frustum projection");
     });
@@ -229,11 +235,11 @@ $(function () {
         var m1 = new Matrix4x4(   3,  6,   9, 12,
                                  -1, -2,  -3, -4,
                                 -10, 20, -30, 40,
-                                 20, 40,  60, 80);
+                                 20, 40,  60, 80),
             m2 = new Matrix4x4(  20, 40,  60, 80,
                                   3,  6,   9, 12,
                                  -1, -2,  -3, -4,
-                                -10, 20, -30, 40);
+                                -10, 20, -30, 40),
             mresult = m1.multiply(m2);
         deepEqual(mresult.elements,
             [ -51,  378,  -153,  756,
