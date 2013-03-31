@@ -219,7 +219,6 @@ var Matrix4x4 = (function () {
                 for (k = 0; k < this.rows(); k += 1) {
                     sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
                 }
-                console.log(sum);
                 result.elements[(i * 4) + j] = sum;
             }
         }
