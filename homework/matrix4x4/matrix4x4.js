@@ -168,6 +168,8 @@ var Matrix4x4 = (function () {
                 this.elements[index + 8],
                 this.elements[index + 12]];
     };
+    // Scaling and translation.
+    
 
     // Addition and subtraction.
     matrix4x4.prototype.add = function (m) {
