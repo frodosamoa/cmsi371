@@ -66,6 +66,7 @@ $(function () {
         equal(m.elementAt(3),
             3,
             "Matrix fourth element");
+
         equal(m.elementAt(4),
             4,
             "Matrix fifth element");
@@ -78,6 +79,7 @@ $(function () {
         equal(m.elementAt(7),
             7,
             "Matrix eighth element");
+
         equal(m.elementAt(8),
             8,
             "Matrix ninth element");
@@ -89,7 +91,8 @@ $(function () {
             "Matrix eleventh element");        
         equal(m.elementAt(11),
             11,
-            "Matrix twelth element");        
+            "Matrix twelth element");  
+                  
         equal(m.elementAt(12),
             12,
             "Matrix thirteenth element");        
@@ -166,7 +169,7 @@ $(function () {
                   90.1,     1069,              134, 64,
                    136, 33.12345,                0, 48,
                  546.2,   455588,          1048576, 14],
-                "Matrix sum text")
+                "Matrix sum text");
 
         m1 = new Matrix4x4(   0,       1,       2,  3,
                              90,     1024,      67, 32,
@@ -184,19 +187,22 @@ $(function () {
                89.9,       979,                  0,   0,
                 110, -32.87655,  6.283185307179586, -36,
              -539.8,    433300,           -1048576,   0],
-            "Matrix difference text")
-
-
+            "Matrix difference text");
     });
 
     test("Matrix Projection", function () {
-        var m1 = new Matrix4x4( 0,  1,  2,  3,
+        var m = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
                                12, 13, 14, 15);
-            mresult = m1.getOrthoMatrix;
-        equal(0, 0, "Matrix ortho projection size check");
+            mresult = m.getOrthoMatrix(10, 10, 10, 10, 10, 10);
+        equal(mresult.dimensions(), 16, "Matrix ortho projection size check");
         equal(0, 0, "Matrix ortho projection");
+        var m = new Matrix4x4( 0,  1,  2,  3,
+                                4,  5,  6,  7,
+                                8,  9, 10, 11,
+                               12, 13, 14, 15);
+            mresult = m.getFrustumMatrix(30, 30, 20, 20, 10, 10);
         equal(0, 0, "Matrix frustum projection size check");
         equal(0, 0, "Matrix frustum projection");
     });
