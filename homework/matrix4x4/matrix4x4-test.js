@@ -92,7 +92,7 @@ $(function () {
         equal(m.elementAt(11),
             11,
             "Matrix twelth element");  
-                  
+
         equal(m.elementAt(12),
             12,
             "Matrix thirteenth element");        
@@ -159,7 +159,7 @@ $(function () {
             m2 = new Matrix4x4(  56,        8,    Math.cos(90),   3,
                                 0.1,       45,              67,  32,
                                  13,   34 ^ 3,        -Math.PI,  42,
-                                543,    11144, Math.pow(32, 4),   7);
+                                543,    11144, Math.pow(32, 4),   7),
             mresult = m1.add(m2);
 
             equal(mresult.dimensions(), 16, "Matrix sum size check");
@@ -211,11 +211,11 @@ $(function () {
         var m1 = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
-                               12, 13, 14, 15);
+                               12, 13, 14, 15),
             m2 = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
-                               12, 13, 14, 15);
+                               12, 13, 14, 15),
             mresult = m1.multiply(m2);
 
         equal(mresult.dimensions(), 16, "Matrix multiply size check");
