@@ -84,7 +84,7 @@ var Matrix4x4 = (function () {
             height = top - botom,
             depth = far - near;
 
-            // This is statement check to see if the viewing volume is symmetric.
+            // This statement checks to see if the viewing volume is symmetric.
             // If it is it returns the matrix as the first Matrix instead of the second.
             if (r === -l && t === -b) {
                 return new Matrix4x4 (
@@ -106,7 +106,7 @@ var Matrix4x4 = (function () {
             height = top - botom,
             depth = far - near;
 
-        // This is statement check to see if the viewing volume is symmetric.
+        // This statement checks to see if the viewing volume is symmetric.
         // If it is it returns the matrix as the first Matrix instead of the second.
         if (r === -l && t === -b) {
             return new Matrix4x4 (
@@ -121,7 +121,7 @@ var Matrix4x4 = (function () {
                                0.0,                 0.0,   -(far + near) / depth,  (-2.0 * near * far) / depth,
                                0.0,                 0.0,                    -1.0,                          0.0);
         }
-    }
+    };
 
     // Basic methods.
     matrix4x4.prototype.dimensions = function () {
@@ -134,11 +134,11 @@ var Matrix4x4 = (function () {
 
     matrix4x4.prototype.rows = function () {
         return this.elements.length / 4;
-    }
+    };
 
     matrix4x4.prototype.columns = function () {
         return this.elements.length / 4;
-    }
+    };
 
     matrix4x4.prototype.elementAt = function (index) {
         if (index < 0 || index > 15) {
