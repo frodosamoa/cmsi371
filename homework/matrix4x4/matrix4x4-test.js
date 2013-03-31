@@ -190,10 +190,15 @@ $(function () {
     });
 
     test("Matrix Projection", function () {
-        deepequal(0, 0, "Matrix ortho projection size check");
-        deepequal(0, 0, "Matrix ortho projection");
-        deepequal(0, 0, "Matrix frustum projection size check");
-        deepequal(0, 0, "Matrix frustum projection");
+        var m1 = new Matrix4x4( 0,  1,  2,  3,
+                                4,  5,  6,  7,
+                                8,  9, 10, 11,
+                               12, 13, 14, 15);
+            mresult = m1.getOrthoMatrix;
+        equal(0, 0, "Matrix ortho projection size check");
+        equal(0, 0, "Matrix ortho projection");
+        equal(0, 0, "Matrix frustum projection size check");
+        equal(0, 0, "Matrix frustum projection");
     });
 
     test("Matrix Multiplication", function () {
