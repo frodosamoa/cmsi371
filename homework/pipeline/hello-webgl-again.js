@@ -25,6 +25,7 @@
         currentRotation = 0.0,
         currentInterval,
         rotationMatrix,
+        projectionMatrix,
         vertexPosition,
         vertexColor,
 
@@ -244,8 +245,15 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
+        //gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
 
+        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(getOrthomatrix(
+                    -4,
+                    4,
+                    -2,
+                    2,
+                    -10,
+                    10)));
         // Display the objects.
         drawObjects(objectsToDraw);
 
