@@ -81,12 +81,12 @@ var Matrix4x4 = (function () {
 
     matrix4x4.getOrthoMatrix = function (left, right, bottom, top, near, far) {
         var width = right - left,
-            height = top - botom,
+            height = top - bottom,
             depth = far - near;
 
             // This statement checks to see if the viewing volume is symmetric.
             // If it is it returns the matrix as the first Matrix instead of the second.
-            if (r === -l && t === -b) {
+            if (right === -left && top === -bottom) {
                 return new Matrix4x4 (
                         1.0 / right,       0.0,          0.0,                   0.0,
                                 0.0, 1.0 / top,          0.0,                   0.0,
@@ -108,7 +108,7 @@ var Matrix4x4 = (function () {
 
         // This statement checks to see if the viewing volume is symmetric.
         // If it is it returns the matrix as the first Matrix instead of the second.
-        if (r === -l && t === -b) {
+        if (right === -left && top === -bottom) {
             return new Matrix4x4 (
                 near / right,        0.0,                   0.0,                          0.0,
                          0.0, near / top,                   0.0,                          0.0,
@@ -220,6 +220,14 @@ var Matrix4x4 = (function () {
         }
 
         return result;
+    };
+
+    matrix4x4.prototype.ortho = function (left, right, bottom, top, near, far) {
+
+    };
+
+    matrix4x4.prototype.frustum = function (left, right, bottom, top, near, far) {
+
     };
 
     matrix4x4.prototype.subtract = function (m) {
