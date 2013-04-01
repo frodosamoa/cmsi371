@@ -170,7 +170,7 @@ var Matrix4x4 = (function () {
     };
 
     // Scaling and translation.
-    matrix4x4.prototype.rotate = function (v) {
+    matrix4x4.prototype.translate = function (v) {
         var x = v.x(),
             y = v.y(),
             z = v.z();
@@ -188,6 +188,7 @@ var Matrix4x4 = (function () {
         return result;
     };
 
+    
     matrix4x4.prototype.scale = function (v) {
         var x = v.x(),
             y = v.y(),
@@ -204,7 +205,26 @@ var Matrix4x4 = (function () {
             }
         
         return result;
-    };  
+    };
+
+    matrix4x4.prototype.rotate = function (v) {
+        var x = v.x(),
+            y = v.y(),
+            z = v.z();
+
+        for (i = 0; i < this.rows(); i += 1) {
+            for (j = 0; j < m.columns(); j += 1) {
+                sum = 0;
+                for (k = 0; k < this.rows(); k += 1) {
+                    sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
+                }
+                result.elements[(i * 4) + j] = sum;
+            }
+        }
+        
+        return result;
+    };
+  
 
     // Addition and subtraction.
     matrix4x4.prototype.add = function (m) {
@@ -220,14 +240,6 @@ var Matrix4x4 = (function () {
         }
 
         return result;
-    };
-
-    matrix4x4.prototype.ortho = function (left, right, bottom, top, near, far) {
-
-    };
-
-    matrix4x4.prototype.frustum = function (left, right, bottom, top, near, far) {
-
     };
 
     matrix4x4.prototype.subtract = function (m) {
