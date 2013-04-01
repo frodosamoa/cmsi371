@@ -108,7 +108,7 @@ $(function () {
 
     });
 
-    test("Pure Transformation Matrices", function () {
+    test("Transformation, Scaling, and Rotation Matrices", function () {
         var m = Matrix4x4.getTranslationMatrix(5, 9, -1),
             v = new Vector (3, 3, 3);
         deepEqual(m.elements,
@@ -137,7 +137,7 @@ $(function () {
              Math.sin(Math.PI / 6),  Math.cos(Math.PI / 6), 0, 0,
                                  0,                      0, 1, 0,
                                  0,                      0, 0, 1],
-            "Rotation by 30 degrees about the z-axis");
+            "Pure rotation matrix by 30 degrees about the z-axis");
 
         m = Matrix4x4.getRotationMatrix(270, 0, 1, 0);
         deepEqual(m.elements,
@@ -145,7 +145,7 @@ $(function () {
                                         0, 1,                           0, 0,
              -Math.sin(3 * (Math.PI / 2)), 0, Math.cos(3 * (Math.PI / 2)), 0,
                                         0, 0,                           0, 1],
-            "Rotation by 270 degrees about the y-axis");
+            "Pure rotation matrix by 270 degrees about the y-axis");
 
         m = Matrix4x4.getRotationMatrix(87, 1, 0, 0);
         deepEqual(m.elements,
@@ -153,9 +153,8 @@ $(function () {
              0, Math.cos(87 * Math.PI / 180), -Math.sin(87 * Math.PI / 180), 0,
              0, Math.sin(87 * Math.PI / 180),  Math.cos(87 * Math.PI / 180), 0,
              0,                            0,                             0, 1],
-            "Rotation by  degrees about the x-axis");
+            "Pure rotation matrix by 87 degrees about the x-axis");
     });
-
 
     test("Addition and Subtraction", function () {
         var m1 = new Matrix4x4(  0,       1,        2,  3,
@@ -175,7 +174,7 @@ $(function () {
                   90.1,     1069,              134, 64,
                    136, 33.12345,                0, 48,
                  546.2,   455588,          1048576, 14],
-                "Matrix sum text");
+                "Matrix sum test");
 
         m1 = new Matrix4x4(   0,       1,       2,  3,
                              90,     1024,      67, 32,
@@ -193,7 +192,7 @@ $(function () {
                89.9,       979,                  0,   0,
                 110, -32.87655,  6.283185307179586, -36,
              -539.8,    433300,           -1048576,   0],
-            "Matrix difference text");
+            "Matrix difference test");
     });
 
     test("Matrix Projection", function () {
