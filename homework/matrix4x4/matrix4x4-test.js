@@ -28,6 +28,7 @@ $(function () {
                            4,  5,  6,  7,
                            8,  9, 10, 11,
                           12, 13, 14, 15);
+        // JD: Nice convenience functions here.
         deepEqual(m.rowAt(0),
             [0, 1, 2, 3],
             "Matrix first row by index");
@@ -54,6 +55,7 @@ $(function () {
             [3, 7, 11, 15],
             "Matrix fourth column by index");
 
+        // JD: Wow, now *that* is thorough!
         equal(m.elementAt(0),
             0,
             "Matrix first element");
@@ -109,8 +111,9 @@ $(function () {
     });
 
     test("Transformation, Scaling, and Rotation Matrices", function () {
-        var m = Matrix4x4.getTranslationMatrix(5, 9, -1),
-            v = new Vector (3, 3, 3);
+        var m = Matrix4x4.getTranslationMatrix(5, 9, -1);
+// JD: I think what you have below is leftover code.
+//            v = new Vector (3, 3, 3);
         deepEqual(m.elements,
             [1, 0, 0, 5,
              0, 1, 0, 9,
@@ -202,6 +205,9 @@ $(function () {
                                12, 13, 14, 15);
             mresult = Matrix4x4.getOrthoMatrix(10, 10, 10, 10, 10, 10);
         equal(mresult.dimensions(), 16, "Matrix ortho projection size check");
+
+        // JD: So these tests are unfinished.  Typically you should mark
+        //     these with a // TODO comment.
         equal(0, 0, "Matrix ortho projection");
         var m = new Matrix4x4( 0,  1,  2,  3,
                                 4,  5,  6,  7,

@@ -86,24 +86,25 @@ var Matrix4x4 = (function () {
 
             // This statement checks to see if the viewing volume is symmetric.
             // If it is it returns the matrix as the first Matrix instead of the second.
+            // JD: Your last element was 0.0 when it should have been 1.0!
             if (right === -left && top === -bottom) {
                 return new Matrix4x4 (
                         1.0 / right,       0.0,          0.0,                   0.0,
                                 0.0, 1.0 / top,          0.0,                   0.0,
                                 0.0,       0.0, -2.0 / depth, -(far + near) / depth,
-                                0.0,       0.0,          0.0,                   0.0);
+                                0.0,       0.0,          0.0,                   1.0);
             } else {
                 return new Matrix4x4 (
                         2.0 / width,          0.0,          0.0,  -(right + left) / width,
                                 0.0, 2.0 / height,          0.0, -(top + bottom) / height,
                                 0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
-                                0.0,          0.0,          0.0,                      0.0);                
+                                0.0,          0.0,          0.0,                      1.0);
             }
     };
 
     matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
         var width = right - left,
-            height = top - botom,
+            height = top - bottom, // JD: This was "botom."
             depth = far - near;
 
         // This statement checks to see if the viewing volume is symmetric.
@@ -170,6 +171,14 @@ var Matrix4x4 = (function () {
     };
 
     // Scaling and translation.
+    // JD: OK, so clearly, these are not yet finished.  However, before you go
+    //     further, based on the code you have placed here you are running the
+    //     risk of excessive repetition that is quite avoidable.
+    //
+    //     If you think about it, translate, scale, and rotate really are just
+    //     matrix multiplications of the respective "pure" matrices and the
+    //     "this" matrix.  If you code them that way, then you will avoid the
+    //     repetition (while also leveraging your matrix multiplication code).
     matrix4x4.prototype.translate = function (v) {
         var x = v.x(),
             y = v.y(),
@@ -207,6 +216,8 @@ var Matrix4x4 = (function () {
         return result;
     };
 
+    // JD: This is missing an argument---an incoming vector only defines
+    //     the axis of rotation.  You still need an angle.
     matrix4x4.prototype.rotate = function (v) {
         var x = v.x(),
             y = v.y(),

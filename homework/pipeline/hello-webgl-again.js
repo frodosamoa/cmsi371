@@ -216,6 +216,8 @@
     vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    // JD: You forgot to set up the "hook" for projectionMatrix into the shade.
+    projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
 
     /*
      * Displays all of the objects, including any leafs an object has.
@@ -245,15 +247,17 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        //gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
+        // JD: You can't just comment this out; this is tantamount to
+        //     keeping this variable as null in the shader.
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
 
-        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(getOrthomatrix(
+        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix( // JD: This was getOrthomatrix by itself.
                     -4,
                     4,
                     -2,
                     2,
                     -10,
-                    10)));
+                    10).convertToWebGL())); // JD: Don't forget the conversion.
         // Display the objects.
         drawObjects(objectsToDraw);
 
