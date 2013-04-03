@@ -86,7 +86,6 @@ var Matrix4x4 = (function () {
 
             // This statement checks to see if the viewing volume is symmetric.
             // If it is it returns the matrix as the first Matrix instead of the second.
-            // JD: Your last element was 0.0 when it should have been 1.0!
             if (right === -left && top === -bottom) {
                 return new Matrix4x4 (
                         1.0 / right,       0.0,          0.0,                   0.0,
@@ -104,7 +103,7 @@ var Matrix4x4 = (function () {
 
     matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
         var width = right - left,
-            height = top - bottom, // JD: This was "botom."
+            height = top - bottom,
             depth = far - near;
 
         // This statement checks to see if the viewing volume is symmetric.
