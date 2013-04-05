@@ -123,6 +123,18 @@ var Matrix4x4 = (function () {
         }
     };
 
+    matrix4x4.getLookAtMatrix = function (p, q, up) {
+        var xe = (p.subtract(q).unit(),
+            ye = (up.subtract(up.projection(ze))).unit(),
+            ze = ye.cross(ze);
+
+            return new Matrix4x4 (
+                xe.x(), xe.y(), xe.z(), -(p.dot(xe)),
+                ye.x(), ye.y(), ye.z(), -(p.dot(ye)),
+                ze.x(), ze.y(), ze.z(), -(p.dot(ze)),
+                     0,      0,      0,            1);
+    }
+
     // Basic methods.
     matrix4x4.prototype.dimensions = function () {
         return this.elements.length;
@@ -178,41 +190,12 @@ var Matrix4x4 = (function () {
     //     matrix multiplications of the respective "pure" matrices and the
     //     "this" matrix.  If you code them that way, then you will avoid the
     //     repetition (while also leveraging your matrix multiplication code).
-    matrix4x4.prototype.translate = function (v) {
-        var x = v.x(),
-            y = v.y(),
-            z = v.z();
-
-        for (i = 0; i < this.rows(); i += 1) {
-            for (j = 0; j < m.columns(); j += 1) {
-                sum = 0;
-                for (k = 0; k < this.rows(); k += 1) {
-                    sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
-                }
-                result.elements[(i * 4) + j] = sum;
-            }
-        }
-        
-        return result;
+    matrix4x4.prototype.translate = function () {
+        return this.multiply(Matrix4x4.getTranslationMatrix());
     };
 
-    
-    matrix4x4.prototype.scale = function (v) {
-        var x = v.x(),
-            y = v.y(),
-            z = v.z(),
-            mult,
-            i,
-            j;
-
-            for (i = 0; i < this.rows(); i++) {
-                for (j = 0; j < 3; j++) {
-                    mult = (i === 1) ? 1 : (i === 2) ? 2 : 3;
-                    this.elements[i + (j * 4)] *= mult;
-                }   
-            }
-        
-        return result;
+    matrix4x4.prototype.scale = function () {
+        return this.multiply(Matrix4x4.getScaleMatrix());
     };
 
     // JD: This is missing an argument---an incoming vector only defines
@@ -299,6 +282,8 @@ var Matrix4x4 = (function () {
                this.columnAt(2).concat(
                this.columnAt(3))));
     };
+
+
 
     return matrix4x4;
 })();
