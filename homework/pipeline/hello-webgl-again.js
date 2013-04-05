@@ -26,6 +26,7 @@
         currentInterval,
         rotationMatrix,
         projectionMatrix,
+        cameraMatrix,
         vertexPosition,
         vertexColor,
 
@@ -148,6 +149,7 @@
     gl.enableVertexAttribArray(vertexColor);
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+    cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
 
     /*
      * Displays all of the objects, including any leafs an object has.
@@ -185,6 +187,15 @@
         // All done.
         gl.flush();
     };
+
+    // Here is the camera matrix. 
+    /*
+    gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
+        Matrix4x4().getLookAtMatrix(
+            new Vector (0, 1, 0),
+            new Vector (0, 0, 0),
+            new Vector (0, 1, 0)
+        ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-6, 6, -6, 6, -20, 20).convertToWebGL()));
