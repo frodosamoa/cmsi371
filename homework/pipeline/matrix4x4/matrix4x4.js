@@ -113,18 +113,20 @@ var Matrix4x4 = (function () {
                 near / right,        0.0,                   0.0,                          0.0,
                          0.0, near / top,                   0.0,                          0.0,
                          0.0,        0.0, -(far + near) / depth,  (-2.0 * near * far) / depth,
-                         0.0,        0.0,                  -1.0,                          0.0);
+                         0.0,        0.0,                  -1.0,                          0.0
+            );
         } else {
             return new Matrix4x4 (
                 2.0 * near / width,                 0.0,  (right + left) / width,                            0,
                                0.0, 2.0 * near / height, (top + bottom) / height,                            0,
                                0.0,                 0.0,   -(far + near) / depth,  (-2.0 * near * far) / depth,
-                               0.0,                 0.0,                    -1.0,                          0.0);
+                               0.0,                 0.0,                    -1.0,                          0.0
+            );
         }
     };
 
     matrix4x4.getLookAtMatrix = function (p, q, up) {
-        var ze = (p.subtract(q).unit(),
+        var ze = p.subtract(q).unit(),
             ye = (up.subtract(up.projection(ze))).unit(),
             xe = ye.cross(ze);
 
@@ -132,8 +134,9 @@ var Matrix4x4 = (function () {
                 xe.x(), xe.y(), xe.z(), -(p.dot(xe)),
                 ye.x(), ye.y(), ye.z(), -(p.dot(ye)),
                 ze.x(), ze.y(), ze.z(), -(p.dot(ze)),
-                     0,      0,      0,            1);
-    }
+                     0,      0,      0,            1
+            );
+    };
 
     // Basic methods.
     matrix4x4.prototype.dimensions = function () {
@@ -242,8 +245,6 @@ var Matrix4x4 = (function () {
                this.columnAt(2).concat(
                this.columnAt(3))));
     };
-
-
 
     return matrix4x4;
 })();
