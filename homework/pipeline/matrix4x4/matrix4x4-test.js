@@ -28,7 +28,7 @@ $(function () {
                            4,  5,  6,  7,
                            8,  9, 10, 11,
                           12, 13, 14, 15);
-        // JD: Nice convenience functions here.
+
         deepEqual(m.rowAt(0),
             [0, 1, 2, 3],
             "Matrix first row by index");
@@ -112,8 +112,6 @@ $(function () {
 
     test("Transformation, Scaling, and Rotation Matrices", function () {
         var m = Matrix4x4.getTranslationMatrix(5, 9, -1);
-// JD: I think what you have below is leftover code.
-//            v = new Vector (3, 3, 3);
         deepEqual(m.elements,
             [1, 0, 0, 5,
              0, 1, 0, 9,
@@ -157,45 +155,6 @@ $(function () {
              0, Math.sin(87 * Math.PI / 180),  Math.cos(87 * Math.PI / 180), 0,
              0,                            0,                             0, 1],
             "Pure rotation matrix by 87 degrees about the x-axis");
-    });
-
-    test("Addition and Subtraction", function () {
-        var m1 = new Matrix4x4(  0,       1,        2,  3,
-                                90,     1024,      67, 32,
-                               123,  0.12345, Math.PI,  6,
-                               3.2,   444444,       0,  7),
-            m2 = new Matrix4x4(  56,        8,    Math.cos(90),   3,
-                                0.1,       45,              67,  32,
-                                 13,   34 ^ 3,        -Math.PI,  42,
-                                543,    11144, Math.pow(32, 4),   7),
-            mresult = m1.add(m2);
-
-            equal(mresult.dimensions(), 16, "Matrix sum size check");
-
-            deepEqual(mresult.elements,
-                [   56,        9, 1.55192638387083,  6,
-                  90.1,     1069,              134, 64,
-                   136, 33.12345,                0, 48,
-                 546.2,   455588,          1048576, 14],
-                "Matrix sum test");
-
-        m1 = new Matrix4x4(   0,       1,       2,  3,
-                             90,     1024,      67, 32,
-                            123,  0.12345, Math.PI,  6,
-                            3.2,   444444,       0,  7),
-        m2 = new Matrix4x4(  56,        8,    Math.cos(90),   3,
-                            0.1,       45,              67,  32,
-                             13,   34 ^ 3,        -Math.PI,  42,
-                            543,    11144, Math.pow(32, 4),   7);
-        mresult = m1.subtract(m2);
-        equal(mresult.dimensions(), 16, "Matrix difference size check");
-
-        deepEqual(mresult.elements,
-            [   -56,        -7, 2.4480736161291703,   0,
-               89.9,       979,                  0,   0,
-                110, -32.87655,  6.283185307179586, -36,
-             -539.8,    433300,           -1048576,   0],
-            "Matrix difference test");
     });
 
     test("Matrix Projection", function () {
@@ -259,7 +218,7 @@ $(function () {
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
                                12, 13, 14, 15);
-            mconversion = m.conlumnOrder();
+            mconversion = m.columnOrder();
 
         equal(mconversion.length, m.dimensions(), "Matrix conversion size check");
         deepEqual(mconversion,
