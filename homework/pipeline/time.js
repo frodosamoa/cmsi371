@@ -82,7 +82,7 @@
             color: { r: 1.0, g: 0.0, b: 0.0 },
             vertices: Shapes.toRawLineArray(Shapes.sphere()),
             mode: gl.LINES
-        } 
+        }
     ];
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
@@ -111,7 +111,7 @@
                 vertexify(objectsToDraw[i].leafs);
             }
         }
-    },  
+    };  
 
     // Initialize the shaders.
     shaderProgram = GLSLUtilities.initSimpleShaderProgram(
@@ -179,7 +179,7 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(new Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()));
         
         // Display the objects.
         drawObjects(objectsToDraw);
@@ -198,7 +198,7 @@
         ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(new Matrix4x4.getOrthoMatrix(-6, 6, -6, 6, -20, 20).columnOrder()));
+    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-6, 6, -6, 6, -20, 20).columnOrder()));
 
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);
