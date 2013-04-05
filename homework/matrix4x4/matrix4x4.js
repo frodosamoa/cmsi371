@@ -124,9 +124,9 @@ var Matrix4x4 = (function () {
     };
 
     matrix4x4.getLookAtMatrix = function (p, q, up) {
-        var xe = (p.subtract(q).unit(),
+        var ze = (p.subtract(q).unit(),
             ye = (up.subtract(up.projection(ze))).unit(),
-            ze = ye.cross(ze);
+            xe = ye.cross(ze);
 
             return new Matrix4x4 (
                 xe.x(), xe.y(), xe.z(), -(p.dot(xe)),
@@ -182,14 +182,6 @@ var Matrix4x4 = (function () {
     };
 
     // Scaling and translation.
-    // JD: OK, so clearly, these are not yet finished.  However, before you go
-    //     further, based on the code you have placed here you are running the
-    //     risk of excessive repetition that is quite avoidable.
-    //
-    //     If you think about it, translate, scale, and rotate really are just
-    //     matrix multiplications of the respective "pure" matrices and the
-    //     "this" matrix.  If you code them that way, then you will avoid the
-    //     repetition (while also leveraging your matrix multiplication code).
     matrix4x4.prototype.translate = function () {
         return this.multiply(Matrix4x4.getTranslationMatrix());
     };
@@ -200,7 +192,7 @@ var Matrix4x4 = (function () {
 
     // JD: This is missing an argument---an incoming vector only defines
     //     the axis of rotation.  You still need an angle.
-    matrix4x4.prototype.rotate = function (v) {
+    matrix4x4.prototype.rotate = function (v, angle) {
         var x = v.x(),
             y = v.y(),
             z = v.z();
