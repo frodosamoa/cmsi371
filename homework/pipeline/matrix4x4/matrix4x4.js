@@ -185,32 +185,10 @@ var Matrix4x4 = (function () {
     };
 
     // Scaling and translation.
-    matrix4x4.prototype.translate = function () {
-        return this.multiply(Matrix4x4.getTranslationMatrix());
-    };
+    matrix4x4.prototype.transform = function (transform) {
 
-    matrix4x4.prototype.scale = function () {
-        return this.multiply(Matrix4x4.getScaleMatrix());
-    };
-
-    // JD: This is missing an argument---an incoming vector only defines
-    //     the axis of rotation.  You still need an angle.
-    matrix4x4.prototype.rotate = function (v, angle) {
-        var x = v.x(),
-            y = v.y(),
-            z = v.z();
-
-        for (i = 0; i < this.rows(); i += 1) {
-            for (j = 0; j < m.columns(); j += 1) {
-                sum = 0;
-                for (k = 0; k < this.rows(); k += 1) {
-                    sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
-                }
-                result.elements[(i * 4) + j] = sum;
-            }
-        }
         
-        return result;
+        return this.multiply(Matrix4x4.getTranslationMatrix());
     };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
