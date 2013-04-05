@@ -44,9 +44,10 @@
             varying vec4 finalVertexColor;
             uniform mat4 rotationMatrix;
             uniform mat4 projectionMatrix;
+            uniform mat4 cameraMatrix;
 
             void main(void) {
-                gl_Position = projectionMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
+                gl_Position = cameraMatrix * projectionMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
             }
