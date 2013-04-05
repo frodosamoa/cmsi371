@@ -179,7 +179,7 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).convertToWebGL()));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(new Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()));
         
         // Display the objects.
         drawObjects(objectsToDraw);
@@ -198,7 +198,7 @@
         ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-6, 6, -6, 6, -20, 20).convertToWebGL()));
+    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(new Matrix4x4.getOrthoMatrix(-6, 6, -6, 6, -20, 20).columnOrder()));
 
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);
@@ -222,4 +222,4 @@
         }
     });
 
-}(document.getElementById("hello-webgl")));
+}(document.getElementById("time")));
