@@ -204,7 +204,7 @@ var Matrix4x4 = (function () {
     matrix4x4.prototype.scale = function (scale) {
         var scale = new Matrix4x();
 
-        translate = Matrix4x4.getScaleMatrix(
+        scale = Matrix4x4.getScaleMatrix(
             scale.sx || 0,
             scale.sy || 0,
             scale.sz || 0
@@ -223,9 +223,38 @@ var Matrix4x4 = (function () {
             vector.y() || 0,
             vector.z() ||0
         );
-        
+
         return this.multiply(rotate);
     };
+
+    // Combining the previous functions.
+
+    matrix4x4.prototype.transform = function (transforms) {
+        var translate = new Matrix4x4(),
+            scale = new Matrix4x4(),
+            rotate = new Matrix4x4();
+
+        translate = new Matrix4x4.getTranslationMatrix(
+            translations.tx || 0,
+            translations.ty || 0,
+            translations.tz || 0
+        );
+
+        scale = Matrix4x4.getScaleMatrix(
+            scale.sx || 0,
+            scale.sy || 0,
+            scale.sz || 0
+        );
+
+        rotate = Matrix.getRotationMatrix(
+            angle || 0,
+            vector.x() || 0,
+            vector.y() || 0,
+            vector.z() ||0
+        );
+
+        return translate.multiply(scale.multiply(rotate));
+    }
 
     // Matrix multiplication. We do not need to check if the first matrix's width
     // is the same as the second's matrix's height since we are only dealing with
