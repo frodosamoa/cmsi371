@@ -139,6 +139,12 @@
      * Displays all of the objects, including any leafs an object has.
      */
     drawObjects = function (objectsToDraw) {
+        var i;
+
+        if (objectsToDraw.transforms) {
+            gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.transform(objectsToDraw.transforms).columnOrder()));
+        }
+
         for (i = 0; i < objectsToDraw.length; i += 1) {
             // Set the varying colors.
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
@@ -148,7 +154,6 @@
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
             gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
             gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
-            //gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array());
 
             if (objectsToDraw[i].leafs) {
                     drawObjects(objectsToDraw[i].leafs);
@@ -173,7 +178,7 @@
         gl.flush();
     };
 
-    // Here is the camera matrix. 
+    // Here is the camera matrix. TODO
     /*
     gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
         Matrix4x4().getLookAtMatrix(
@@ -183,7 +188,7 @@
         ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-2, 2, -2, 2, -2, 2).columnOrder()));
+    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()));
 
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);
