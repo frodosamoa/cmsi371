@@ -67,7 +67,7 @@
             mode: gl.TRIANGLES,
             transforms: {
                 tx : 0.25,
-                ty : 0.25,
+                ty : 0.25
             }
         }
     ];
