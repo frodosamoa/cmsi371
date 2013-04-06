@@ -213,7 +213,7 @@ var Matrix4x4 = (function () {
         );
 
         return translate.multiply(scale);
-    }
+    };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
     // is the same as the second's matrix's height since we are only dealing with
