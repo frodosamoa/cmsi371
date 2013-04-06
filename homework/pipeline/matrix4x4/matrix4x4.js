@@ -217,10 +217,13 @@ var Matrix4x4 = (function () {
     matrix4x4.prototype.rotate = function (angle, vector) {
         var rotate = new Matrix4x4();
 
-        if (vector.x() === 0 && vector.y() === 0 && vector.z() === 0) {
-        } else {
-
-        }
+        rotate = Matrix.getRotationMatrix(
+            angle || 0,
+            vector.x() || 0,
+            vector.y() || 0,
+            vector.z() ||0
+        );
+        
         return this.multiply(rotate);
     };
 
