@@ -209,10 +209,10 @@ var Matrix4x4 = (function () {
             transforms.angle || 0,
             transforms.vector.x() || 0,
             transforms.vector.y() || 0,
-            transforms.vector.z() ||0
+            transforms.vector.z() || 0
         );
 
-        return translate.multiply(scale.multiply(rotate));
+        return translate.multiply(scale);
     }
 
     // Matrix multiplication. We do not need to check if the first matrix's width
