@@ -91,6 +91,7 @@
                     );
                 }
             }
+
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
 
@@ -143,9 +144,6 @@
      * Displays all of the objects, including any leafs an object has.
      */
     drawObjects = function (objectsToDraw) {
-        var i;
-
-
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
             if (objectsToDraw[i].transforms) {
