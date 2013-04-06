@@ -200,9 +200,9 @@ var Matrix4x4 = (function () {
         );
 
         scale = Matrix4x4.getScaleMatrix(
-            transforms.sx || 0,
-            transforms.sy || 0,
-            transforms.sz || 0
+            transforms.sx || 1,
+            transforms.sy || 1,
+            transforms.sz || 1
         );
 
         rotate = Matrix.getRotationMatrix(
