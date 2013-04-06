@@ -138,23 +138,17 @@ var Matrix4x4 = (function () {
             );
     };
 
-    // Basic methods.
+    // Returns the length of the elements in the matrix (16).
     matrix4x4.prototype.dimensions = function () {
         return this.elements.length;
     };
 
+    // Returns the array of elements in the matrix.
     matrix4x4.prototype.elements = function () {
         return this.elements;
     };
 
-    matrix4x4.prototype.rows = function () {
-        return this.elements.length / 4;
-    };
-
-    matrix4x4.prototype.columns = function () {
-        return this.elements.length / 4;
-    };
-
+    // Returns the element specified by the user.
     matrix4x4.prototype.elementAt = function (index) {
         if (index < 0 || index > 15) {
             throw "Index out of bounds";
@@ -162,6 +156,7 @@ var Matrix4x4 = (function () {
         return this.elements[index];
     };
 
+    // Returns the row specified by the user.
     matrix4x4.prototype.rowAt = function (index) {
         if (index < 0 || index > 3) {
             throw "Index out of bounds";
@@ -173,6 +168,7 @@ var Matrix4x4 = (function () {
                 this.elements[3 + (index * 4)]];
     };
 
+    // Returns the column specified by the user.
     matrix4x4.prototype.columnAt = function (index) {
         if (index < 0 || index > 3) {
             throw "Index out of bounds";
@@ -184,16 +180,51 @@ var Matrix4x4 = (function () {
                 this.elements[index + 12]];
     };
 
-    // Scaling and translation.
-    matrix4x4.prototype.transform = function (transform) {
+    // An instance translate function.
+    matrix4x4.prototype.translate = function (translations) {
+        var translate = new Matrix4x4();
 
-        
-        return this.multiply(Matrix4x4.getTranslationMatrix());
+        translate = Matrix4x4.getTranslationMatrix(
+            translations.tx || 0,
+            translations.ty || 0,
+            translations.tz || 0
+        );
+
+        return this.multiply(translate);
+    }
+
+    // An instance scale function.
+    matrix4x4.prototype.scale = function (scale) {
+        var scale = new Matrix4x();
+
+        translate = Matrix4x4.getScaleMatrix(
+            scale.sx || 0,
+            scale.sy || 0,
+            scale.sz || 0
+        );
+
+        return this.multiply(scale);
+    };
+
+    // An instance rotate function.
+    matrix4x4.prototype.rotate = function (angle, vector) {
+        var rotate = new Matrix4x4();
+
+        if (vector.x() === 0 && vector.y() === 0 && vector.z() === 0) {
+            translate = 
+        } else {
+            translate = Matrix4x4.getTranslationMatrix (
+
+
+            );
+        }
+        return this.multiply(translate);
     };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
     // is the same as the second's matrix's height since we are only dealing with
-    // 4x4 matrices.
+    // 4x4 matrices. We do however have to check if the dimensions of both are the
+    // same.
     matrix4x4.prototype.multiply = function (m) {
         var result = new Matrix4x4(),
             i,
@@ -217,6 +248,7 @@ var Matrix4x4 = (function () {
         return result;
     };
 
+    // A conversion function for ease of use with WegGL.
     matrix4x4.prototype.columnOrder = function () {
         return this.columnAt(0).concat(
                this.columnAt(1).concat(
