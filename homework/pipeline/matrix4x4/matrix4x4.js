@@ -145,6 +145,43 @@ var Matrix4x4 = (function () {
             );
     };
 
+    // Combining the previous functions.
+    matrix4x4.transform = function (transforms) {
+        var translate = new Matrix4x4(),
+            scale = new Matrix4x4(),
+            rotate = new Matrix4x4();
+
+        translate = Matrix4x4.getTranslationMatrix(
+            transforms.tx || 0,
+            transforms.ty || 0,
+            transforms.tz || 0
+        );
+        console.log(translate.elements);
+
+        scale = Matrix4x4.getScaleMatrix(
+            transforms.sx || 1,
+            transforms.sy || 1,
+            transforms.sz || 1
+        );
+
+        // We need to see if the user specifies a valid vector to rotate by. If not,
+        /*// we will just use a vector of (0, 0, 0).
+        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
+            transforms.rotationVector.z() === 0) {
+            ratate = Matrix4x4.getRotationMatrix(
+                transforms.angle, 1, 1, 1);
+        } else {
+            rotate = Matrix.getRotationMatrix(
+                transforms.angle || 0,
+                transforms.rotationVector.x() || 0,
+                transforms.rotationVector.y() || 0,
+                transforms.rotationVector.z() || 0
+            );
+        }*/
+
+        return translate.multiply(scale.multiply(rotate));
+    };
+
     // Returns the length of the elements in the matrix (16).
     matrix4x4.prototype.dimensions = function () {
         return this.elements.length;
@@ -185,42 +222,6 @@ var Matrix4x4 = (function () {
                 this.elements[index + 4],
                 this.elements[index + 8],
                 this.elements[index + 12]];
-    };
-
-    // Combining the previous functions.
-    matrix4x4.prototype.transform = function (transforms) {
-        var translate = new Matrix4x4(),
-            scale = new Matrix4x4(),
-            rotate = new Matrix4x4();
-
-        translate = Matrix4x4.getTranslationMatrix(
-            transforms.tx || 0,
-            transforms.ty || 0,
-            transforms.tz || 0
-        );
-
-        scale = Matrix4x4.getScaleMatrix(
-            transforms.sx || 1,
-            transforms.sy || 1,
-            transforms.sz || 1
-        );
-
-        // We need to see if the user specifies a valid vector to rotate by. If not,
-        // we will just use a vector of (0, 0, 0).
-        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
-            transforms.rotationVector.z() === 0) {
-            ratate = Matrix4x4.getRotationMatrix(
-                transforms.angle, 1, 1, 1);
-        } else {
-            rotate = Matrix.getRotationMatrix(
-                transforms.angle || 0,
-                transforms.rotationVector.x() || 0,
-                transforms.rotationVector.y() || 0,
-                transforms.rotationVector.z() || 0
-            );
-        }
-
-        return translate.multiply(scale.multiply(rotate));
     };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
