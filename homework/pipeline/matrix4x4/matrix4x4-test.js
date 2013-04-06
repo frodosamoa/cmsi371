@@ -158,23 +158,23 @@ $(function () {
     });
 
     test("Matrix Projection", function () {
-        var m = new Matrix4x4( 0,  1,  2,  3,
-                                4,  5,  6,  7,
-                                8,  9, 10, 11,
-                               12, 13, 14, 15);
-            mresult = Matrix4x4.getOrthoMatrix(10, 10, 10, 10, 10, 10);
-        equal(mresult.dimensions(), 16, "Matrix ortho projection size check");
+        var m = new Matrix4x4.getOrthoMatrix(-2, 2, -10, 10, -5, 5);
+        equal(m.dimensions(), 16, "Pure matrix ortho projection size check");
+        deepEqual(m.elements,
+            [0.5,   0,    0, 0,
+               0, 0.1,    0, 0,
+               0,   0, -0.2, 0,
+               0,   0,    0, 1],
+            "Pure matrix ortho projection test");
 
-        // JD: So these tests are unfinished.  Typically you should mark
-        //     these with a // TODO comment.
-        equal(0, 0, "Matrix ortho projection");
-        var m = new Matrix4x4( 0,  1,  2,  3,
-                                4,  5,  6,  7,
-                                8,  9, 10, 11,
-                               12, 13, 14, 15);
-            mresult = Matrix4x4.getFrustumMatrix(30, 30, 20, 20, 10, 10);
-        equal(0, 0, "Matrix frustum projection size check");
-        equal(0, 0, "Matrix frustum projection");
+        var m = Matrix4x4.getFrustumMatrix(-2, 2, -2, 2, -2, 2);
+        equal(m.dimensions(), 16, "Pure matrix frustum projection size check");
+        deepEqual(m.elements,
+            [-1,  0,  0, 0,
+              0, -1,  0, 0,
+              0,  0,  0, 2,
+              0,  0, -1, 0], 
+            "Pure matrix frustum projection test");
     });
 
     test("Matrix Multiplication", function () {
