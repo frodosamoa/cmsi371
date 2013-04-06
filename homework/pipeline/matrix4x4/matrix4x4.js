@@ -187,70 +187,29 @@ var Matrix4x4 = (function () {
                 this.elements[index + 12]];
     };
 
-    // An instance translate function.
-    matrix4x4.prototype.translate = function (translations) {
-        var translate = new Matrix4x4();
-
-        translate = Matrix4x4.getTranslationMatrix(
-            translations.tx || 0,
-            translations.ty || 0,
-            translations.tz || 0
-        );
-
-        return this.multiply(translate);
-    }
-
-    // An instance scale function.
-    matrix4x4.prototype.scale = function (scale) {
-        var scale = new Matrix4x();
-
-        scale = Matrix4x4.getScaleMatrix(
-            scale.sx || 0,
-            scale.sy || 0,
-            scale.sz || 0
-        );
-
-        return this.multiply(scale);
-    };
-
-    // An instance rotate function.
-    matrix4x4.prototype.rotate = function (angle, vector) {
-        var rotate = new Matrix4x4();
-
-        rotate = Matrix.getRotationMatrix(
-            angle || 0,
-            vector.x() || 0,
-            vector.y() || 0,
-            vector.z() ||0
-        );
-
-        return this.multiply(rotate);
-    };
-
     // Combining the previous functions.
-
     matrix4x4.prototype.transform = function (transforms) {
         var translate = new Matrix4x4(),
             scale = new Matrix4x4(),
             rotate = new Matrix4x4();
 
         translate = new Matrix4x4.getTranslationMatrix(
-            translations.tx || 0,
-            translations.ty || 0,
-            translations.tz || 0
+            transforms.tx || 0,
+            transforms.ty || 0,
+            transforms.tz || 0
         );
 
         scale = Matrix4x4.getScaleMatrix(
-            scale.sx || 0,
-            scale.sy || 0,
-            scale.sz || 0
+            transforms.sx || 0,
+            transforms.sy || 0,
+            transforms.sz || 0
         );
 
         rotate = Matrix.getRotationMatrix(
-            angle || 0,
-            vector.x() || 0,
-            vector.y() || 0,
-            vector.z() ||0
+            transforms.angle || 0,
+            transforms.vector.x() || 0,
+            transforms.vector.y() || 0,
+            transforms.vector.z() ||0
         );
 
         return translate.multiply(scale.multiply(rotate));
