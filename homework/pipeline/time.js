@@ -148,7 +148,7 @@
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
-            if (objectsToDraw.transforms) {
+            if (objectsToDraw[i].transforms) {
                 gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.transform(objectsToDraw.transforms).columnOrder()));
             }
 
