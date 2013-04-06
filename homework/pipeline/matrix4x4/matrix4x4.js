@@ -188,7 +188,7 @@ var Matrix4x4 = (function () {
     };
 
     // Combining the previous functions.
-    matrix4x4.prototype.transform = function (transforms) {
+    matrix4x4.transform = function (transforms) {
         var translate = new Matrix4x4(),
             scale = new Matrix4x4(),
             rotate = new Matrix4x4();
