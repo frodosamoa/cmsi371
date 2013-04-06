@@ -188,34 +188,35 @@ var Matrix4x4 = (function () {
     };
 
     // Combining the previous functions.
-    matrix4x4.transform = function (transforms) {
+    matrix4x4.prototype.transform = function (transforms) {
         var translate = new Matrix4x4(),
             scale = new Matrix4x4(),
             rotate = new Matrix4x4();
 
-        translate = new Matrix4x4.getTranslationMatrix(
+        translate = Matrix4x4.getTranslationMatrix(
             transforms.tx || 0,
             transforms.ty || 0,
             transforms.tz || 0
         );
 
-        scale = new Matrix4x4.getScaleMatrix(
+        scale = Matrix4x4.getScaleMatrix(
             transforms.sx || 1,
             transforms.sy || 1,
             transforms.sz || 1
         );
 
-        // We need to see if the user specifies
-        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotr.y() === 0 &&
-            transforms.rotationVecotr.z() === 0) {
-            ratate = new Matrix4x4.getRotationMatrix(
+        // We need to see if the user specifies a valid vector to rotate by. If not,
+        // we will just use a vector of (0, 0, 0).
+        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
+            transforms.rotationVector.z() === 0) {
+            ratate = Matrix4x4.getRotationMatrix(
                 transforms.angle, 1, 1, 1);
         } else {
-            rotate = new Matrix.getRotationMatrix(
+            rotate = Matrix.getRotationMatrix(
                 transforms.angle || 0,
-                transforms.vector.x() || 0,
-                transforms.vector.y() || 0,
-                transforms.vector.z() || 0
+                transforms.rotationVector.x() || 0,
+                transforms.rotationVector.y() || 0,
+                transforms.rotationVector.z() || 0
             );
         }
 
