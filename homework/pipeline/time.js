@@ -64,7 +64,11 @@
         {
             color: { r: 0.7, g: 0.7, b: 0.7 },
             vertices: Shapes.toRawTriangleArray(Shapes.sphere()),
-            mode: gl.TRIANGLES
+            mode: gl.TRIANGLES,
+            transforms: {
+                tx : 0.25,
+                ty : 0.25,
+            }
         }
     ];
 
@@ -141,11 +145,13 @@
     drawObjects = function (objectsToDraw) {
         var i;
 
-        if (objectsToDraw.transforms) {
-            gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.transform(objectsToDraw.transforms).columnOrder()));
-        }
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
+
+            if (objectsToDraw.transforms) {
+                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.transform(objectsToDraw.transforms).columnOrder()));
+            }
+
             // Set the varying colors.
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
             gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
