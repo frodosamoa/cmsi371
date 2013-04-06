@@ -199,20 +199,27 @@ var Matrix4x4 = (function () {
             transforms.tz || 0
         );
 
-        scale = Matrix4x4.getScaleMatrix(
+        scale = new Matrix4x4.getScaleMatrix(
             transforms.sx || 1,
             transforms.sy || 1,
             transforms.sz || 1
         );
 
-        rotate = Matrix.getRotationMatrix(
-            transforms.angle || 0,
-            transforms.vector.x() || 0,
-            transforms.vector.y() || 0,
-            transforms.vector.z() || 0
-        );
+        // We need to see if the user specifies
+        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotr.y() === 0 &&
+            transforms.rotationVecotr.z() === 0) {
+            ratate = new Matrix4x4.getRotationMatrix(
+                transforms.angle, 1, 1, 1);
+        } else {
+            rotate = new Matrix.getRotationMatrix(
+                transforms.angle || 0,
+                transforms.vector.x() || 0,
+                transforms.vector.y() || 0,
+                transforms.vector.z() || 0
+            );
+        }
 
-        return translate.multiply(scale);
+        return translate.multiply(scale.multiply(rotate));
     };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
