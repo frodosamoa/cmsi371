@@ -26,6 +26,7 @@
         currentInterval,
         rotationMatrix,
         projectionMatrix,
+        tranformMatrix,
         cameraMatrix,
         vertexPosition,
         vertexColor,
@@ -132,6 +133,7 @@
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
+    transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
 
     /*
      * Displays all of the objects, including any leafs an object has.
@@ -146,6 +148,7 @@
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
             gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
             gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
+            //gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array());
 
             if (objectsToDraw[i].leafs) {
                     drawObjects(objectsToDraw[i].leafs);
