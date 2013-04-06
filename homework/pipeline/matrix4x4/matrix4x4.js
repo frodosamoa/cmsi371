@@ -1,4 +1,5 @@
 var Matrix4x4 = (function () {
+    
     // Define the constructor.
     var matrix4x4 = function () {
         this.elements = arguments.length ?
@@ -16,6 +17,7 @@ var Matrix4x4 = (function () {
             }
         };
 
+    // Returns a pure translation matrix.
     matrix4x4.getTranslationMatrix = function (tx, ty, tz) {
         return new Matrix4x4(
             1, 0, 0, tx,
@@ -25,6 +27,7 @@ var Matrix4x4 = (function () {
         );
     };
 
+    // Returns a pure scale matrix.
     matrix4x4.getScaleMatrix = function (sx, sy, sz) {
         return new Matrix4x4(
             sx,  0,  0, 0,
@@ -34,6 +37,7 @@ var Matrix4x4 = (function () {
         );
     };
 
+    // Returns a pure rotation matrix.
     matrix4x4.getRotationMatrix = function (angle, x, y, z) {
         // In production code, this function should be associated
         // with a matrix object with associated functions.
@@ -79,6 +83,7 @@ var Matrix4x4 = (function () {
         );
     };
 
+    // Returns a pure ortho matrix.
     matrix4x4.getOrthoMatrix = function (left, right, bottom, top, near, far) {
         var width = right - left,
             height = top - bottom,
@@ -101,6 +106,7 @@ var Matrix4x4 = (function () {
             }
     };
 
+    // Returns a pure frustum matrix.
     matrix4x4.getFrustumMatrix = function (left, right, bottom, top, near, far) {
         var width = right - left,
             height = top - bottom,
@@ -125,6 +131,7 @@ var Matrix4x4 = (function () {
         }
     };
 
+    // Returns a pure look at (camera) matrix.
     matrix4x4.getLookAtMatrix = function (p, q, up) {
         var ze = p.subtract(q).unit(),
             ye = (up.subtract(up.projection(ze))).unit(),
