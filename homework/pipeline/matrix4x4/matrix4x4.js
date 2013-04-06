@@ -218,14 +218,10 @@ var Matrix4x4 = (function () {
         var rotate = new Matrix4x4();
 
         if (vector.x() === 0 && vector.y() === 0 && vector.z() === 0) {
-            translate = 
         } else {
-            translate = Matrix4x4.getTranslationMatrix (
 
-
-            );
         }
-        return this.multiply(translate);
+        return this.multiply(rotate);
     };
 
     // Matrix multiplication. We do not need to check if the first matrix's width
@@ -237,15 +233,17 @@ var Matrix4x4 = (function () {
             i,
             j,
             k,
-            sum;
+            sum
+            rows = 4
+            columns = 4;
 
         // Dimensionality check.
         checkDimensions(this, m);
 
-        for (i = 0; i < this.rows(); i += 1) {
-            for (j = 0; j < m.columns(); j += 1) {
+        for (i = 0; i < rows; i += 1) {
+            for (j = 0; j < columns; j += 1) {
                 sum = 0;
-                for (k = 0; k < this.rows(); k += 1) {
+                for (k = 0; k < rows; k += 1) {
                     sum += this.elementAt((i * 4) + k) * m.elementAt((k * 4) + j); 
                 }
                 result.elements[(i * 4) + j] = sum;
