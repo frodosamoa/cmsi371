@@ -213,7 +213,7 @@ $(function () {
             "4x4 matrix multiplication second test");
     });
 
-        test("Matrix Conversion and Convenience functions", function () {
+    test("Matrix Conversion and Convenience functions", function () {
         var m = new Matrix4x4(  0,  1,  2,  3,
                                 4,  5,  6,  7,
                                 8,  9, 10, 11,
