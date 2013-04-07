@@ -59,17 +59,35 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
+    sphereTriangleVertices = Shapes.toRawTriangleArray(Shapes.sphere());
+    sphereLineVertices = Shapes.toRawLineArray(Shapes.sphere());
+
     // Build the objects to display.
     objectsToDraw = [
         {
             color: { r: 0.7, g: 0.7, b: 0.7 },
-            vertices: Shapes.toRawTriangleArray(Shapes.sphere()),
+            vertices: sphereLineVertices,
+            mode: gl.LINES,
+            transforms: {
+                tx: 0.25,
+                sx: 0.3,
+                sy: 0.3,
+                rotationVector: new Vector (5, 5, 5),
+                angle: 50
+            }
+        },
+
+        {
+            color: { r: 0.7, g: 0.7, b: 0.7 },
+            vertices: sphereTriangleVertices,
             mode: gl.TRIANGLES,
             transforms: {
-                tx : 0.25,
-                ty : 0.25
+                tx: -0.25,
+                sx: 0.3,
+                sy: 0.3
             }
-        }
+        },
+
     ];
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
@@ -147,7 +165,7 @@
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
             if (objectsToDraw[i].transforms) {
-                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.transform(objectsToDraw.transforms).columnOrder()));
+                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()));
             }
 
             // Set the varying colors.
