@@ -63,6 +63,8 @@
     sphereLineVertices = Shapes.toRawLineArray(Shapes.sphere());
 
     // Build the objects to display.
+    // JD: This works on the top-level object...does it work as expected on
+    //     subobjects?  You should try that  ;-)
     objectsToDraw = [
         {
             color: { r: 0.7, g: 0.7, b: 0.7 },
@@ -191,6 +193,10 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
+        // JD: Note how, with the instance transform done, you can get rid of this
+        //     rotation matrix in terms of per-object rotation.  You can potentially
+        //     still use this for universal rotation, but then again that might be
+        //     superseded by the camera matrix when that is done.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()));
         
         // Display the objects.
@@ -210,7 +216,17 @@
         ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Float32Array(Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()));
+    // JD: I'm going to guess that you did this on purpose: project to the exact
+    //     same viewing volume initially in order to make sure that things work.
+    //     Good move, and yes, this works nicely.
+    //
+    //     But, hope you don't mind, I took the liverty of doing a little
+    //     reformatting so that the editor window need not be so wide.
+    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
+        new Float32Array(
+            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()
+        )
+    );
 
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);

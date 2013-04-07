@@ -157,6 +157,8 @@ $(function () {
             "Pure rotation matrix by 87 degrees about the x-axis");
     });
 
+    // JD: How about getTransformMatrix?
+
     test("Matrix Projection", function () {
         var m = new Matrix4x4.getOrthoMatrix(-2, 2, -10, 10, -5, 5);
         equal(m.dimensions(), 16, "Pure matrix ortho projection size check");
