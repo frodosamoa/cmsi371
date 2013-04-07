@@ -146,7 +146,7 @@ var Matrix4x4 = (function () {
     };
 
     // Combining the previous functions.
-    matrix4x4.transform = function (transforms) {
+    matrix4x4.getTransformMatrix = function (transforms) {
         var translate = new Matrix4x4(),
             scale = new Matrix4x4(),
             rotate = new Matrix4x4();
@@ -156,7 +156,6 @@ var Matrix4x4 = (function () {
             transforms.ty || 0,
             transforms.tz || 0
         );
-        console.log(translate.elements);
 
         scale = Matrix4x4.getScaleMatrix(
             transforms.sx || 1,
@@ -164,20 +163,23 @@ var Matrix4x4 = (function () {
             transforms.sz || 1
         );
 
-        // We need to see if the user specifies a valid vector to rotate by. If not,
-        /*// we will just use a vector of (0, 0, 0).
-        if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
-            transforms.rotationVector.z() === 0) {
-            ratate = Matrix4x4.getRotationMatrix(
-                transforms.angle, 1, 1, 1);
-        } else {
-            rotate = Matrix.getRotationMatrix(
-                transforms.angle || 0,
-                transforms.rotationVector.x() || 0,
-                transforms.rotationVector.y() || 0,
-                transforms.rotationVector.z() || 0
-            );
-        }*/
+        // Check to see if we have a rotation vector.
+        if (transforms.rotationVector) {
+            // If so, let us check if the user provided a vector of (0, 0, 0)
+            // If they did, then we rotate the object about the vector (1, 1, 1)
+            if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
+                transforms.rotationVector.z() === 0) {
+                ratate = Matrix4x4.getRotationMatrix(
+                    transforms.angle, 1, 1, 1);
+            } else {
+                rotate = Matrix4x4.getRotationMatrix(
+                    transforms.angle || 0,
+                    transforms.rotationVector.x() || 0,
+                    transforms.rotationVector.y() || 0,
+                    transforms.rotationVector.z() || 0
+                );
+            }
+        }
 
         return translate.multiply(scale.multiply(rotate));
     };
