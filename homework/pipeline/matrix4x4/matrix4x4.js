@@ -23,7 +23,7 @@ var Matrix4x4 = (function () {
             1, 0, 0, tx,
             0, 1, 0, ty,
             0, 0, 1, tz,
-            0, 0, 0, 1
+            0, 0, 0,  1
         );
     };
 
@@ -76,10 +76,10 @@ var Matrix4x4 = (function () {
 
         // GL expects its matrices in column major order.
         return new Matrix4x4(
-            (x2 * oneMinusC) + c, (xy * oneMinusC) - zs, (xz * oneMinusC) + ys, 0.0,
-            (xy * oneMinusC) + zs, (y2 * oneMinusC) + c, (yz * oneMinusC) - xs, 0.0,
-            (xz * oneMinusC) - ys, (yz * oneMinusC) + xs, (z2 * oneMinusC) + c, 0.0,
-            0.0, 0.0, 0.0, 1.0
+             (x2 * oneMinusC) + c, (xy * oneMinusC) - zs, (xz * oneMinusC) + ys, 0.0,
+            (xy * oneMinusC) + zs,  (y2 * oneMinusC) + c, (yz * oneMinusC) - xs, 0.0,
+            (xz * oneMinusC) - ys, (yz * oneMinusC) + xs,  (z2 * oneMinusC) + c, 0.0,
+                              0.0,                   0.0,                   0.0, 1.0
         );
     };
 
@@ -93,16 +93,18 @@ var Matrix4x4 = (function () {
             // If it is it returns the matrix as the first Matrix instead of the second.
             if (right === -left && top === -bottom) {
                 return new Matrix4x4 (
-                        1.0 / right,       0.0,          0.0,                   0.0,
-                                0.0, 1.0 / top,          0.0,                   0.0,
-                                0.0,       0.0, -2.0 / depth, -(far + near) / depth,
-                                0.0,       0.0,          0.0,                   1.0);
+                    1.0 / right,       0.0,          0.0,                   0.0,
+                            0.0, 1.0 / top,          0.0,                   0.0,
+                            0.0,       0.0, -2.0 / depth, -(far + near) / depth,
+                            0.0,       0.0,          0.0,                   1.0
+                );
             } else {
                 return new Matrix4x4 (
-                        2.0 / width,          0.0,          0.0,  -(right + left) / width,
-                                0.0, 2.0 / height,          0.0, -(top + bottom) / height,
-                                0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
-                                0.0,          0.0,          0.0,                      1.0);
+                    2.0 / width,          0.0,          0.0,  -(right + left) / width,
+                            0.0, 2.0 / height,          0.0, -(top + bottom) / height,
+                            0.0,          0.0, -2.0 / depth,    -(far + near) / depth,
+                            0.0,          0.0,          0.0,                      1.0
+                );
             }
     };
 
