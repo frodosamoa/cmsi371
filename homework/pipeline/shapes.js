@@ -8,10 +8,10 @@ var Shapes = {
     /*
      * Returns the vertices for a small sphere.
      */
-    cube: function () {
-        var X = 0.5,
-            Y = 0.5,
-            Z = 0.5;
+    cube: function (x, y, z) {
+        var X = x,
+            Y = y,
+            Z = z;
 
         return {
             vertices: [
@@ -40,6 +40,11 @@ var Shapes = {
                 [5, 1, 0]
             ]
         };
+    },
+
+    cylinder: function () {
+        var radius = 0.4,
+            height = 1;
     },
 
     /*
