@@ -58,8 +58,8 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    sphereTriangleVertices = Shapes.toRawTriangleArray(Shapes.sphere());
-    sphereLineVertices = Shapes.toRawLineArray(Shapes.sphere());
+    sphereTriangleVertices = Shapes.toRawTriangleArray(Shapes.sphere(25, 15));
+    sphereLineVertices = Shapes.toRawLineArray(Shapes.sphere(25, 15));
 
     // Build the objects to display.
     // JD: This works on the top-level object...does it work as expected on
