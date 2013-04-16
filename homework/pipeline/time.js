@@ -25,7 +25,8 @@
         currentRotation = 0.0,
         currentInterval,
         projectionMatrix,
-        tranformMatrix,
+        transformMatrix,
+        rotationMatrix,
         cameraMatrix,
         vertexPosition,
         vertexColor,
@@ -69,12 +70,9 @@
             color: { r: 0.7, g: 0.7, b: 0.7 },
             vertices: sphereLineVertices,
             mode: gl.LINES,
-            tick: 0,
-            tickDelta: 0.1,
             transforms: {
                 tx: 0.25,
                 ty: 0.0,
-                tz: -110,
                 sx: 0.3,
                 sy: 0.3,
                 rotationVector: new Vector (5, 5, 5),
@@ -83,20 +81,16 @@
         },
 
         {
-            color: { r: 0.7, g: 0.7, b: 0.7 },
-            vertices: sphereTriangleVertices,
+            color: { r: 0.0, g: 0.0, b: 0.0 },
+            vertices: Shapes.toRawTriangleArray(Shapes.cube(0.02, 0.4, 0.005)),
             mode: gl.TRIANGLES,
-            tick: 0,
-            tickDelta: 1,
             transforms: {
-                tx: -0.25,
-                ty: 0.0,
-                tz: -110,
-                sx: 0.3,
-                sy: 0.3
+                tx: 0.0,
+                ty: 0.5,
+                rotationVector: new Vector (0.5, 0.5, 0.5),
+                angle: 30
             }
-        },
-
+        }
     ];
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
@@ -163,6 +157,7 @@
     vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+    rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
 
@@ -173,7 +168,11 @@
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
             if (objectsToDraw[i].transforms) {
-                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, new Float32Array(Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()));
+                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                    new Float32Array(
+                        Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
+                    )
+                );
             }
 
             // Set the varying colors.
@@ -200,14 +199,19 @@
 
         // Display the objects.
         drawObjects(objectsToDraw);
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()
+            )
+        );
 
         // All done.
         gl.flush();
     };
 
     // Here is the camera matrix. TODO
-    /*
-    gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
+    
+    /*gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
         Matrix4x4().getLookAtMatrix(
             new Vector (0, 1, 0),
             new Vector (0, 0, 0),
@@ -215,15 +219,9 @@
         ).convertToWebGL); */
     
     // We now can "project" our scene to whatever way we want.
-    // JD: I'm going to guess that you did this on purpose: project to the exact
-    //     same viewing volume initially in order to make sure that things work.
-    //     Good move, and yes, this works nicely.
-    //
-    //     But, hope you don't mind, I took the liverty of doing a little
-    //     reformatting so that the editor window need not be so wide.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getFrustumMatrix(-10, 10, -10, 10, 100, 10000).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -12, 12).columnOrder()
         )
     );
 
@@ -240,24 +238,11 @@
             currentInterval = null;
         } else {
             currentInterval = setInterval(function () {
-                // Modify the transforms property of the different objects.
-                var i, maxi;
-                // Assumption: the objectsToDraw array is strictly an array
-                // of sphere objects to be modified through a trig function.
-                for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-                    objectsToDraw[i].tick += objectsToDraw[i].tickDelta;
-                    if (i % 2) {
-                        // For balls at odd indices, tweak tx and tz.
-                        objectsToDraw[i].transforms.tx += (Math.sin(objectsToDraw[i].tick) / 10.0);
-                        objectsToDraw[i].transforms.tz -= (Math.cos(objectsToDraw[i].tick) / 50.0);
-                    } else {
-                        // For balls at even indices, tweak tx and ty.
-                        objectsToDraw[i].transforms.tx -= (Math.cos(objectsToDraw[i].tick) / 30.0);
-                        objectsToDraw[i].transforms.ty += (Math.sin(objectsToDraw[i].tick) / 20.0);
-                    }
-                }
-
+                currentRotation += 1.0;
                 drawScene();
+                if (currentRotation >= 360.0) {
+                    currentRotation -= 360.0;
+                }
             }, 30);
         }
     });
