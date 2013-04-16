@@ -82,7 +82,7 @@
 
         {
             color: { r: 0.0, g: 0.0, b: 0.0 },
-            vertices: Shapes.toRawTriangleArray(Shapes.cube(0.02, 0.4, 0.005)),
+            vertices: Shapes.toRawTriangleArray(Shapes.cube(0.005, 0.4, 0.005)),
             mode: gl.TRIANGLES,
             transforms: {
                 tx: 0.0,
@@ -221,7 +221,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -12, 12).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()
         )
     );
 
