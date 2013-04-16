@@ -122,14 +122,14 @@ var Shapes = {
     /*
      * Returns the vertices for a small sphere.
      */
-    sphere: function () {
+    sphere: function (latitudeBelts, longitudeBelts) {
         var radius = 0.8,
             theta,
             sinTheta,
             cosTheta,
             phi,
-            latitudeBelts = 25,
-            longitudeBelts = 25,
+            latBelts = latitudeBelts,
+            longBelts = longitudeBelts,
             vertices = [],
             indices = [],
             top,
@@ -143,13 +143,13 @@ var Shapes = {
             l,
             sphereData = {};
 
-        for (i = 0; i < latitudeBelts + 1; i += 1) {
-            theta = (i * Math.PI) / latitudeBelts;
+        for (i = 0; i < latBelts + 1; i += 1) {
+            theta = (i * Math.PI) / latBelts;
             sinTheta = Math.sin(theta);
             cosTheta = Math.cos(theta);
 
-            for (j = 0; j < longitudeBelts + 1; j += 1) {
-                phi = (j * 2 * Math.PI) / longitudeBelts;
+            for (j = 0; j < longBelts + 1; j += 1) {
+                phi = (j * 2 * Math.PI) / longBelts;
                 x = radius * Math.cos(phi) * sinTheta;
                 y = radius * cosTheta;
                 z = radius * Math.sin(phi) * sinTheta;
@@ -158,10 +158,10 @@ var Shapes = {
             }
         }
 
-        for (i = 0; i < latitudeBelts + 1; i += 1) {
-            for (j = 0; j < longitudeBelts + 1; j += 1) {
-                top = (i * (longitudeBelts + 1)) + j;
-                bottom = top + longitudeBelts + 1;
+        for (i = 0; i < latBelts + 1; i += 1) {
+            for (j = 0; j < longBelts + 1; j += 1) {
+                top = (i * (longBelts + 1)) + j;
+                bottom = top + longBelts + 1;
 
                 indices.push([top, bottom, top + 1]);
                 indices.push([bottom, bottom + 1, top + 1]);
