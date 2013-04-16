@@ -171,7 +171,7 @@ var Matrix4x4 = (function () {
             // If they did, then we rotate the object about the vector (1, 1, 1)
             if (transforms.rotationVector.x() === 0 && transforms.rotationVecotor.y() === 0 &&
                 transforms.rotationVector.z() === 0) {
-                ratate = Matrix4x4.getRotationMatrix(
+                rotate = Matrix4x4.getRotationMatrix(
                     transforms.angle, 1, 1, 1);
             } else {
                 rotate = Matrix4x4.getRotationMatrix(
@@ -182,7 +182,7 @@ var Matrix4x4 = (function () {
                 );
             }
         }
-
+        console.log(translate.multiply(scale.multiply(rotate)).elements)
         return translate.multiply(scale.multiply(rotate));
     };
 
