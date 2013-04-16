@@ -198,12 +198,12 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Display the objects.
-        drawObjects(objectsToDraw);
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
                 Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()
             )
         );
+        drawObjects(objectsToDraw);
 
         // All done.
         gl.flush();
