@@ -63,44 +63,68 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
 
-
-    // Build the objects to display.
-    secondHandCoords = {
-        vertices: [0],
-        indices: [0]
-    };
-
     objectsToDraw = [
         {
             name: "Null Object Anchor",
-            vertices: Shapes.toRawTriangleArray(secondHandCoords),
-            mode: gl.TRIANGLES,
+            vertices: Shapes.toRawTriangleArray(
+                {
+                    vertices: [0],
+                    indices: [0]
+                }
+            ),
             leafs: [
                 {
                     name: "Second Hand",
-                    color: { r: 1.0, g: 0.0, b: 0.0 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.005, 0.4, 0.005)),
+                    color: { r: 0.803, g: 0.113, b: 0.113 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005)),
                     mode: gl.TRIANGLES,
                     transforms: {
-                        tx: 0.0,
-                        ty: 0.5,
-                        rotationVector: new Vector (0, 0, 1),
-                        angle: 90
                     }
                     // Temporary red circle TODO
-                    /*
-                    leafs: [
-                        name: "Red Circle",
-                        color: {r: 1.0, g: 0.0, b: 0.0 },
-                        vertices: Shapes.toRawTriangleArray(Shapes.cylinder()),
-                        mode: gl.TRIANGLES,
-                        transforms: {
-                            tx: secondhandCoords.tx,
-                            ty: secondhandCoords.ty
-                        }
-                    ]
-                    */   
+                        /*
+                        leafs: [
+                            name: "Red Circle",
+                            color: {r: 1.0, g: 0.0, b: 0.0 },
+                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder()),
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                tx: secondhandCoords.tx,
+                                ty: secondhandCoords.ty
+                            }
+                        ]
+                        */   
+                },
+
+                {
+                    name: "Hour Hand",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: 0.3
+                    }
+                },
+
+                {
+                    name: "Minute Hand",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: -0.3
+                    }
+                },
+
+                {
+                    name: "Minute Ticks",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.06, 0.005)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: 0.6
+                    }
                 }
+
             ]
         }
     ];
@@ -212,7 +236,7 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
             )
         );
 
