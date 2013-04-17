@@ -37,6 +37,9 @@
         // The big "draw scene" function.
         drawScene,
 
+        // Variables to hold object positions.
+        secondHandCoords,
+
         // Reusable loop variables.
         i,
         maxi,
@@ -59,37 +62,46 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    sphereTriangleVertices = Shapes.toRawTriangleArray(Shapes.sphere(25, 15));
-    sphereLineVertices = Shapes.toRawLineArray(Shapes.sphere(25, 15));
+
 
     // Build the objects to display.
-    // JD: This works on the top-level object...does it work as expected on
-    //     subobjects?  You should try that  ;-)
+    secondHandCoords = {
+        vertices: [0],
+        indices: [0]
+    };
+
     objectsToDraw = [
         {
-            color: { r: 0.7, g: 0.7, b: 0.7 },
-            vertices: sphereLineVertices,
-            mode: gl.LINES,
-            transforms: {
-                tx: 0.25,
-                ty: 0.0,
-                sx: 0.3,
-                sy: 0.3,
-                rotationVector: new Vector (5, 5, 5),
-                angle: 50
-            }
-        },
-
-        {
-            color: { r: 0.0, g: 0.0, b: 0.0 },
-            vertices: Shapes.toRawTriangleArray(Shapes.cube(0.005, 0.4, 0.005)),
+            name: "Null Object Anchor",
+            vertices: Shapes.toRawTriangleArray(secondHandCoords),
             mode: gl.TRIANGLES,
-            transforms: {
-                tx: 0.0,
-                ty: 0.5,
-                rotationVector: new Vector (0.5, 0.5, 0.5),
-                angle: 30
-            }
+            leafs: [
+                {
+                    name: "Second Hand",
+                    color: { r: 1.0, g: 0.0, b: 0.0 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.005, 0.4, 0.005)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: 0.0,
+                        ty: 0.5,
+                        rotationVector: new Vector (0, 0, 1),
+                        angle: 90
+                    }
+                    // Temporary red circle TODO
+                    /*
+                    leafs: [
+                        name: "Red Circle",
+                        color: {r: 1.0, g: 0.0, b: 0.0 },
+                        vertices: Shapes.toRawTriangleArray(Shapes.cylinder()),
+                        mode: gl.TRIANGLES,
+                        transforms: {
+                            tx: secondhandCoords.tx,
+                            ty: secondhandCoords.ty
+                        }
+                    ]
+                    */   
+                }
+            ]
         }
     ];
 
