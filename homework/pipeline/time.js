@@ -30,6 +30,10 @@
         cameraMatrix,
         vertexPosition,
         vertexColor,
+        currentDate,
+        secondAngle,
+        hourAngle,
+        minuteAngle,
 
         // A function that draws all of the objects.
         drawObjects,
@@ -62,6 +66,11 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
+    currentDate = new Date();
+    secondAngle = currentDate.getSeconds() * 6;
+    minuteAngle = ((currentDate.getMinutes() + (currentDate.getSeconds() / 60)) * 6);
+    hourAngle = (minuteAngle / 12) + (currentDate.getHours() * 30);
+    zAxisVector = new Vector (0, 0, 1); 
 
     objectsToDraw = [
         {
@@ -79,6 +88,8 @@
                     vertices: Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005)),
                     mode: gl.TRIANGLES,
                     transforms: {
+                        angle: secondAngle,
+                        rotationVector: zAxisVector
                     }
                     // Temporary red circle TODO
                         /*
@@ -101,7 +112,9 @@
                     vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005)),
                     mode: gl.TRIANGLES,
                     transforms: {
-                        tx: 0.3
+                        tx: 0.3,
+                        angle: hourAngle,
+                        rotationVector: zAxisVector
                     }
                 },
 
@@ -111,7 +124,9 @@
                     vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005)),
                     mode: gl.TRIANGLES,
                     transforms: {
-                        tx: -0.3
+                        tx: -0.3,
+                        angle: minuteAngle,
+                        rotationVector: zAxisVector
                     }
                 },
 
@@ -122,6 +137,16 @@
                     mode: gl.TRIANGLES,
                     transforms: {
                         tx: 0.6
+                    }
+                },
+
+                {
+                    name: "Hour Ticks",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.003, 0.12, 0.005)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: -0.6
                     }
                 }
 
