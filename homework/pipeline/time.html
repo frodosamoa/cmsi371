@@ -61,7 +61,7 @@
                 //     See the comment that I put in regarding the rotation matrix over
                 //     in time.js; for now I have kept it as an individual rotation per
                 //     object.
-                gl_Position = projectionMatrix * transformMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
+                gl_Position = projectionMatrix * cameraMatrix * transformMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
             }

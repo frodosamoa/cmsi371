@@ -274,17 +274,17 @@
 
     // Here is the camera matrix. TODO
     
-    /*gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
-        Matrix4x4().getLookAtMatrix(
-            new Vector (0, 1, 0),
-            new Vector (0, 0, 0),
+    gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
+        Matrix4x4.getLookAtMatrix(
+            new Vector (-5, 0, 0),
+            new Vector (-5, 0, -5),
             new Vector (0, 1, 0)
-        ).convertToWebGL); */
+        ).columnOrder()));
     
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()
+            Matrix4x4.getOrthoMatrix(-10, 10, -10, 10, -1, 1).columnOrder()
         )
     );
 
