@@ -30,10 +30,18 @@
         cameraMatrix,
         vertexPosition,
         vertexColor,
+
         currentDate,
         secondAngle,
         hourAngle,
         minuteAngle,
+        minuteTick,
+        hourTick,
+        secondHand,
+        hourHand,
+        minuteHand,
+        zAxisVector,
+        hourHandTransform,
 
         // A function that draws all of the objects.
         drawObjects,
@@ -72,6 +80,37 @@
     hourAngle = (minuteAngle / 12) + (currentDate.getHours() * 30);
     zAxisVector = new Vector (0, 0, 1); 
 
+    hourTick = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.12, 0.005));
+    minuteTick = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.06, 0.005));
+    secondHand = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005));
+    minuteHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005));
+    hourHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005));
+
+    hourHandTransform = function (hour, radius) {
+        var xNeg = 1,
+            yNeg = 1
+            hourAngle = hour * 30,
+            piDivisor = 3;
+
+        if (hourAngle % 60 === 0) piDivisor = 6;
+
+        if (hour === 1 || hour === 2) {
+            xNeg = -1;
+        } else if (hour === 4 || hour === 5) {
+            xNeg = -1;
+            yNeg = -1;
+        } else if (hour === 7 || hour === 8) {
+            yNeg = -1;
+        } 
+
+        return {
+            ty: yNeg * radius * Math.sin(Math.PI / piDivisor),
+            tx: xNeg * radius * Math.cos(Math.PI / piDivisor),
+            angle: hourAngle,
+            rotationVector: zAxisVector
+        }
+    };
+
     objectsToDraw = [
         {
             name: "Null Object Anchor",
@@ -81,11 +120,15 @@
                     indices: [0]
                 }
             ),
+            transforms: {
+                tx: 0,
+                ty: 0
+            },
             leafs: [
                 {
                     name: "Second Hand",
                     color: { r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005)),
+                    vertices: secondHand,
                     mode: gl.TRIANGLES,
                     transforms: {
                         angle: secondAngle,
@@ -109,10 +152,9 @@
                 {
                     name: "Hour Hand",
                     color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005)),
+                    vertices: hourHand,
                     mode: gl.TRIANGLES,
                     transforms: {
-                        tx: 0.3,
                         angle: hourAngle,
                         rotationVector: zAxisVector
                     }
@@ -121,10 +163,9 @@
                 {
                     name: "Minute Hand",
                     color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005)),
+                    vertices: minuteHand,
                     mode: gl.TRIANGLES,
                     transforms: {
-                        tx: -0.3,
                         angle: minuteAngle,
                         rotationVector: zAxisVector
                     }
@@ -132,24 +173,147 @@
 
                 {
                     name: "Minute Ticks",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.06, 0.005)),
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        tx: 0.6
-                    }
+                    vertices: Shapes.toRawTriangleArray(
+                        {
+                            vertices: [0],
+                            indices: [0]
+                        }
+                    )/*,
+                    leafs: [
+                        {
+                            name: "1 Minute Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: minuteTick,
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                tx: 0.1,
+                                ty: 0.78
+                                angle: 6,
+                                rotationVector: zAxisVector
+                            }
+                        }
+                    ]*/
                 },
 
                 {
                     name: "Hour Ticks",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cube(0.003, 0.12, 0.005)),
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        tx: -0.6
-                    }
-                }
+                    vertices: Shapes.toRawTriangleArray(
+                        {
+                            vertices: [0],
+                            indices: [0]
+                        }
+                    ),
+                    leafs: [
 
+                        {
+                            name: "1 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(1, 0.8)
+                        },
+
+                        {
+                            name: "2 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(2, 0.8)
+                        },
+
+                        {
+                            name: "3 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                tx: -0.8,
+                                angle: 90,
+                                rotationVector: zAxisVector
+                            }
+                        }, 
+
+                        {
+                            name: "4 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(4, 0.8)
+                        },
+
+                        {
+                            name: "5 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(5, 0.8)
+                        },    
+
+                        {
+                            name: "6 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                ty: -0.8
+                            }
+                        },
+
+                        {
+                            name: "7 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(7, 0.8)
+                        },
+
+                        {
+                            name: "8 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(8, 0.8)
+                        },
+
+                        {
+                            name: "9 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                tx: 0.8,
+                                angle: 90,
+                                rotationVector: zAxisVector
+                            }
+                        },
+
+                        {
+                            name: "10 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(10, 0.8)
+                        },
+
+                        {
+                            name: "11 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: hourHandTransform(11, 0.8)
+                        },
+
+                        {
+                            name: "12 Hour Tick",
+                            color: { r: 0.196, g: 0.196, b: 0.196 },
+                            vertices: hourTick,
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                ty: 0.8
+                            }
+                        }
+                    ]
+                }
             ]
         }
     ];
@@ -272,19 +436,18 @@
         gl.flush();
     };
 
-    // Here is the camera matrix. TODO
-    
+    // Here is the camera matrix.
     gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
         Matrix4x4.getLookAtMatrix(
-            new Vector (-5, 0, 0),
-            new Vector (-5, 0, -5),
+            new Vector (0, 0, -1),
+            new Vector (0, 0, 1),
             new Vector (0, 1, 0)
         ).columnOrder()));
     
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-10, 10, -10, 10, -1, 1).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()
         )
     );
 
