@@ -80,6 +80,12 @@
     hourAngle = (minuteAngle / 12) + (currentDate.getHours() * 30);
     zAxisVector = new Vector (0, 0, 1); 
 
+    nullObject = Shapes.toRawTriangleArray(
+                    {
+                        vertices: [0],
+                        indices: [0]
+                    }
+                );
     hourTick = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.12, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.06, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005));
@@ -149,16 +155,7 @@
     objectsToDraw = [
         {
             name: "Null Object Anchor",
-            vertices: Shapes.toRawTriangleArray(
-                {
-                    vertices: [0],
-                    indices: [0]
-                }
-            ),
-            transforms: {
-                tx: 0,
-                ty: 0
-            },
+            vertices: nullObject,
             leafs: [
                 {
                     name: "Second Hand",
@@ -204,23 +201,13 @@
 
                 {
                     name: "Minute Ticks",
-                    vertices: Shapes.toRawTriangleArray(
-                        {
-                            vertices: [0],
-                            indices: [0]
-                        }
-                    ),
+                    vertices: nullObject,
                     leafs: minuteTickObjects(0.85)
                 },        
 
                 {
                     name: "Hour Ticks",
-                    vertices: Shapes.toRawTriangleArray(
-                        {
-                            vertices: [0],
-                            indices: [0]
-                        }
-                    ),
+                    vertices: nullObject,
                     leafs: hourTickObjects(0.8)
                 }
             ]
