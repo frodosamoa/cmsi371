@@ -90,7 +90,8 @@
         var xNeg = 1,
             yNeg = 1
             hourAngle = hour * 30,
-            piDivisor = 3;
+            piDivisor = 3,
+            transformObject = {};
 
         if (hourAngle % 60 === 0) piDivisor = 6;
 
@@ -103,12 +104,36 @@
             yNeg = -1;
         } 
 
-        return {
+        transformObject = {
             ty: yNeg * radius * Math.sin(Math.PI / piDivisor),
             tx: xNeg * radius * Math.cos(Math.PI / piDivisor),
             angle: hourAngle,
             rotationVector: zAxisVector
+        };
+
+        return transformObject;
+    };
+
+    hourHandsTickObjects = function (radius) {
+        var i,
+            hourHandTickArray = [],
+            hourHandTickObject = {};
+
+        for (i = 1; i < 13; i ++) {
+            hourHandTickObject = 
+                {
+                    name: i.toString() + " Hour Tick",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: hourTick,
+                    mode: gl.TRIANGLES,
+                    transforms: hourHandTransform(i, radius)
+                };
+                //console.log(hourHandTickObject);
+            hourHandTickArray.push(hourHandTickObject);
+
         }
+        console.log(hourHandTickArray);
+        return hourHandTickArray;
     };
 
     objectsToDraw = [
@@ -204,7 +229,8 @@
                         }
                     ),
                     leafs: [
-
+                        //hourHandsTickObjects(0.8)
+                        
                         {
                             name: "1 Hour Tick",
                             color: { r: 0.196, g: 0.196, b: 0.196 },
@@ -317,7 +343,7 @@
             ]
         }
     ];
-
+    console.log(objectsToDraw[0]);
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
         for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
