@@ -87,27 +87,15 @@
     hourHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005));
 
     hourHandTransform = function (hour, radius) {
-        var xNeg = 1,
-            yNeg = 1
+        var xNeg = -1,
+            yNeg = -1,
             hourAngle = hour * 30,
-            piDivisor = 3,
             transformObject = {};
 
-        if (hourAngle % 60 === 0) piDivisor = 6;
-
-        if (hour === 1 || hour === 2) {
-            xNeg = -1;
-        } else if (hour === 4 || hour === 5) {
-            xNeg = -1;
-            yNeg = -1;
-        } else if (hour === 7 || hour === 8) {
-            yNeg = -1;
-        } 
-
         transformObject = {
-            ty: yNeg * radius * Math.sin(Math.PI / piDivisor),
-            tx: xNeg * radius * Math.cos(Math.PI / piDivisor),
-            angle: hourAngle,
+            ty: yNeg * radius * Math.cos(hourAngle * (Math.PI / 180)),
+            tx: xNeg * radius * Math.sin(hourAngle * (Math.PI / 180)),
+            angle: -hourAngle,
             rotationVector: zAxisVector
         };
 
@@ -120,19 +108,16 @@
             hourHandTickObject = {};
 
         for (i = 1; i < 13; i ++) {
-            hourHandTickObject = 
-                {
+            hourHandTickObject =  {
                     name: i.toString() + " Hour Tick",
                     color: { r: 0.196, g: 0.196, b: 0.196 },
                     vertices: hourTick,
                     mode: gl.TRIANGLES,
                     transforms: hourHandTransform(i, radius)
                 };
-                //console.log(hourHandTickObject);
             hourHandTickArray.push(hourHandTickObject);
-
         }
-        console.log(hourHandTickArray);
+
         return hourHandTickArray;
     };
 
@@ -228,122 +213,12 @@
                             indices: [0]
                         }
                     ),
-                    leafs: [
-                        //hourHandsTickObjects(0.8)
-                        
-                        {
-                            name: "1 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(1, 0.8)
-                        },
-
-                        {
-                            name: "2 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(2, 0.8)
-                        },
-
-                        {
-                            name: "3 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                tx: -0.8,
-                                angle: 90,
-                                rotationVector: zAxisVector
-                            }
-                        }, 
-
-                        {
-                            name: "4 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(4, 0.8)
-                        },
-
-                        {
-                            name: "5 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(5, 0.8)
-                        },    
-
-                        {
-                            name: "6 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                ty: -0.8
-                            }
-                        },
-
-                        {
-                            name: "7 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(7, 0.8)
-                        },
-
-                        {
-                            name: "8 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(8, 0.8)
-                        },
-
-                        {
-                            name: "9 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                tx: 0.8,
-                                angle: 90,
-                                rotationVector: zAxisVector
-                            }
-                        },
-
-                        {
-                            name: "10 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(10, 0.8)
-                        },
-
-                        {
-                            name: "11 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: hourHandTransform(11, 0.8)
-                        },
-
-                        {
-                            name: "12 Hour Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: hourTick,
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                ty: 0.8
-                            }
-                        }
-                    ]
+                    leafs: hourHandsTickObjects(0.8)
                 }
             ]
         }
     ];
-    console.log(objectsToDraw[0]);
+
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
         for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
