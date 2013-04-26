@@ -86,39 +86,64 @@
     minuteHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005));
 
-    hourHandTransform = function (hour, radius) {
-        var xNeg = -1,
-            yNeg = -1,
-            hourAngle = hour * 30,
-            transformObject = {};
+    tickTransform = function (minuteORHour, time, radius) {
+        var angle,
+            tickObject = {};
 
-        transformObject = {
-            ty: yNeg * radius * Math.cos(hourAngle * (Math.PI / 180)),
-            tx: xNeg * radius * Math.sin(hourAngle * (Math.PI / 180)),
-            angle: -hourAngle,
+        if (minuteORHour) {
+            angle = time * 6;
+        } else {
+            angle = time * 30;
+        }
+
+        tickObject = {
+            ty: -radius * Math.cos(angle * (Math.PI / 180)),
+            tx: -radius * Math.sin(angle * (Math.PI / 180)),
+            angle: -angle,
             rotationVector: zAxisVector
         };
 
-        return transformObject;
+        return tickObject;
     };
 
-    hourHandsTickObjects = function (radius) {
+    hourTickObjects = function (radius) {
         var i,
-            hourHandTickArray = [],
-            hourHandTickObject = {};
+            hourTickArray = [],
+            hourTickObject = {};
 
         for (i = 1; i < 13; i ++) {
-            hourHandTickObject =  {
+            hourTickObject = {
                     name: i.toString() + " Hour Tick",
                     color: { r: 0.196, g: 0.196, b: 0.196 },
                     vertices: hourTick,
                     mode: gl.TRIANGLES,
-                    transforms: hourHandTransform(i, radius)
+                    transforms: tickTransform(false, i, radius)
                 };
-            hourHandTickArray.push(hourHandTickObject);
+            hourTickArray.push(hourTickObject);
         }
 
-        return hourHandTickArray;
+        return hourTickArray;
+    };
+
+    minuteTickObjects = function (radius) {
+        var i,
+            minuteTickArray = [],
+            minuteTickObject = {};
+
+        for (i = 1; i < 61; i ++) {
+            if (i % 5 !== 0) {
+                minuteTickObject =  {
+                        name: i.toString() + " Minute Tick",
+                        color: { r: 0.196, g: 0.196, b: 0.196 },
+                        vertices: minuteTick,
+                        mode: gl.TRIANGLES,
+                        transforms: tickTransform(true, i, radius)
+                    };
+                minuteTickArray.push(minuteTickObject);
+            }
+        }
+
+        return minuteTickArray;
     };
 
     objectsToDraw = [
@@ -144,19 +169,15 @@
                         angle: secondAngle,
                         rotationVector: zAxisVector
                     }
-                    // Temporary red circle TODO
-                        /*
-                        leafs: [
+                        // Temporary red circle TODO
+                        /* leafs: [
                             name: "Red Circle",
                             color: {r: 1.0, g: 0.0, b: 0.0 },
                             vertices: Shapes.toRawTriangleArray(Shapes.cylinder()),
                             mode: gl.TRIANGLES,
                             transforms: {
-                                tx: secondhandCoords.tx,
-                                ty: secondhandCoords.ty
                             }
-                        ]
-                        */   
+                        ] */   
                 },
 
                 {
@@ -188,22 +209,9 @@
                             vertices: [0],
                             indices: [0]
                         }
-                    )/*,
-                    leafs: [
-                        {
-                            name: "1 Minute Tick",
-                            color: { r: 0.196, g: 0.196, b: 0.196 },
-                            vertices: minuteTick,
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                tx: 0.1,
-                                ty: 0.78
-                                angle: 6,
-                                rotationVector: zAxisVector
-                            }
-                        }
-                    ]*/
-                },
+                    ),
+                    leafs: minuteTickObjects(0.85)
+                },        
 
                 {
                     name: "Hour Ticks",
@@ -213,7 +221,7 @@
                             indices: [0]
                         }
                     ),
-                    leafs: hourHandsTickObjects(0.8)
+                    leafs: hourTickObjects(0.8)
                 }
             ]
         }
@@ -221,7 +229,7 @@
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
-        for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
+        for (i = 0; i < objectsToDraw.length; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
 
@@ -243,6 +251,7 @@
                     objectsToDraw[i].colors);
 
             if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length !== 0)) {
+                console.log(objectsToDraw[i].leafs);
                 vertexify(objectsToDraw[i].leafs);
             }
         }
