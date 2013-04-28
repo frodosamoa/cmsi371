@@ -93,6 +93,8 @@
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
+    var test = Shapes.toRawTriangleArray(Shapes.cylinder(0.9, 0.3, 20));
+
     tickTransform = function (minuteORHour, time, radius) {
         var angle,
             tickObject = {};
