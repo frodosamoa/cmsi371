@@ -6,7 +6,7 @@
 var Shapes = {
 
     /*
-     * Returns the vertices for a 6 sided three dimensional hexahedron.
+     * Returns the vertices for a six sided three dimensional hexahedron.
      */
     hexahedron: function (x, y, z) {
         var X = x,
@@ -42,6 +42,9 @@ var Shapes = {
         };
     },
 
+    /**
+     * Returns the vertices for a cylinder.
+     */
     cylinder: function (radius, depth, radiusSegments) {
         var radius = radius,
             height = height,
@@ -57,15 +60,27 @@ var Shapes = {
             cylinderData = {},
             depthHalf = depth / 2;
 
-
+        // The "top" cap of the cylinder.
         for (i = 0; i < radiusSegments + 1; i += 1) {
             phi = (i * 2 * Math.PI) / radiusSegments;
             x = radius * Math.cos(phi);
             y = radius * Math.sin(phi);
             z = depthHalf;
             vertices.push([x, y, z]);
+            console.log([x,y,z]);
         }
 
+        // The "bottom" cap of the cylinder.
+        for (i = 0; i < radiusSegments + 1; i += 1) {
+            phi = (i * 2 * Math.PI) / radiusSegments;
+            x = radius * Math.cos(phi);
+            y = radius * Math.sin(phi);
+            z = -depthHalf;
+            vertices.push([x, y, z]);
+            console.log([x,y,z]);
+        }
+
+        // This gets the indices of the cylinder.
         for (i = 0; i < radiusSegments + 1; i += 1) {
 
         }
@@ -99,6 +114,7 @@ var Shapes = {
             j,
             sphereData = {};
 
+        // This creates the vertices for the circle.
         for (i = 0; i < latBelts + 1; i += 1) {
             theta = (i * Math.PI) / latBelts;
             sinTheta = Math.sin(theta);
@@ -114,6 +130,7 @@ var Shapes = {
             }
         }
 
+        // This creates the indices for the circle.
         for (i = 0; i < latBelts + 1; i += 1) {
             for (j = 0; j < longBelts + 1; j += 1) {
                 top = (i * (longBelts + 1)) + j;
