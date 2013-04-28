@@ -42,16 +42,38 @@ var Shapes = {
         };
     },
 
-    cylinder: function (radius, height, radiusSegments) {
+    cylinder: function (radius, depth, radiusSegments) {
         var radius = radius,
             height = height,
-            radiusSegments = radiusSegments;
+            theta,
+            radiusSegments = radiusSegments,
+            i,
+            j,
+            x,
+            y,
+            z,
+            vertices = [],
+            indices = []
+            cylinderData = {},
+            depthHalf = depth / 2;
 
 
-        return {
-            vertices: [0],
-            indices: [0]
+        for (i = 0; i < radiusSegments + 1; i += 1) {
+            phi = (i * 2 * Math.PI) / radiusSegments;
+            x = radius * Math.cos(phi);
+            y = radius * Math.sin(phi);
+            z = depthHalf;
+            vertices.push([x, y, z]);
         }
+
+        for (i = 0; i < radiusSegments + 1; i += 1) {
+
+        }
+
+        cylinderData.vertices = vertices;
+        cylinderData.indices = indices;
+
+        return cylinderData;
 
     },
 
