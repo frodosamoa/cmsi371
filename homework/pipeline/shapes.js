@@ -75,8 +75,6 @@ var Shapes = {
             z,
             i,
             j,
-            k,
-            l,
             sphereData = {};
 
         for (i = 0; i < latBelts + 1; i += 1) {
