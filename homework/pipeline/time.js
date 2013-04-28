@@ -87,11 +87,11 @@
                         indices: [0]
                     }
                 );
-    hourTick = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.12, 0.005));
-    minuteTick = Shapes.toRawTriangleArray(Shapes.cube(0.06, 0.007, 0.005));
-    secondHand = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005));
-    minuteHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.55, 0.005));
-    hourHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005));
+    hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.12, 0.005));
+    minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
+    secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.45, 0.005));
+    minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
+    hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
     tickTransform = function (minuteORHour, time, radius) {
         var angle,
