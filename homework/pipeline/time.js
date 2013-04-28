@@ -93,8 +93,6 @@
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
-    var test = Shapes.toRawTriangleArray(Shapes.cylinder(0.9, 0.3, 20));
-
     tickTransform = function (minuteORHour, time, radius) {
         var angle,
             tickObject = {};
@@ -178,6 +176,17 @@
                             transforms: {
                             }
                         ] */   
+                },
+
+                {
+                    name: "Cylinder test",
+                    color: { r: 0.803, g: 0.113, b: 0.113 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.9, 0.3, 20)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        tx: 0,
+                        ty: 0
+                    }
                 },
 
                 {
@@ -326,7 +335,7 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentRotation, 0, 1, 0).columnOrder()
             )
         );
 
@@ -348,7 +357,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 1).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -2, 2).columnOrder()
         )
     );
 
