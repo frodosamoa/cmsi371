@@ -31,6 +31,7 @@
         vertexPosition,
         vertexColor,
 
+        // Variables for the clock.
         currentDate,
         secondAngle,
         hourAngle,
@@ -87,9 +88,9 @@
                     }
                 );
     hourTick = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.12, 0.005));
-    minuteTick = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.06, 0.005));
+    minuteTick = Shapes.toRawTriangleArray(Shapes.cube(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.cube(0.007, 0.45, 0.005));
-    minuteHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.4, 0.005));
+    minuteHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.cube(0.03, 0.3, 0.005));
 
     tickTransform = function (minuteORHour, time, radius) {
@@ -103,9 +104,8 @@
         }
 
         tickObject = {
-            ty: -radius * Math.cos(angle * (Math.PI / 180)),
-            tx: -radius * Math.sin(angle * (Math.PI / 180)),
-            angle: -angle,
+            tx: radius,
+            angle: angle,
             rotationVector: zAxisVector
         };
 
@@ -163,6 +163,7 @@
                     vertices: secondHand,
                     mode: gl.TRIANGLES,
                     transforms: {
+                        ty: 0.25,
                         angle: secondAngle,
                         rotationVector: zAxisVector
                     }
@@ -183,6 +184,7 @@
                     vertices: hourHand,
                     mode: gl.TRIANGLES,
                     transforms: {
+                        ty: 0.2,
                         angle: hourAngle,
                         rotationVector: zAxisVector
                     }
@@ -194,6 +196,7 @@
                     vertices: minuteHand,
                     mode: gl.TRIANGLES,
                     transforms: {
+                        ty: 0.3,
                         angle: minuteAngle,
                         rotationVector: zAxisVector
                     }
@@ -238,7 +241,6 @@
                     objectsToDraw[i].colors);
 
             if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length !== 0)) {
-                console.log(objectsToDraw[i].leafs);
                 vertexify(objectsToDraw[i].leafs);
             }
         }
