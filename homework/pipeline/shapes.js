@@ -55,6 +55,8 @@ var Shapes = {
             x,
             y,
             z,
+            top,
+            bottom,
             vertices = [],
             indices = []
             cylinderData = {},
@@ -67,25 +69,19 @@ var Shapes = {
             y = radius * Math.sin(phi);
             z = depthHalf;
             vertices.push([x, y, z]);
-            console.log([x,y,z]);
-        }
-
-        // The "bottom" cap of the cylinder.
-        for (i = 0; i < radiusSegments + 1; i += 1) {
-            phi = (i * 2 * Math.PI) / radiusSegments;
-            x = radius * Math.cos(phi);
-            y = radius * Math.sin(phi);
             z = -depthHalf;
             vertices.push([x, y, z]);
-            console.log([x,y,z]);
         }
 
         // This gets the indices of the cylinder.
-        for (i = 0; i < radiusSegments + 1; i += 1) {
+        for (i = 0; i < radiusSegments * 2; i += 1) {
 
+            indices.push([i, i+1, i+2]);
+            indices.push([i+2, i+3, i+4]);
         }
 
         cylinderData.vertices = vertices;
+        console.log(vertices.length);
         cylinderData.indices = indices;
 
         return cylinderData;
