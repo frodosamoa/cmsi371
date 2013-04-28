@@ -183,7 +183,7 @@ var Matrix4x4 = (function () {
             }
         } 
 
-        return translate.multiply(scale.multiply(rotate));
+        return rotate.multiply(scale.multiply(translate));
     };
 
     // Returns the length of the elements in the matrix (16).
