@@ -6,9 +6,9 @@
 var Shapes = {
 
     /*
-     * Returns the vertices for a small sphere.
+     * Returns the vertices for a 6 sided three dimensional hexahedron.
      */
-    cube: function (x, y, z) {
+    hexahedron: function (x, y, z) {
         var X = x,
             Y = y,
             Z = z;
@@ -42,93 +42,24 @@ var Shapes = {
         };
     },
 
-    cylinder: function () {
-        var radius = 0.4,
-            height = 1;
-    },
-
-    /*
-     * Returns the vertices for a small sphere.
-     */
-    cross: function () {
-        var X  = 0.2,
-            X2 = 0.45,
-            Y  = 0.2,
-            Y2 = 0.45,
-            Z  = 0.1;
+    cylinder: function (radius, height, radiusSegments) {
+        var radius = radius,
+            height = height,
+            radiusSegments = radiusSegments;
 
 
         return {
-            vertices: [
-                [X, Y, Z],
-                [X, Y2, Z],
-                [X, -Y, Z],
-                [X, -Y2, Z],
-                [-X, Y, Z],
-                [-X, Y2, Z],
-                [-X, -Y, Z],
-                [-X, -Y2, Z],
-                [X2, Y, Z],
-                [X2, -Y, Z],
-                [-X2, Y, Z],
-                [-X2, -Y, Z],
-                [X, Y, -Z],
-                [X, Y2, -Z],
-                [X, -Y, -Z],
-                [X, -Y2, -Z],
-                [-X, Y, -Z],
-                [-X, Y2, -Z],
-                [-X, -Y, -Z],
-                [-X, -Y2, -Z],
-                [X2, Y, -Z],
-                [X2, -Y, -Z],
-                [-X2, Y, -Z],
-                [-X2, -Y, -Z]
-            ],
+            vertices: [0],
+            indices: [0]
+        }
 
-            indices: [
-                [1, 13, 17, 5],
-                [10, 11, 23, 22],
-                [8, 9, 21, 20],
-                [3, 7, 19, 15],
-                [0, 1],
-                [1, 5],
-                [2, 3],
-                [2, 9],
-                [3, 7],
-                [4, 5],
-                [4, 10],
-                [6, 7],
-                [6, 11],
-                [8, 0],
-                [10, 11],
-                [12, 13],
-                [14, 15],
-                [14, 21],
-                [16, 17],
-                [16, 22],
-                [18, 19],
-                [18, 23],
-                [20, 12],
-                [0, 12],
-                [1, 13],
-                [2, 14],
-                [3, 15],
-                [4, 16],
-                [5, 17],
-                [6, 18],
-                [8, 20],
-                [9, 21],
-                [10, 22]
-            ]
-        };
     },
 
     /*
      * Returns the vertices for a small sphere.
      */
-    sphere: function (latitudeBelts, longitudeBelts) {
-        var radius = 0.8,
+    sphere: function (radius, latitudeBelts, longitudeBelts) {
+        var radius = radius,
             theta,
             sinTheta,
             cosTheta,
