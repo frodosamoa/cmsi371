@@ -87,7 +87,7 @@
                         indices: [0]
                     }
                 );
-    hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.12, 0.005));
+    hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.45, 0.005));
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
@@ -154,8 +154,15 @@
 
     objectsToDraw = [
         {
-            name: "Null Object Anchor",
-            vertices: nullObject,
+            name: "Clock Face",
+            color: { r: 0.863, g: 0.863, b: 0.863 },
+            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80)),
+            mode: gl.TRIANGLES,
+            transforms: {
+                tx: 0,
+                ty: 0,
+                tz: 0.2
+            },
             leafs: [
                 {
                     name: "Second Hand",
@@ -166,27 +173,20 @@
                         ty: 0.25,
                         angle: secondAngle,
                         rotationVector: zAxisVector
-                    }
-                        // Temporary red circle TODO
-                        /* leafs: [
+                    },
+                    leafs: [
+                        {
                             name: "Red Circle",
-                            color: {r: 1.0, g: 0.0, b: 0.0 },
-                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder()),
+                            color: {r: 0.803, g: 0.113, b: 0.113 },
+                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.1, 0.005, 30)),
                             mode: gl.TRIANGLES,
                             transforms: {
+                                ty: 0.6,
+                                angle: secondAngle,
+                                rotationVector: zAxisVector
                             }
-                        ] */   
-                },
-
-                {
-                    name: "Cylinder test",
-                    color: { r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.9, 0.3, 20)),
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        tx: 0,
-                        ty: 0
-                    }
+                        }
+                    ]
                 },
 
                 {
@@ -222,7 +222,7 @@
                 {
                     name: "Hour Ticks",
                     vertices: nullObject,
-                    leafs: hourTickObjects(0.8)
+                    leafs: hourTickObjects(0.82)
                 }
             ]
         }
@@ -335,7 +335,7 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 0, 1, 0).columnOrder()
+                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
             )
         );
 
