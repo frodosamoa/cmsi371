@@ -173,20 +173,19 @@
                         ty: 0.25,
                         angle: secondAngle,
                         rotationVector: zAxisVector
-                    },
-                    leafs: [
-                        {
-                            name: "Red Circle",
-                            color: {r: 0.803, g: 0.113, b: 0.113 },
-                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.1, 0.005, 30)),
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                ty: 0.6,
-                                angle: secondAngle,
-                                rotationVector: zAxisVector
-                            }
-                        }
-                    ]
+                    }
+                },
+
+                {
+                    name: "Red Second Hand Circle",
+                    color: {r: 0.803, g: 0.113, b: 0.113 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.1, 0.005, 30)),
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        ty: 0.6,
+                        angle: secondAngle,
+                        rotationVector: zAxisVector
+                    }
                 },
 
                 {
@@ -211,18 +210,12 @@
                         angle: minuteAngle,
                         rotationVector: zAxisVector
                     }
-                },
+                }, 
 
                 {
-                    name: "Minute Ticks",
+                    name: "Tick Objects",
                     vertices: nullObject,
-                    leafs: minuteTickObjects(0.85)
-                },        
-
-                {
-                    name: "Hour Ticks",
-                    vertices: nullObject,
-                    leafs: hourTickObjects(0.82)
+                    leafs: minuteTickObjects(0.86).concat(hourTickObjects(0.82))
                 }
             ]
         }
@@ -299,30 +292,31 @@
     /*
      * Displays all of the objects, including any leafs an object has.
      */
-    drawObjects = function (objectsToDraw) {
-        for (i = 0; i < objectsToDraw.length; i += 1) {
+    drawObject = function (objectToDraw) {
 
-            if (objectsToDraw[i].transforms) {
-                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
-                    new Float32Array(
-                        Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
-                    )
-                );
-            }
+        if (objectToDraw.transforms) {
+            gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                new Float32Array(
+                    Matrix4x4.getTransformMatrix(objectToDraw.transforms).columnOrder()
+                )
+            );
+        }
 
-            // Set the varying colors.
-            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
-            gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+        // Set the varying colors.
+        gl.bindBuffer(gl.ARRAY_BUFFER, objectToDraw.colorBuffer);
+        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-            // Set the varying vertex coordinates.
-            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
-            gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-            gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
+        // Set the varying vertex coordinates.
+        gl.bindBuffer(gl.ARRAY_BUFFER, objectToDraw.buffer);
+        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(objectToDraw.mode, 0, objectToDraw.vertices.length / 3);
 
-            if (objectsToDraw[i].leafs) {
-                    drawObjects(objectsToDraw[i].leafs);
+        if (objectToDraw.leafs && (objectToDraw.leafs.length !== 0)) {
+            for (i = 0; i < objectToDraw.leafs.length; i += 1) {
+                drawObject(objectToDraw.leafs[i]);
             }
         }
+
     };
 
     /*
@@ -335,12 +329,14 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()
             )
         );
 
         // Display the objects.
-        drawObjects(objectsToDraw);
+        for (i = 0; i < objectsToDraw.length; i += 1) {
+            drawObject(objectsToDraw[i]);
+        }
 
         // All done.
         gl.flush();
