@@ -63,25 +63,31 @@ var Shapes = {
             depthHalf = depth / 2;
 
         // The "top" cap of the cylinder.
+        vertices.push([0, 0, depthHalf]);
+        vertices.push([0, 0, -depthHalf]);
+
         for (i = 0; i < radiusSegments + 1; i += 1) {
             phi = (i * 2 * Math.PI) / radiusSegments;
             x = radius * Math.cos(phi);
             y = radius * Math.sin(phi);
             z = depthHalf;
+
             vertices.push([x, y, z]);
-            z = -depthHalf;
-            vertices.push([x, y, z]);
+            vertices.push([x, y, -z]);
         }
 
-        // This gets the indices of the cylinder.
-        for (i = 0; i < radiusSegments * 2; i += 1) {
 
-            indices.push([i, i+1, i+2]);
-            indices.push([i+2, i+3, i+4]);
+        for (i = 1; i < radiusSegments + 1; i += 1) {
+            indices.push([0, (i * 2), (i * 2) + 2]);
+            indices.push([1, (i * 2) + 1, (i * 2) + 3]);
+        }
+
+        for (i = 0; i < radiusSegments * 2 + 1; i += 1) {
+                indices.push([i, i+1, i+2]);
+                indices.push([i+2, i+3, i+4]);
         }
 
         cylinderData.vertices = vertices;
-        console.log(vertices.length);
         cylinderData.indices = indices;
 
         return cylinderData;
