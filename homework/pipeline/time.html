@@ -7,7 +7,7 @@
     </head>
     <body>
         <center>
-            <canvas id="time" width="800" height="800">
+            <canvas id="time" width="1600" height="800">
                 Sorry, your web browser does not appear to support
                 the <code>canvas</code> element, either.
             </canvas>
@@ -53,14 +53,6 @@
             uniform mat4 cameraMatrix;
 
             void main(void) {
-                // JD: Note that the first transform applied is the rightmost one
-                //     (like function notation: f(g(h(x)))---notice how h is done
-                //     first.  You project at the very end, and the instance transform
-                //     is performed first.
-                //
-                //     See the comment that I put in regarding the rotation matrix over
-                //     in time.js; for now I have kept it as an individual rotation per
-                //     object.
                 gl_Position = projectionMatrix * cameraMatrix * transformMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
