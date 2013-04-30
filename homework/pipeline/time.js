@@ -44,6 +44,12 @@
         zAxisVector,
         hourHandTransform,
 
+        // Functions for creating clock objects.
+        tickTransform,
+        minuteTickObject,
+        hourTickObject,
+        clock,
+
         // A function that draws all of the objects.
         drawObjects,
 
@@ -89,7 +95,7 @@
                 );
     hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
-    secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.45, 0.005));
+    secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
@@ -112,44 +118,41 @@
         return tickObject;
     };
 
-    hourTickObjects = function (radius) {
+    tickObjects = function (radius) {
         var i,
-            hourTickArray = [],
-            hourTickObject = {};
+            tickArray = [],
+            tickObject = {};
 
-        for (i = 1; i < 13; i ++) {
-            hourTickObject = {
+        for (i = 1; i < 61; i ++) {
+            if (i % 5 !== 0) {
+                tickObject =  {
+                        name: i.toString() + " Minute Tick",
+                        color: { r: 0.196, g: 0.196, b: 0.196 },
+                        vertices: minuteTick,
+                        mode: gl.TRIANGLES,
+                        transforms: tickTransform(true, i, radius + 0.04)
+                    };
+            } else {
+                tickObject = {
                     name: i.toString() + " Hour Tick",
                     color: { r: 0.196, g: 0.196, b: 0.196 },
                     vertices: hourTick,
                     mode: gl.TRIANGLES,
                     transforms: tickTransform(false, i, radius)
                 };
-            hourTickArray.push(hourTickObject);
+            }
+            tickArray.push(tickObject);
         }
 
-        return hourTickArray;
+        return tickArray;
     };
 
-    minuteTickObjects = function (radius) {
-        var i,
-            minuteTickArray = [],
-            minuteTickObject = {};
+    clock = function (radius) {
+        var clockObject = {},
+            i;
 
-        for (i = 1; i < 61; i ++) {
-            if (i % 5 !== 0) {
-                minuteTickObject =  {
-                        name: i.toString() + " Minute Tick",
-                        color: { r: 0.196, g: 0.196, b: 0.196 },
-                        vertices: minuteTick,
-                        mode: gl.TRIANGLES,
-                        transforms: tickTransform(true, i, radius)
-                    };
-                minuteTickArray.push(minuteTickObject);
-            }
-        }
 
-        return minuteTickArray;
+        return clockObject;
     };
 
     objectsToDraw = [
@@ -157,7 +160,7 @@
             name: "Clock Face",
             color: { r: 0.863, g: 0.863, b: 0.863 },
             vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80)),
-            mode: gl.TRIANGLES,
+            mode: gl.TRIANGLE_FAN,
             transforms: {
                 tx: 0,
                 ty: 0,
@@ -170,22 +173,23 @@
                     vertices: secondHand,
                     mode: gl.TRIANGLES,
                     transforms: {
-                        ty: 0.25,
+                        ty: 0.2,
                         angle: secondAngle,
                         rotationVector: zAxisVector
-                    }
-                },
-
-                {
-                    name: "Red Second Hand Circle",
-                    color: {r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.1, 0.005, 30)),
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        ty: 0.6,
-                        angle: secondAngle,
-                        rotationVector: zAxisVector
-                    }
+                    },
+                    leafs: [
+                        {
+                            name: "Red Second Hand Circle",
+                            color: {r: 0.803, g: 0.113, b: 0.113 },
+                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30)),
+                            mode: gl.TRIANGLES,
+                            transforms: {
+                                ty: 0.65,
+                                angle: secondAngle,
+                                rotationVector: zAxisVector
+                            }
+                        }
+                    ]
                 },
 
                 {
@@ -215,7 +219,7 @@
                 {
                     name: "Tick Objects",
                     vertices: nullObject,
-                    leafs: minuteTickObjects(0.86).concat(hourTickObjects(0.82))
+                    leafs: tickObjects(0.82)
                 }
             ]
         }
@@ -223,6 +227,7 @@
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
+        var i;
         for (i = 0; i < objectsToDraw.length; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
@@ -293,6 +298,7 @@
      * Displays all of the objects, including any leafs an object has.
      */
     drawObject = function (objectToDraw) {
+        var i;
 
         if (objectToDraw.transforms) {
             gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
@@ -329,7 +335,7 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 1, 1, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
             )
         );
 
@@ -353,7 +359,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -2, 2).columnOrder()
+            Matrix4x4.getOrthoMatrix(-2, 2, -1, 1, -2, 2).columnOrder()
         )
     );
 
