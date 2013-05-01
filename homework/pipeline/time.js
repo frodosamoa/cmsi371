@@ -126,12 +126,12 @@
         for (i = 1; i < 61; i ++) {
             if (i % 5 !== 0) {
                 tickObject =  {
-                        name: i.toString() + " Minute Tick",
-                        color: { r: 0.196, g: 0.196, b: 0.196 },
-                        vertices: minuteTick,
-                        mode: gl.TRIANGLES,
-                        transforms: tickTransform(true, i, radius + 0.04)
-                    };
+                    name: i.toString() + " Minute Tick",
+                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    vertices: minuteTick,
+                    mode: gl.TRIANGLES,
+                    transforms: tickTransform(true, i, radius + 0.04)
+                };
             } else {
                 tickObject = {
                     name: i.toString() + " Hour Tick",
@@ -227,7 +227,9 @@
 
     // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
     vertexify = function (objectsToDraw) {
+        // Redeclaration of i necessary for recursiveness.
         var i;
+        
         for (i = 0; i < objectsToDraw.length; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
@@ -298,6 +300,7 @@
      * Displays all of the objects, including any leafs an object has.
      */
     drawObject = function (objectToDraw) {
+        // Redeclaration of i necessary for recursiveness.
         var i;
 
         if (objectToDraw.transforms) {
@@ -369,20 +372,32 @@
     // Draw the initial scene.
     drawScene();
 
+
     // Set up the rotation toggle: clicking on the canvas does it.
     $(canvas).click(function () {
-        if (currentInterval) {
-            clearInterval(currentInterval);
-            currentInterval = null;
-        } else {
-            currentInterval = setInterval(function () {
-                currentRotation += 1.0;
-                drawScene();
-                if (currentRotation >= 360.0) {
-                    currentRotation -= 360.0;
-                }
-            }, 30);
+
+        var mouseDown = false;
+
+        $(canvas).mousedown(function() {
+            mouseDown = true;
+        }).mouseup(function() {
+            mouseDown = false;  
+        });
+
+        if (mouseDown) {
+            console.log("mouseisdown");
+            $(canvas).mousemove(function() {
+                console.log("poooooop");
+            })
         }
+/*
+        currentInterval = setInterval(function () {
+            currentRotation += 1.0;
+            drawScene();
+            if (currentRotation >= 360.0) {
+                currentRotation -= 360.0;
+            }
+        }, 100);*/
     });
 
 }(document.getElementById("time")));
