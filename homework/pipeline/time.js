@@ -229,7 +229,7 @@
     vertexify = function (objectsToDraw) {
         // Redeclaration of i necessary for recursiveness.
         var i;
-        
+
         for (i = 0; i < objectsToDraw.length; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
@@ -378,19 +378,22 @@
 
         var mouseDown = false;
 
-        $(canvas).mousedown(function() {
+        $(canvas).mousedown(function(event) {
             mouseDown = true;
-        }).mouseup(function() {
+            console.log(mouseDown);
+        }).mouseup(function(event) {
             mouseDown = false;  
+            $(canvas).unbind('mousedown');
+            console.log(mouseDown);
         });
-
+/*
         if (mouseDown) {
             console.log("mouseisdown");
             $(canvas).mousemove(function() {
                 console.log("poooooop");
             })
         }
-/*
+
         currentInterval = setInterval(function () {
             currentRotation += 1.0;
             drawScene();
