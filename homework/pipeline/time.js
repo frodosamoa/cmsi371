@@ -32,6 +32,26 @@
         vertexColor,
 
         // Variables for the clock.
+        // JD: Good; this is effectively your "model model."
+        //     For better readability, consider putting these
+        //     in a single object, i.e.,
+        //
+        // clock = {
+        //         currentDate: new Date(),
+        //         (you can put other initializations here if
+        //          they can be invoked immediately)
+        //     },
+        //
+        //     Thus, your code will look like this, making it
+        //     easier to tell when you are accessing your
+        //     core model data:
+        //
+        // clock.secondAngle = clock.currentDate.getSeconds() * 6;
+        // clock.hourAngle = ...;
+        //
+        //     ...etc.  Clock-specific functions can be held here
+        //     also, again in the spirit of better readability and
+        //     separation of concerns.
         currentDate,
         secondAngle,
         hourAngle,
@@ -229,7 +249,7 @@
     vertexify = function (objectsToDraw) {
         // Redeclaration of i necessary for recursiveness.
         var i;
-
+        
         for (i = 0; i < objectsToDraw.length; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
@@ -378,22 +398,24 @@
 
         var mouseDown = false;
 
-        $(canvas).mousedown(function(event) {
+        // JD: I'm not sure what you're trying to do here...but just
+        //     note that you are setting an event handler within
+        //     another event handler.  This can work under certain
+        //     circumstances, but you have to be very clear on what
+        //     your intended behavior/interaction should be.
+        $(canvas).mousedown(function() {
             mouseDown = true;
-            console.log(mouseDown);
-        }).mouseup(function(event) {
+        }).mouseup(function() {
             mouseDown = false;  
-            $(canvas).unbind('mousedown');
-            console.log(mouseDown);
         });
-/*
+
         if (mouseDown) {
             console.log("mouseisdown");
             $(canvas).mousemove(function() {
                 console.log("poooooop");
             })
         }
-
+/*
         currentInterval = setInterval(function () {
             currentRotation += 1.0;
             drawScene();
