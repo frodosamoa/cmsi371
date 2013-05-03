@@ -76,14 +76,14 @@ var Shapes = {
             vertices.push([x, y, -z]);
         }
 
-        for (i = 0; i < radiusSegments + 1; i += 1) {
-            indices.push([0, (i * 2) + 2, (i * 2) + 4]);
-            indices.push([1, (i * 2) + 3, (i * 2) + 5]);
+        for (i = 1; i < radiusSegments + 1; i += 1) {
+            indices.push([0, (i * 2), (i * 2) + 2]);
+            indices.push([1, (i * 2) + 1, (i * 2) + 3]);
         }
 
-        for (i = 2; i < (radiusSegments * 2) + 1; i += 1) {
-            indices.push([i, i + 1, i + 2]);
-            indices.push([i + 1, i + 2, i + 3]);
+        for (i = 0; i < radiusSegments * 2 + 1; i += 1) {
+            indices.push([i, i+1, i+2]);
+            indices.push([i+2, i+3, i+4]);
         }
 
         cylinderData.vertices = vertices;
