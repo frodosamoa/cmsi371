@@ -393,36 +393,25 @@
     drawScene();
 
 
-    // Set up the rotation toggle: clicking on the canvas does it.
-    $(canvas).click(function () {
-
-        var mouseDown = false;
-
-        // JD: I'm not sure what you're trying to do here...but just
-        //     note that you are setting an event handler within
-        //     another event handler.  This can work under certain
-        //     circumstances, but you have to be very clear on what
-        //     your intended behavior/interaction should be.
-        $(canvas).mousedown(function() {
-            mouseDown = true;
-        }).mouseup(function() {
-            mouseDown = false;  
-        });
-
-        if (mouseDown) {
-            console.log("mouseisdown");
-            $(canvas).mousemove(function() {
-                console.log("poooooop");
-            })
-        }
-/*
-        currentInterval = setInterval(function () {
-            currentRotation += 1.0;
+    // Rotate the canvas based on user input.
+    $(canvas).mousedown(function (event) {
+        isRotating = true;
+        mouseXStartingPoint = event.clientX;
+        mouseYStartingPoint = event.clientY;
+        startingYRotation = currentYRotation;
+        startingXRotation = currentXRotation;
+    });
+        
+    $(canvas).mousemove(function (event) {
+        if (isRotating) {
+            currentYRotation = startingYRotation + (event.clientX - mouseXStartingPoint);
+            currentXRotation = startingXRotation + (event.clientY - mouseYStartingPoint);
             drawScene();
-            if (currentRotation >= 360.0) {
-                currentRotation -= 360.0;
-            }
-        }, 100);*/
+        }
+    });
+
+    $(canvas).mouseup(function () {
+        isRotating = false;
     });
 
 }(document.getElementById("time")));
