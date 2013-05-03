@@ -63,6 +63,7 @@
         minuteHand,
         zAxisVector,
         hourHandTransform,
+        isRotating = false,
 
         // Functions for creating clock objects.
         tickTransform,
@@ -116,6 +117,7 @@
     hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
+    secondHandCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
@@ -123,11 +125,7 @@
         var angle,
             tickObject = {};
 
-        if (minuteORHour) {
-            angle = time * 6;
-        } else {
-            angle = time * 30;
-        }
+        angle = minuteORHour ? time * 6 : time * 30;
 
         tickObject = {
             tx: radius,
@@ -140,14 +138,15 @@
 
     tickObjects = function (radius) {
         var i,
-            tickArray = [],
+            tickObjects = [],
             tickObject = {};
+
 
         for (i = 1; i < 61; i ++) {
             if (i % 5 !== 0) {
                 tickObject =  {
                     name: i.toString() + " Minute Tick",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    color : { r: 0.196, g: 0.196, b: 0.196 },
                     vertices: minuteTick,
                     mode: gl.TRIANGLES,
                     transforms: tickTransform(true, i, radius + 0.04)
@@ -155,17 +154,74 @@
             } else {
                 tickObject = {
                     name: i.toString() + " Hour Tick",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
+                    color : { r: 0.196, g: 0.196, b: 0.196 },
                     vertices: hourTick,
                     mode: gl.TRIANGLES,
                     transforms: tickTransform(false, i, radius)
                 };
             }
-            tickArray.push(tickObject);
+            tickObjects.push(tickObject);
         }
 
-        return tickArray;
+        return tickObjects;
     };
+
+    minuteHandWebGl = function (minuteAngle, vertices) {
+        return {
+            name: "Minute Hand",
+            color: { r: 0.196, g: 0.196, b: 0.196 },
+            vertices: vertices,
+            mode: gl.TRIANGLES,
+            transforms: {
+                ty: 0.3,
+                angle: minuteAngle,
+                rotationVector: zAxisVector
+            }
+        }
+    };
+
+    hourHandWebGl = function (hourAngle, vertices) {
+        return {
+            name: "Hour Hand",
+            color: { r: 0.196, g: 0.196, b: 0.196 },
+            vertices: hourHand,
+            mode: gl.TRIANGLES,
+            transforms: {
+                ty: 0.2,
+                angle: hourAngle,
+                rotationVector: zAxisVector
+            }
+        }
+    };
+
+    secondHandWebGL = function (secondAngle, handVertices, circleVertices) {
+        return {
+            name: "Second Hand",
+            color: { r: 0.803, g: 0.113, b: 0.113 },
+            vertices: handVertices,
+            mode: gl.TRIANGLES,
+            transforms: {
+                ty: 0.2,
+                angle: secondAngle,
+                rotationVector: zAxisVector
+            },
+            leafs: [
+                {
+                    name: "Red Second Hand Circle",
+                    color: {r: 0.803, g: 0.113, b: 0.113 },
+                    vertices: circleVertices,
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        ty: 0.65,
+                        angle: secondAngle,
+                        rotationVector: zAxisVector
+                    }
+                }
+            ]
+        };
+    }
+
+
 
     clock = function (radius) {
         var clockObject = {},
@@ -187,54 +243,10 @@
                 tz: 0.2
             },
             leafs: [
-                {
-                    name: "Second Hand",
-                    color: { r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: secondHand,
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        ty: 0.2,
-                        angle: secondAngle,
-                        rotationVector: zAxisVector
-                    },
-                    leafs: [
-                        {
-                            name: "Red Second Hand Circle",
-                            color: {r: 0.803, g: 0.113, b: 0.113 },
-                            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30)),
-                            mode: gl.TRIANGLES,
-                            transforms: {
-                                ty: 0.65,
-                                angle: secondAngle,
-                                rotationVector: zAxisVector
-                            }
-                        }
-                    ]
-                },
 
-                {
-                    name: "Hour Hand",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: hourHand,
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        ty: 0.2,
-                        angle: hourAngle,
-                        rotationVector: zAxisVector
-                    }
-                },
-
-                {
-                    name: "Minute Hand",
-                    color: { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: minuteHand,
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        ty: 0.3,
-                        angle: minuteAngle,
-                        rotationVector: zAxisVector
-                    }
-                }, 
+                secondHandWebGL(secondAngle, secondHand, secondHandCircle),
+                hourHandWebGl(hourAngle, hourHand),
+                minuteHandWebGl(minuteAngle, minuteHand), 
 
                 {
                     name: "Tick Objects",
