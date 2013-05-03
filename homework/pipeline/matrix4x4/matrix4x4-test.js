@@ -178,6 +178,16 @@ $(function () {
               0,  0,  0, 2,
               0,  0, -1, 0], 
             "Pure matrix frustum projection test");
+
+        var m = Matrix4x4.getLookAtMatrix(-2, 2, -2, 2, -2, 2);
+        console.log(m.elements);
+        equal(m.dimensions(), 16, "Pure look at projection size check");
+        deepEqual(m.elements,
+            [-1,  0,  0, 0,
+              0, -1,  0, 0,
+              0,  0,  0, 2,
+              0,  0, -1, 0], 
+            "Pure look at projection test");
     });
 
     test("Matrix Multiplication", function () {
