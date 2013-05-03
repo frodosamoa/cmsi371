@@ -208,7 +208,7 @@
                 angle: secondAngle,
                 rotationVector: zAxisVector
             },
-            leafs: [
+            children: [
                 {
                     name: "Bigger Red Circle",
                     color: {r: 0.803, g: 0.113, b: 0.113 },
@@ -257,7 +257,7 @@
                 ty: 0,
                 tz: 0.2
             },
-            leafs: [
+            children: [
 
                 secondHandWebGL(secondAngle, secondHand, secondHandBigCircle, secondHandSmallCircle),
                 hourHandWebGl(hourAngle, hourHand),
@@ -266,13 +266,13 @@
                 {
                     name: "Tick Objects",
                     vertices: nullObject,
-                    leafs: tickObjects(0.82)
+                    children: tickObjects(0.82)
                 }
             ]
         }
     ];
 
-    // Pass the vertices of all of the objects to WebGL, including any objects' leafs.
+    // Pass the vertices of all of the objects to WebGL, including any objects' children.
     vertexify = function (objectsToDraw) {
         // Redeclaration of i necessary for recursiveness.
         var i;
@@ -298,8 +298,8 @@
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
 
-            if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length !== 0)) {
-                vertexify(objectsToDraw[i].leafs);
+            if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
+                vertexify(objectsToDraw[i].children);
             }
         }
     };  
@@ -344,7 +344,7 @@
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
 
     /*
-     * Displays all of the objects, including any leafs an object has.
+     * Displays all of the objects, including any children an object has.
      */
     drawObjects = function (objectsToDraw) {
         // Redeclaration of i necessary for recursiveness.
@@ -371,8 +371,8 @@
             gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
             gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
 
-            if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length !== 0)) {
-                    drawObjects(objectsToDraw[i].leafs);
+            if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
+                    drawObjects(objectsToDraw[i].children);
             }
         }
 
