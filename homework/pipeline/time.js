@@ -347,12 +347,14 @@
      * Displays all of the objects, including any leafs an object has.
      */
     drawObjects = function (objectsToDraw) {
-        for (i = 0; i < objectsToDraw.length; i += 1) {
+        // Redeclaration of i necessary for recursiveness.
+        var i;
 
-            // Redeclaration of i necessary for recursiveness.
-            var i;
+        for (i = 0; i < objectsToDraw.length; i += 1) {
+                
 
             if (objectsToDraw[i].transforms) {
+
                 gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                     new Float32Array(
                         Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
@@ -386,7 +388,7 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentXRotation, 0, 0, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentYRotation, 0, 0, 1).columnOrder()
             )
         );
 
