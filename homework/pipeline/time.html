@@ -51,9 +51,12 @@
             uniform mat4 rotationMatrix;
             uniform mat4 transformMatrix;
             uniform mat4 cameraMatrix;
+            uniform mat4 xRotationMatrix;
+            uniform mat4 yRotationMatrix;
 
             void main(void) {
-                gl_Position = projectionMatrix * cameraMatrix * transformMatrix * rotationMatrix * vec4(vertexPosition, 1.0);
+                gl_Position = projectionMatrix * cameraMatrix * transformMatrix * 
+                              xRotationMatrix * yRotationMatrix * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
             }
@@ -71,8 +74,8 @@
                 // We vary the color based on the fragment's z coordinate,
                 // which, at this point, ranges from 0 (near) to 1 (far).
                 // Note the ".rgb" subselector.
-                //gl_FragColor = vec4((1.0 - gl_FragCoord.z) * finalVertexColor.rgb, 1.0);
-                gl_FragColor = vec4(finalVertexColor.rgb, 1.0);
+                gl_FragColor = vec4((1.0 - gl_FragCoord.z) * finalVertexColor.rgb, 1.0);
+                //gl_FragColor = vec4(finalVertexColor.rgb, 1.0);
             }
         </script>
 
