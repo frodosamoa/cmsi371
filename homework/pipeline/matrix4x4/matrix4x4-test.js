@@ -158,6 +158,7 @@ $(function () {
     });
 
     // JD: How about getTransformMatrix?
+    // JD 0502: And now getLookAtMatrix also?
 
     test("Matrix Projection", function () {
         var m = new Matrix4x4.getOrthoMatrix(-2, 2, -10, 10, -5, 5);
