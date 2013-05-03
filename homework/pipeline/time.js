@@ -71,6 +71,11 @@
         hourTickObject,
         clock,
 
+        currentXRotation = 0,
+        currentYRotation = 0,
+        mouseXStartingPoint,
+        mouseYStartingPoint,
+
         // A function that draws all of the objects.
         drawObjects,
 
@@ -117,7 +122,8 @@
     hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
-    secondHandCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
+    secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
+    secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.2, 0.005, 30));
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
@@ -141,25 +147,22 @@
             tickObjects = [],
             tickObject = {};
 
-
         for (i = 1; i < 61; i ++) {
+            tickObject = {
+                color: { r: 0.196, g: 0.196, b: 0.196 },
+                mode: gl.TRIANGLES
+            };
+
             if (i % 5 !== 0) {
-                tickObject =  {
-                    name: i.toString() + " Minute Tick",
-                    color : { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: minuteTick,
-                    mode: gl.TRIANGLES,
-                    transforms: tickTransform(true, i, radius + 0.04)
-                };
+                tickObject.name = i.toString() + " Minute Tick",
+                tickObject.vertices = minuteTick;
+                tickObject.transforms = tickTransform(true, i, radius + 0.04);
             } else {
-                tickObject = {
-                    name: i.toString() + " Hour Tick",
-                    color : { r: 0.196, g: 0.196, b: 0.196 },
-                    vertices: hourTick,
-                    mode: gl.TRIANGLES,
-                    transforms: tickTransform(false, i, radius)
-                };
+                tickObject.name = (i / 5).toString() + " Hour Tick",
+                tickObject.vertices = hourTick;
+                tickObject.transforms = tickTransform(false, i, radius);
             }
+
             tickObjects.push(tickObject);
         }
 
@@ -194,7 +197,7 @@
         }
     };
 
-    secondHandWebGL = function (secondAngle, handVertices, circleVertices) {
+    secondHandWebGL = function (secondAngle, handVertices, bigCircleVertices, smallCircleVertices) {
         return {
             name: "Second Hand",
             color: { r: 0.803, g: 0.113, b: 0.113 },
@@ -207,16 +210,28 @@
             },
             leafs: [
                 {
-                    name: "Red Second Hand Circle",
+                    name: "Bigger Red Circle",
                     color: {r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: circleVertices,
+                    vertices: bigCircleVertices,
                     mode: gl.TRIANGLES,
                     transforms: {
                         ty: 0.65,
                         angle: secondAngle,
                         rotationVector: zAxisVector
                     }
+                },            
+
+                {
+                    name: "Smaller Red Circle",
+                    color: {r: 0.803, g: 0.113, b: 0.113 },
+                    vertices: smallCircleVertices,
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        angle: secondAngle,
+                        rotationVector: zAxisVector
+                    }
                 }
+
             ]
         };
     }
@@ -244,7 +259,7 @@
             },
             leafs: [
 
-                secondHandWebGL(secondAngle, secondHand, secondHandCircle),
+                secondHandWebGL(secondAngle, secondHand, secondHandBigCircle, secondHandSmallCircle),
                 hourHandWebGl(hourAngle, hourHand),
                 minuteHandWebGl(minuteAngle, minuteHand), 
 
@@ -331,30 +346,31 @@
     /*
      * Displays all of the objects, including any leafs an object has.
      */
-    drawObject = function (objectToDraw) {
-        // Redeclaration of i necessary for recursiveness.
-        var i;
+    drawObjects = function (objectsToDraw) {
+        for (i = 0; i < objectsToDraw.length; i += 1) {
 
-        if (objectToDraw.transforms) {
-            gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
-                new Float32Array(
-                    Matrix4x4.getTransformMatrix(objectToDraw.transforms).columnOrder()
-                )
-            );
-        }
+            // Redeclaration of i necessary for recursiveness.
+            var i;
 
-        // Set the varying colors.
-        gl.bindBuffer(gl.ARRAY_BUFFER, objectToDraw.colorBuffer);
-        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+            if (objectsToDraw[i].transforms) {
+                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                    new Float32Array(
+                        Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
+                    )
+                );
+            }
 
-        // Set the varying vertex coordinates.
-        gl.bindBuffer(gl.ARRAY_BUFFER, objectToDraw.buffer);
-        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.drawArrays(objectToDraw.mode, 0, objectToDraw.vertices.length / 3);
+            // Set the varying colors.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
+            gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        if (objectToDraw.leafs && (objectToDraw.leafs.length !== 0)) {
-            for (i = 0; i < objectToDraw.leafs.length; i += 1) {
-                drawObject(objectToDraw.leafs[i]);
+            // Set the varying vertex coordinates.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].buffer);
+            gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
+
+            if (objectsToDraw[i].leafs && (objectsToDraw[i].leafs.length !== 0)) {
+                    drawObjects(objectsToDraw[i].leafs);
             }
         }
 
@@ -370,14 +386,12 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentRotation, 0, 0, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentXRotation, 0, 0, 1).columnOrder()
             )
         );
 
         // Display the objects.
-        for (i = 0; i < objectsToDraw.length; i += 1) {
-            drawObject(objectsToDraw[i]);
-        }
+        drawObjects(objectsToDraw);
 
         // All done.
         gl.flush();
