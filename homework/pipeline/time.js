@@ -108,10 +108,11 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     currentDate = new Date();
-    secondAngle = currentDate.getSeconds() * 6;
+    secondAngle = (currentDate.getSeconds() + currentDate.getMilliseconds() * 0.001) * 6;
     minuteAngle = ((currentDate.getMinutes() + (currentDate.getSeconds() / 60)) * 6);
     hourAngle = (minuteAngle / 12) + (currentDate.getHours() * 30);
     zAxisVector = new Vector (0, 0, 1); 
+
 
     nullObject = Shapes.toRawTriangleArray(
                     {
@@ -123,7 +124,7 @@
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
     secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
-    secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.2, 0.005, 30));
+    secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, 0.005, 30));
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
@@ -251,12 +252,12 @@
             name: "Clock Face",
             color: { r: 0.863, g: 0.863, b: 0.863 },
             vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80)),
-            mode: gl.TRIANGLE_FAN,
+            mode: gl.TRIANGLES,
             transforms: {
                 tx: 0,
                 ty: 0,
                 tz: 0.2
-            },
+            }/*,
             children: [
 
                 secondHandWebGL(secondAngle, secondHand, secondHandBigCircle, secondHandSmallCircle),
@@ -268,7 +269,7 @@
                     vertices: nullObject,
                     children: tickObjects(0.82)
                 }
-            ]
+            ]*/
         }
     ];
 
@@ -340,26 +341,41 @@
     gl.enableVertexAttribArray(vertexColor);
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
+    yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
 
     /*
      * Displays all of the objects, including any children an object has.
      */
-    drawObjects = function (objectsToDraw) {
+    drawObjects = function (objectsToDraw, inheritedTransformMatrix) {
         // Redeclaration of i necessary for recursiveness.
         var i;
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
-                
 
+            // This if statement check to see if the object that is about to be drawn has any transforms.
             if (objectsToDraw[i].transforms) {
 
-                gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
-                    new Float32Array(
-                        Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
-                    )
-                );
+                // This if statement checks to see if the object's parents had any transforms.
+                // They will be multiplied through another matrix. If not, only the objects
+                // transforms are applied.
+                if (inheritedTransformMatrix) {
+                    inheritedTransformMatrix = Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).multiply
+                                (inheritedTransformMatrix);
+                    gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                        new Float32Array(
+                            Matrix4x4.getTransformMatrix(inheritedTransformMatrix.columnOrder())
+                        )
+                    );
+                } else {
+                    gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
+                        new Float32Array(
+                            Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
+                        )
+                    );
+                }
             }
 
             // Set the varying colors.
@@ -386,9 +402,16 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix before we draw the objects.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE,
+        gl.uniformMatrix4fv(xRotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentYRotation, 0, 0, 1).columnOrder()
+                Matrix4x4.getRotationMatrix(currentXRotation, 1, 0, 0).columnOrder()
+            )
+        );
+
+        // Set up the rotation matrix before we draw the objects.
+        gl.uniformMatrix4fv(yRotationMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getRotationMatrix(currentYRotation, 0, -1, 0).columnOrder()
             )
         );
 
@@ -410,7 +433,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-2, 2, -1, 1, -2, 2).columnOrder()
+            Matrix4x4.getOrthoMatrix(-2, 2, -1, 1, -3, 3).columnOrder()
         )
     );
 
