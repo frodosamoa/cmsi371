@@ -62,15 +62,16 @@
         hourHand,
         minuteHand,
         zAxisVector,
-        hourHandTransform,
-        isRotating = false,
 
         // Functions for creating clock objects.
         tickTransform,
         minuteTickObject,
         hourTickObject,
         clock,
+        clockWebGL,
 
+        // Variables for mouse rotation.
+        isRotating = false,
         currentXRotation = 0,
         currentYRotation = 0,
         mouseXStartingPoint,
@@ -107,11 +108,19 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    currentDate = new Date();
-    secondAngle = (currentDate.getSeconds() + currentDate.getMilliseconds() * 0.001) * 6;
-    minuteAngle = ((currentDate.getMinutes() + (currentDate.getSeconds() / 60)) * 6);
-    hourAngle = (minuteAngle / 12) + (currentDate.getHours() * 30);
-    zAxisVector = new Vector (0, 0, 1); 
+
+    // This function returns a clock object with all of the information
+    // necessary to be passed to WebGL.
+    clock = function () {
+        clock = { currentDate: new Date() };
+        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
+        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
+        clock.hourAngle = (minuteAngle / 12) + (clock.currentDate.getHours() * 30);
+        clock.zAxisVector = new Vector (0, 0, 1);
+        clock.radius = 1;
+
+        return clock;
+    }
 
 
     nullObject = Shapes.toRawTriangleArray(
@@ -120,6 +129,7 @@
                         indices: [0]
                     }
                 );
+
     hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
     minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
     secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
@@ -128,8 +138,10 @@
     minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
     hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
-    tickTransform = function (minuteORHour, time, radius) {
-        var angle,
+    var clock1 = clock();
+
+    tickTransform = function (clock, minuteORHour, time, radius) {
+        var i,
             tickObject = {};
 
         angle = minuteORHour ? time * 6 : time * 30;
@@ -137,13 +149,13 @@
         tickObject = {
             tx: radius,
             angle: angle,
-            rotationVector: zAxisVector
+            rotationVector: clock.zAxisVector
         };
 
         return tickObject;
     };
 
-    tickObjects = function (radius) {
+    tickObjects = function (clock, radius) {
         var i,
             tickObjects = [],
             tickObject = {};
@@ -157,11 +169,11 @@
             if (i % 5 !== 0) {
                 tickObject.name = i.toString() + " Minute Tick",
                 tickObject.vertices = minuteTick;
-                tickObject.transforms = tickTransform(true, i, radius + 0.04);
+                tickObject.transforms = tickTransform(clock, true, i, radius + 0.04);
             } else {
                 tickObject.name = (i / 5).toString() + " Hour Tick",
                 tickObject.vertices = hourTick;
-                tickObject.transforms = tickTransform(false, i, radius);
+                tickObject.transforms = tickTransform(clock, false, i, radius);
             }
 
             tickObjects.push(tickObject);
@@ -170,21 +182,22 @@
         return tickObjects;
     };
 
-    minuteHandWebGl = function (minuteAngle, vertices) {
+    minuteHandWebGl = function (clock, minuteAngle, vertices) {
         return {
             name: "Minute Hand",
             color: { r: 0.196, g: 0.196, b: 0.196 },
-            vertices: vertices,
+            vertices: minuteHand,
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.3,
-                angle: minuteAngle,
-                rotationVector: zAxisVector
+                tz: 0.1,
+                angle: clock.minuteAngle,
+                rotationVector: clock.zAxisVector
             }
         }
     };
 
-    hourHandWebGl = function (hourAngle, vertices) {
+    hourHandWebGl = function (clock, hourAngle, vertices) {
         return {
             name: "Hour Hand",
             color: { r: 0.196, g: 0.196, b: 0.196 },
@@ -192,13 +205,14 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.2,
-                angle: hourAngle,
-                rotationVector: zAxisVector
+                tz: 0.1,
+                angle: clock.hourAngle,
+                rotationVector: clock.zAxisVector
             }
         }
     };
 
-    secondHandWebGL = function (secondAngle, handVertices, bigCircleVertices, smallCircleVertices) {
+    secondHandWebGL = function (clock, secondAngle, handVertices, bigCircleVertices) {
         return {
             name: "Second Hand",
             color: { r: 0.803, g: 0.113, b: 0.113 },
@@ -206,10 +220,10 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.2,
-                tz: -0.5,
-                angle: secondAngle,
-                rotationVector: zAxisVector
-            },
+                tz: 0.1,
+                angle: clock.secondAngle,
+                rotationVector: clock.zAxisVector
+            }/*,
             children: [
                 {
                     name: "Bigger Red Circle",
@@ -217,32 +231,68 @@
                     vertices: bigCircleVertices,
                     mode: gl.TRIANGLES,
                     transforms: {
-                        ty: 0.65,
-                        angle: secondAngle,
-                        rotationVector: zAxisVector
+                        ty: 0.4
                     }
-                },            
-
-                {
-                    name: "Smaller Red Circle",
-                    color: {r: 0.803, g: 0.113, b: 0.113 },
-                    vertices: smallCircleVertices,
-                    mode: gl.TRIANGLES,
-                    transforms: {
-                        angle: secondAngle,
-                        rotationVector: zAxisVector
-                    }
-                }
-
-            ]
+                }           
+            ]*/
         };
-    }
+    };
+
+    clockFace = function () {
+        return {
+            name: "Clock Face",
+            color: { r: 0.863, g: 0.863, b: 0.863 },
+            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.15, 80)),
+            mode: gl.TRIANGLES,
+            transforms: {
+                tx: 0,
+                ty: 0,
+                tz: -0.5
+            },
+        }
+    };
 
 
+    /**
+     * This creates a clok object ready to be sent to WegGl. It takes in a clock
+     * object with all of the necessary information to draw the object.
+     */ 
 
-    clock = function (radius) {
+    clockWebGL = function (clock) {
         var clockObject = {},
-            i;
+            i,
+
+
+            handDepth,
+
+            // Variables to hold all of the colors for the clock.
+            secondHandColor,
+            clockFaceColor,
+            tickAndOtherHandsColor,
+
+            // Variables to hold all of the vertices.
+            clockFaceVertices,
+            hourHandVertices,
+            minuteHandVertices,
+            secondHandVertices,
+            secondHandCircleVertices,
+            hourTickVertices,
+            minuteTickVertices;
+
+
+        // Assign the colors values.
+        secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
+        clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
+        tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+
+        // Assign the vertices variables with vertices.
+        hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
+        minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
+        secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
+        secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
+        secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, 0.005, 30));
+        minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
+        hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
 
         return clockObject;
@@ -257,21 +307,26 @@
             transforms: {
                 tx: 0,
                 ty: 0,
-                tz: 0.1
+                tz: -0.5
             },
-            children: [
+        },
 
-                secondHandWebGL(secondAngle, secondHand, secondHandBigCircle, secondHandSmallCircle),
-                hourHandWebGl(hourAngle, hourHand),
-                minuteHandWebGl(minuteAngle, minuteHand), 
+        hourHandWebGl(clock1, hourAngle, hourHand),
+        minuteHandWebGl(clock1, minuteAngle, minuteHand),
+        secondHandWebGL(clock1, secondAngle, secondHand, secondHandBigCircle),
 
-                {
-                    name: "Tick Objects",
-                    vertices: nullObject,
-                    children: tickObjects(0.82)
-                }
-            ]
-        }
+        {
+            name: "Tick Objects",
+            vertices: nullObject,
+            children: tickObjects(clock1, 0.82)
+         }//,
+
+        // {
+        //     name: "Smaller Red Circle",
+        //     color: {r: 0.803, g: 0.113, b: 0.113 },
+        //     vertices: smallCircleVertices,
+        //     mode: gl.TRIANGLES
+        // }
     ];
 
     // Pass the vertices of all of the objects to WebGL, including any objects' children.
@@ -352,9 +407,14 @@
      */
     drawObjects = function (objectsToDraw, inheritedTransforms) {
         // Redeclaration of i necessary for recursiveness.
+<<<<<<< HEAD
         // JD: Good find.  So, do you still need the i that is declared outside?
         var i,
             inheritedTransformMatrix = new Matrix4x4 ();
+=======
+        // var i,
+           var inheritedTransformMatrix = new Matrix4x4 ();
+>>>>>>> moved variables around for readability, created function for creating clocks, created function for creating a clockFace
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
@@ -365,6 +425,7 @@
                 // transforms are applied.
                 // JD: ^^^^^The intent is right, but the execution is missing something.
                 if (inheritedTransforms) {
+<<<<<<< HEAD
                     // JD: The trick is here.  You acquire the matrix for the inherited transforms, yes.
                     //     You then multiply it to inheritedTransformMatrix...which is the identity
                     //     matrix, and therefore has no effect!
@@ -372,6 +433,10 @@
                     //     Instead, you should be multiplying the inheritedTransforms matrix with
                     //     the matrix formed by the current object's transforms...see *
                     inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(inheritedTransformMatrix);
+=======
+                    inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(
+                                Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms));
+>>>>>>> moved variables around for readability, created function for creating clocks, created function for creating a clockFace
 
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                         new Float32Array(
@@ -437,8 +502,8 @@
     // Here is the camera matrix.
     gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
         Matrix4x4.getLookAtMatrix(
-            new Vector (0, 0, -1),
             new Vector (0, 0, 1),
+            new Vector (0, 0, -1),
             new Vector (0, 1, 0)
         ).columnOrder()));
     
@@ -453,7 +518,8 @@
     vertexify(objectsToDraw);
 
     // Draw the initial scene.
-    drawScene();
+    drawScene());
+
 
 
     // Rotate the canvas based on user input.
