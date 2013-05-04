@@ -352,6 +352,7 @@
      */
     drawObjects = function (objectsToDraw, inheritedTransforms) {
         // Redeclaration of i necessary for recursiveness.
+        // JD: Good find.  So, do you still need the i that is declared outside?
         var i,
             inheritedTransformMatrix = new Matrix4x4 ();
 
@@ -362,7 +363,14 @@
                 // This if statement checks to see if the object's parents had any transforms.
                 // They will be multiplied through another matrix. If not, only the objects
                 // transforms are applied.
+                // JD: ^^^^^The intent is right, but the execution is missing something.
                 if (inheritedTransforms) {
+                    // JD: The trick is here.  You acquire the matrix for the inherited transforms, yes.
+                    //     You then multiply it to inheritedTransformMatrix...which is the identity
+                    //     matrix, and therefore has no effect!
+                    //
+                    //     Instead, you should be multiplying the inheritedTransforms matrix with
+                    //     the matrix formed by the current object's transforms...see *
                     inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(inheritedTransformMatrix);
 
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
@@ -373,6 +381,8 @@
                 } else {
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                         new Float32Array(
+                            // JD: * THIS is what is not being multiplied to the inherited
+                            //     transform matrix.
                             Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).columnOrder()
                         )
                     );
