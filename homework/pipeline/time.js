@@ -206,6 +206,7 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.2,
+                tz: -0.5,
                 angle: secondAngle,
                 rotationVector: zAxisVector
             },
@@ -349,10 +350,10 @@
     /*
      * Displays all of the objects, including any children an object has.
      */
-    drawObjects = function (objectsToDraw, inheritedTransformMatrix) {
+    drawObjects = function (objectsToDraw, inheritedTransforms) {
         // Redeclaration of i necessary for recursiveness.
         var i,
-            inheritedTransformMatrix;
+            inheritedTransformMatrix = new Matrix4x4 ();
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
@@ -361,13 +362,12 @@
                 // This if statement checks to see if the object's parents had any transforms.
                 // They will be multiplied through another matrix. If not, only the objects
                 // transforms are applied.
-                if (inheritedTransformMatrix) {
-                    inheritedTransformMatrix = Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).multiply
-                                (inheritedTransformMatrix);
+                if (inheritedTransforms) {
+                    inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(inheritedTransformMatrix);
 
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                         new Float32Array(
-                            Matrix4x4.getTransformMatrix(inheritedTransformMatrix.columnOrder())
+                            inheritedTransformMatrix.columnOrder()
                         )
                     );
                 } else {
@@ -389,7 +389,8 @@
             gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
 
             if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
-                    drawObjects(objectsToDraw[i].children, inheritedTransformMatrix);
+                inheritedTransforms = objectsToDraw[i].transforms;
+                drawObjects(objectsToDraw[i].children, inheritedTransforms);
             }
         }
 
