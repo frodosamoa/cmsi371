@@ -307,7 +307,7 @@
             transforms: {
                 tx: 0,
                 ty: 0,
-                tz: -0.5
+                tz: -0.1
             },
         },
 
@@ -407,14 +407,11 @@
      */
     drawObjects = function (objectsToDraw, inheritedTransforms) {
         // Redeclaration of i necessary for recursiveness.
-<<<<<<< HEAD
         // JD: Good find.  So, do you still need the i that is declared outside?
         var i,
             inheritedTransformMatrix = new Matrix4x4 ();
-=======
         // var i,
            var inheritedTransformMatrix = new Matrix4x4 ();
->>>>>>> moved variables around for readability, created function for creating clocks, created function for creating a clockFace
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
@@ -425,7 +422,6 @@
                 // transforms are applied.
                 // JD: ^^^^^The intent is right, but the execution is missing something.
                 if (inheritedTransforms) {
-<<<<<<< HEAD
                     // JD: The trick is here.  You acquire the matrix for the inherited transforms, yes.
                     //     You then multiply it to inheritedTransformMatrix...which is the identity
                     //     matrix, and therefore has no effect!
@@ -433,10 +429,8 @@
                     //     Instead, you should be multiplying the inheritedTransforms matrix with
                     //     the matrix formed by the current object's transforms...see *
                     inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(inheritedTransformMatrix);
-=======
                     inheritedTransformMatrix = Matrix4x4.getTransformMatrix(inheritedTransforms).multiply(
                                 Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms));
->>>>>>> moved variables around for readability, created function for creating clocks, created function for creating a clockFace
 
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                         new Float32Array(
@@ -518,7 +512,7 @@
     vertexify(objectsToDraw);
 
     // Draw the initial scene.
-    drawScene());
+    drawScene();
 
 
 
