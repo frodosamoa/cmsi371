@@ -55,8 +55,8 @@
             uniform mat4 yRotationMatrix;
 
             void main(void) {
-                gl_Position = projectionMatrix * cameraMatrix * transformMatrix * 
-                              xRotationMatrix * yRotationMatrix * vec4(vertexPosition, 1.0);
+                gl_Position = projectionMatrix * cameraMatrix * xRotationMatrix * yRotationMatrix * transformMatrix 
+                               * vec4(vertexPosition, 1.0);
                 finalVertexColor = vec4(vertexColor, 1.0);
                 gl_PointSize = 0.1;
             }
