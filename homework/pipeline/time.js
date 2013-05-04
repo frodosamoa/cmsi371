@@ -251,13 +251,13 @@
         {
             name: "Clock Face",
             color: { r: 0.863, g: 0.863, b: 0.863 },
-            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80)),
+            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.15, 80)),
             mode: gl.TRIANGLES,
             transforms: {
                 tx: 0,
                 ty: 0,
-                tz: 0.2
-            }/*,
+                tz: 0.1
+            },
             children: [
 
                 secondHandWebGL(secondAngle, secondHand, secondHandBigCircle, secondHandSmallCircle),
@@ -269,7 +269,7 @@
                     vertices: nullObject,
                     children: tickObjects(0.82)
                 }
-            ]*/
+            ]
         }
     ];
 
@@ -351,19 +351,20 @@
      */
     drawObjects = function (objectsToDraw, inheritedTransformMatrix) {
         // Redeclaration of i necessary for recursiveness.
-        var i;
+        var i,
+            inheritedTransformMatrix;
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
 
             // This if statement check to see if the object that is about to be drawn has any transforms.
             if (objectsToDraw[i].transforms) {
-
                 // This if statement checks to see if the object's parents had any transforms.
                 // They will be multiplied through another matrix. If not, only the objects
                 // transforms are applied.
                 if (inheritedTransformMatrix) {
                     inheritedTransformMatrix = Matrix4x4.getTransformMatrix(objectsToDraw[i].transforms).multiply
                                 (inheritedTransformMatrix);
+
                     gl.uniformMatrix4fv(transformMatrix, gl.FALSE, 
                         new Float32Array(
                             Matrix4x4.getTransformMatrix(inheritedTransformMatrix.columnOrder())
@@ -388,7 +389,7 @@
             gl.drawArrays(objectsToDraw[i].mode, 0, objectsToDraw[i].vertices.length / 3);
 
             if (objectsToDraw[i].children && (objectsToDraw[i].children.length !== 0)) {
-                    drawObjects(objectsToDraw[i].children);
+                    drawObjects(objectsToDraw[i].children, inheritedTransformMatrix);
             }
         }
 
@@ -404,14 +405,14 @@
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(xRotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentXRotation, 1, 0, 0).columnOrder()
+                Matrix4x4.getRotationMatrix(currentXRotation / 4, 1, 0, 0).columnOrder()
             )
         );
 
         // Set up the rotation matrix before we draw the objects.
         gl.uniformMatrix4fv(yRotationMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getRotationMatrix(currentYRotation, 0, -1, 0).columnOrder()
+                Matrix4x4.getRotationMatrix(currentYRotation / 4, 0, 1, 0).columnOrder()
             )
         );
 
