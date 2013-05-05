@@ -40,12 +40,13 @@
         minuteHand,
         zAxisVector,
 
-        // Functions for creating clock objects.
+        // Functions for creating WebGL ready clock objects.
         tickTransform,
-        tickObjects,
+        tickObjectsWebGL,
         secondHandWebGL,
         minuteHandWebGl,
         hourHandWebGl,
+        clockFaceWebGL,
         clockWebGL,
 
         // Variables for mouse rotation.
@@ -97,6 +98,10 @@
         clock.zAxisVector = new Vector (0, 0, 1);
         clock.radius = 1;
 
+        clock.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
+        clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
+        clock.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+
         return clock;
     }
 
@@ -118,30 +123,39 @@
 
     var clock1 = clock();
 
+    /**
+     *  Helper function for computing tick transforms.
+     */
+
     tickTransform = function (clock, minuteORHour, time, radius) {
         var i,
-            tickObject = {};
+            tickTransform = {};
 
+        // Boolean assignment to see if we have a minute or hour tick.
         angle = minuteORHour ? time * 6 : time * 30;
 
-        tickObject = {
+        tickTransform = {
             tx: radius,
             angle: angle,
             rotationVector: clock.zAxisVector
         };
 
-        return tickObject;
+        return tickTransform;
     };
 
-    tickObjects = function (clock, radius) {
-        var i,
-            tickObjects = [],
+    /**
+     *  Returns an array of tick objects ready to be drawn by WebGL.
+     */  
+
+    tickObjectsWebGL = function (clock, radius) {
+        var tickObjects = [],
             tickObject = {};
 
         for (i = 1; i < 61; i ++) {
+            // Since every tick object has the same color and mode, assign it here.
             tickObject = {
                 color: { r: 0.196, g: 0.196, b: 0.196 },
-                mode: gl.TRIANGLES
+                mode: gl.TRIANGLES,
             };
 
             if (i % 5 !== 0) {
@@ -159,6 +173,10 @@
 
         return tickObjects;
     };
+
+    /**
+     *  Returns a minute hand ready to be drawn by WebGL.
+     */     
 
     minuteHandWebGl = function (clock, vertices) {
         return {
@@ -216,7 +234,7 @@
         };
     };
 
-    clockFace = function () {
+    clockFaceWebGL = function () {
         return {
             name: "Clock Face",
             color: { r: 0.863, g: 0.863, b: 0.863 },
@@ -264,11 +282,6 @@
 
             handDepth,
 
-            // Variables to hold all of the colors for the clock.
-            secondHandColor,
-            clockFaceColor,
-            tickAndOtherHandsColor,
-
             // Variables to hold all of the vertices.
             clockFaceVertices,
             hourHandVertices,
@@ -282,9 +295,7 @@
         handDepth = 0.005;
 
         // Assign the colors values.
-        secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
-        clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
-        tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+
 
         // Assign the vertices variables with vertices.
         hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, handDepth));
@@ -297,15 +308,19 @@
 
 
         // Add the clock face to the array of clock objects.
+        clockObject.push(clockFaceWebGL);
 
         // Add the second hand to the array of clock objects.
+        clockObject.push(clockFaceWebGL);
 
         // Add the minute hand to the array of clock objects.
+        clockObject.push(clockFaceWebGL);
 
         // Add the hour hand to the array of clock objects.
+        clockObject.push(clockFaceWebGL);
 
         // Add the ticks to the array of clock objects.
-
+        clockObject.push(clockFaceWebGL);
 
         return clockObject;
     };
