@@ -62,7 +62,7 @@ var Shapes = {
             cylinderData = {},
             depthHalf = depth / 2;
 
-        // The top and bottom middle points of the cylinder
+        // The top and bottom middle points of the cylinder are pushed first.
         vertices.push([0, 0, depthHalf]);
         vertices.push([0, 0, -depthHalf]);
 
