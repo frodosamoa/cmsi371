@@ -96,22 +96,32 @@
         clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
         clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
         clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
-        clock.zAxisVector = new Vector (0, 0, 1);
+        clock.zAxisVector = new Vector (0, 0, -1);
         clock.radius = 1;
+
 
         // Colors of the clock.
         clock.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
-        clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
-        clock.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+        var day = true;
+        if (day) {    
+            clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
+            clock.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+        } else {
+            clock.clockFaceColor = { r: 0.062, g: 0.062, b: 0.062 };
+            clock.tickAndOtherHandsColor = { r: 0.878, g: 0.878, b: 0.878 }; 
+        }
+
+        // Reusable depth variable.
+        clock.handDepth = 0.005;
 
         // Vertices of the clock.
-        clock.hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
-        clock.minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
-        clock.secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
-        clock.secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
-        clock.secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, 0.005, 30));
-        clock.minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
-        clock.hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
+        clock.hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, clock.handDepth));
+        clock.minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, clock.handDepth));
+        clock.secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, clock.handDepth));
+        clock.secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, clock.handDepth, 30));
+        clock.secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, clock.handDepth, 30));
+        clock.minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, clock.handDepth));
+        clock.hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, clock.handDepth));
 
         return clock;
     }
