@@ -9,35 +9,37 @@ var Shapes = {
      * Returns the vertices for a six sided three dimensional hexahedron.
      */
     hexahedron: function (x, y, z) {
-        var X = x,
-            Y = y,
-            Z = z;
+        // These variables are divided by two because I will be passing
+        // the full lengths of each dimension of the hexahedron.
+        var X = x / 2,
+            Y = y / 2,
+            Z = z / 2;
 
         return {
             vertices: [
-                [X, Y, Z],
-                [X, Y, -Z],
-                [X, -Y, Z],
-                [X, -Y, -Z],
-                [-X, Y, Z],
-                [-X, Y, -Z],
-                [-X, -Y, Z],
-                [-X, -Y, -Z]
+                [ X, Y, Z ],
+                [ X, Y, -Z ],
+                [ -X, Y, -Z ],
+                [ -X, Y, Z ],
+                [ X, -Y, Z ],
+                [ X, -Y, -Z ],
+                [ -X, -Y, -Z ],
+                [ -X, -Y, Z ]
             ],
 
             indices: [
-                [0, 1, 3],
-                [2, 0, 3],
-                [7, 2, 3],
-                [6, 7, 2],
-                [4, 0, 2],
-                [6, 4, 2],
-                [5, 1, 7],
-                [1, 3, 7],
-                [4, 5, 7],
-                [6, 4, 7],
-                [4, 5, 0],
-                [5, 1, 0]
+                [ 0, 1, 3 ],
+                [ 2, 3, 1 ],
+                [ 0, 3, 4 ],
+                [ 7, 4, 3 ],
+                [ 0, 4, 1 ],
+                [ 5, 1, 4 ],
+                [ 1, 5, 6 ],
+                [ 2, 1, 6 ],
+                [ 2, 7, 3 ],
+                [ 6, 7, 2 ],
+                [ 4, 7, 6 ],
+                [ 5, 4, 6 ]
             ]
         };
     },
@@ -46,10 +48,7 @@ var Shapes = {
      * Returns the vertices for a cylinder.
      */
     cylinder: function (radius, depth, radiusSegments) {
-        var radius = radius,
-            height = height,
-            theta,
-            radiusSegments = radiusSegments,
+        var theta,
             i,
             j,
             x,
