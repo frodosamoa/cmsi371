@@ -115,13 +115,14 @@
         clock.handDepth = 0.005;
 
         // Vertices of the clock.
-        clock.hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, clock.handDepth));
-        clock.minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, clock.handDepth));
-        clock.secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, clock.handDepth));
+        clock.clockFaceVertices = Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80));
+        clock.hourTickVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, clock.handDepth));
+        clock.minuteTickVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, clock.handDepth));
+        clock.secondHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, clock.handDepth));
         clock.secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, clock.handDepth, 30));
         clock.secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, clock.handDepth, 30));
-        clock.minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, clock.handDepth));
-        clock.hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, clock.handDepth));
+        clock.minuteHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, clock.handDepth));
+        clock.hourHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, clock.handDepth));
 
         return clock;
     }
@@ -134,13 +135,6 @@
                     }
                 );
 
-    hourTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, 0.005));
-    minuteTick = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, 0.005));
-    secondHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, 0.005));
-    secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, 0.005, 30));
-    secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, 0.005, 30));
-    minuteHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, 0.005));
-    hourHand = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, 0.005));
 
     var clock1 = clock();
 
@@ -181,11 +175,11 @@
 
             if (i % 5 !== 0) {
                 tickObject.name = i.toString() + " Minute Tick",
-                tickObject.vertices = minuteTick;
+                tickObject.vertices = clock.minuteTickVertices;
                 tickObject.transforms = tickTransform(clock, true, i, radius + 0.04);
             } else {
                 tickObject.name = (i / 5).toString() + " Hour Tick",
-                tickObject.vertices = hourTick;
+                tickObject.vertices = clock.hourTickVertices;
                 tickObject.transforms = tickTransform(clock, false, i, radius);
             }
 
@@ -199,11 +193,11 @@
      *  Returns a minute hand ready to be drawn by WebGL.
      */     
 
-    minuteHandWebGl = function (clock, vertices) {
+    minuteHandWebGl = function (clock) {
         return {
             name: "Minute Hand",
             color: clock.tickAndOtherHandsColor,
-            vertices: minuteHand,
+            vertices: clock.minuteHandVertices,
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.3,
@@ -214,11 +208,11 @@
         }
     };
 
-    hourHandWebGl = function (clock, vertices) {
+    hourHandWebGl = function (clock) {
         return {
             name: "Hour Hand",
             color: clock.tickAndOtherHandsColor,
-            vertices: hourHand,
+            vertices: clock.hourHandVertices,
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.2,
@@ -229,11 +223,11 @@
         }
     };
 
-    secondHandWebGL = function (clock, handVertices, bigCircleVertices) {
+    secondHandWebGL = function (clock) {
         return {
             name: "Second Hand",
             color: clock.secondHandColor,
-            vertices: handVertices,
+            vertices: clock.secondHandVertices,
             mode: gl.TRIANGLES,
             transforms: {
                 ty: 0.3,
@@ -245,7 +239,7 @@
                 {
                     name: "Red Circle",
                     color: clock.secondHandColor,
-                    vertices: bigCircleVertices,
+                    vertices: clock.secondHandBigCircle,
                     mode: gl.TRIANGLES,
                     transforms: {
                         ty: 0.35
@@ -259,7 +253,7 @@
         return {
             name: "Clock Face",
             color: clock.clockFaceColor,
-            vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80)),
+            vertices: clock.clockFaceVertices,
             mode: gl.TRIANGLES,
             transforms: {
                 tz: -0.1
@@ -329,9 +323,9 @@
     objectsToDraw = [
 
         clockFaceWebGL(clock1),
-        hourHandWebGl(clock1, hourHand),
-        minuteHandWebGl(clock1, minuteHand),
-        secondHandWebGL(clock1, secondHand, secondHandBigCircle),
+        hourHandWebGl(clock1),
+        minuteHandWebGl(clock1),
+        secondHandWebGL(clock1),
 
         {
             name: "Tick Objects",
