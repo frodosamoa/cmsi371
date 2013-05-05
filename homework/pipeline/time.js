@@ -102,6 +102,9 @@
 
         // Colors of the clock.
         clock.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
+
+        // Depending on if it is day ot night time in a certain region,
+        // change the colors of the clock. TODO
         var day = true;
         if (day) {    
             clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
@@ -113,16 +116,63 @@
 
         // Reusable depth variable.
         clock.handDepth = 0.005;
+        clock.hourAndMinuteHandWidth = clock.radius * 0.039;
+
+        clock.tickOffset = clock.radius * 0.023;
+
+    //clock width 760
+
+    // hour tick length 86
+    // hour tick width 30
+
+    // minute tick length 35
+
+    // tick offset from outside 18
+
+    // minute hand length 437
+    // minute hand width 30
+    // minute hand offset from outside 54
+
+    // hour hand length 312
+    // hour hand offset from outside 175
+
+    // second hand circle radius 57
+    // second hand small circle radius 25
+
+    // second hand length  209
+    // second hand offset from circel 175
+    // second hand width 12
 
         // Vertices of the clock.
-        clock.clockFaceVertices = Shapes.toRawTriangleArray(Shapes.cylinder(0.95, 0.2, 80));
-        clock.hourTickVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.10, 0.03, clock.handDepth));
-        clock.minuteTickVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.06, 0.007, clock.handDepth));
+        clock.clockFaceVertices = Shapes.toRawTriangleArray(Shapes.cylinder(clock.radius, 0.2, 80));
+
+        clock.hourTickVertices = Shapes.toRawTriangleArray(
+                                    Shapes.hexahedron(
+                                        clock.radius * 0.113, clock.hourAndMinuteHandWidth, clock.handDepth
+                                    )
+                                );
+
+        clock.minuteTickVertices = Shapes.toRawTriangleArray(
+                                        Shapes.hexahedron(
+                                            0.06, 0.007, clock.handDepth
+                                        )
+                                    );
+
         clock.secondHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, clock.handDepth));
         clock.secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, clock.handDepth, 30));
         clock.secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, clock.handDepth, 30));
-        clock.minuteHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.55, clock.handDepth));
-        clock.hourHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.03, 0.3, clock.handDepth));
+
+        clock.minuteHandVertices = Shapes.toRawTriangleArray(
+                                        Shapes.hexahedron(
+                                            clock.hourAndMinuteHandWidth, clock.radius * 0.575, clock.handDepth
+                                        )
+                                    );
+
+        clock.hourHandVertices = Shapes.toRawTriangleArray(
+                                    Shapes.hexahedron(
+                                        clock.hourAndMinuteHandWidth, clock.radius * 0.41, clock.handDepth
+                                    )
+                                );
 
         return clock;
     }
@@ -142,12 +192,11 @@
      *  Helper function for computing tick transforms.
      */
 
-    tickTransform = function (clock, minuteORHour, time, radius) {
-        var i,
-            tickTransform = {};
+    tickTransform = function (clock, minuteORHour, i, radius) {
+        var tickTransform = {};
 
         // Boolean assignment to see if we have a minute or hour tick.
-        angle = minuteORHour ? time * 6 : time * 30;
+        angle = minuteORHour ? i * 6 : i * 30;
 
         tickTransform = {
             tx: radius,
@@ -162,7 +211,7 @@
      *  Returns an array of tick objects ready to be drawn by WebGL.
      */  
 
-    tickObjectsWebGL = function (clock, radius) {
+    tickObjectsWebGL = function (clock) {
         var tickObjects = [],
             tickObject = {};
 
@@ -176,11 +225,11 @@
             if (i % 5 !== 0) {
                 tickObject.name = i.toString() + " Minute Tick",
                 tickObject.vertices = clock.minuteTickVertices;
-                tickObject.transforms = tickTransform(clock, true, i, radius + 0.04);
+                tickObject.transforms = tickTransform(clock, true, i, clock.radius);
             } else {
                 tickObject.name = (i / 5).toString() + " Hour Tick",
                 tickObject.vertices = clock.hourTickVertices;
-                tickObject.transforms = tickTransform(clock, false, i, radius);
+                tickObject.transforms = tickTransform(clock, false, i, clock.radius - clock.tickOffset * 4);
             }
 
             tickObjects.push(tickObject);
@@ -261,46 +310,13 @@
         }
     };
 
-
     /**
-     * This creates a clok object ready to be sent to WegGl. It takes in a clock
+     * This creates a clock object ready to be sent to WegGl. It takes in a clock
      * object with all of the necessary information to draw the object.
-     */ 
-
-    //clock width 760
-
-    // hour tick length 86
-    // hour tick width 30
-
-    // minute tick length 35
-
-    // tick offset from outside 18
-
-    // minute hand length 437
-    // minute hand width 30
-    // minute hand offset from outside 54
-
-    // hour hand length 312
-    // hour hand offset from outside 175
-
-    // second hand circle radius 57
-    // second hand small circle radius 25
-
-    // second hand length  209
-    // second hand offset from circel 175
-    // second hand width 12
+     */
 
     clockWebGL = function (clock) {
-        var clockObject = {},
-            i,
-
-
-            handDepth,
-
-        // Assigne the hand depth.
-        handDepth = 0.005;
-
-        // Assign the colors values.
+        var clockObject = {};
 
         // Add the clock face to the array of clock objects.
         // clockObject.push(clockFaceWebGL);
@@ -409,10 +425,11 @@
     gl.enableVertexAttribArray(vertexColor);
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
-    xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
-    yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+    xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
+    yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
+
 
     /*
      * Displays all of the objects, including any children an object has.
