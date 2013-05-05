@@ -30,14 +30,8 @@
         vertexPosition,
         vertexColor,
 
-        // Variables for the clock.
+        // Function to make a clock object.
         clock,
-        minuteTick,
-        hourTick,
-        secondHand,
-        hourHand,
-        minuteHand,
-        zAxisVector,
 
         // Functions for creating WebGL ready clock objects.
         tickTransform,
@@ -172,7 +166,7 @@
                                     );
         clock.secondHandBigCircle = Shapes.toRawTriangleArray(
                                         Shapes.cylinder(
-                                            clock.secondHandCircleRadius, clock.handDepth, 30
+                                            clock.secondHandCircleRadius, clock.handDepth * 2, 30
                                         )
                                     );
         clock.secondHandSmallCircle = Shapes.toRawTriangleArray(
@@ -274,6 +268,10 @@
         }
     };
 
+    /**
+     *  Returns an hour hand ready to be drawn by WebGL.
+     */  
+
     hourHandWebGl = function (clock) {
         console.log(clock.hourHandOffset);
         return {
@@ -289,6 +287,10 @@
             }
         }
     };
+
+    /**
+     *  Returns a second hand ready to be drawn by WebGL.
+     */  
 
     secondHandWebGL = function (clock) {
         return {
@@ -315,6 +317,10 @@
             ]
         };
     };
+
+    /**
+     *  Returns a minute hand ready to be drawn by WebGL.
+     */  
 
     clockFaceWebGL = function (clock) {
         return {
@@ -375,7 +381,10 @@
         }*/
     ];
 
-    // Pass the vertices of all of the objects to WebGL, including any objects' children.
+    /**
+     *  Pass the vertices of all of the objects to WebGL, including any objects' children.
+     */
+
     vertexify = function (objectsToDraw) {
         // Redeclaration of i necessary for recursiveness.
         var i;
@@ -448,10 +457,10 @@
     xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
 
-
     /*
      * Displays all of the objects, including any children an object has.
      */
+
     drawObjects = function (objectsToDraw, inheritedTransforms) {
         // Redeclaration of i for recursiveness.
         // Matrix to hold all of the inhereted transforms.
@@ -503,6 +512,7 @@
     /*
      * Displays the scene.
      */
+
     drawScene = function () {
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -539,7 +549,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-2, 2, -1, 1, -3, 3).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1, 1, -0.5, 0.5, -1, 2).columnOrder()
         )
     );
 
