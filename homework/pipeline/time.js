@@ -22,7 +22,6 @@
         abort = false,
 
         // Important state variables.
-        currentRotation = 0.0,
         currentInterval,
         projectionMatrix,
         transformMatrix,
