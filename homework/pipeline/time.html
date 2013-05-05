@@ -7,7 +7,7 @@
     </head>
     <body>
         <center>
-            <canvas id="time" width="1600" height="800">
+            <canvas id="time" width="1200" height="600">
                 Sorry, your web browser does not appear to support
                 the <code>canvas</code> element, either.
             </canvas>
@@ -47,10 +47,15 @@
             // Note this new additional output.
             attribute vec3 vertexColor;
             varying vec4 finalVertexColor;
+
+            // Matrices for projection.
             uniform mat4 projectionMatrix;
-            uniform mat4 rotationMatrix;
-            uniform mat4 transformMatrix;
             uniform mat4 cameraMatrix;
+
+            // Matrix for object transformation.
+            uniform mat4 transformMatrix;
+
+            // Matrices for mouse rotation.
             uniform mat4 xRotationMatrix;
             uniform mat4 yRotationMatrix;
 
