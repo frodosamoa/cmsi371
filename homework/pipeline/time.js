@@ -144,7 +144,11 @@
     // second hand width 12
 
         // Vertices of the clock.
-        clock.clockFaceVertices = Shapes.toRawTriangleArray(Shapes.cylinder(clock.radius, 0.2, 80));
+        clock.clockFaceVertices = Shapes.toRawTriangleArray(
+                                    Shapes.cylinder(
+                                        clock.radius, 0.2, 80
+                                    )
+                                  );
 
         clock.hourTickVertices = Shapes.toRawTriangleArray(
                                     Shapes.hexahedron(
@@ -158,9 +162,24 @@
                                         )
                                     );
 
-        clock.secondHandVertices = Shapes.toRawTriangleArray(Shapes.hexahedron(0.007, 0.4, clock.handDepth));
-        clock.secondHandBigCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.065, clock.handDepth, 30));
-        clock.secondHandSmallCircle = Shapes.toRawTriangleArray(Shapes.cylinder(0.05, clock.handDepth, 30));
+        clock.secondHandVertices = Shapes.toRawTriangleArray(
+                                        Shapes.hexahedron(
+                                            0.007, 0.4, clock.handDepth
+                                        )
+                                    );
+
+        clock.secondHandBigCircle = Shapes.toRawTriangleArray(
+                                        Shapes.cylinder(
+                                            0.065, clock.handDepth, 30
+                                        )
+                                    );
+
+        clock.secondHandSmallCircle = Shapes.toRawTriangleArray(
+                                            Shapes.cylinder(
+                                                0.05, clock.handDepth, 30
+                                            )
+                                        );
+
 
         clock.minuteHandVertices = Shapes.toRawTriangleArray(
                                         Shapes.hexahedron(
