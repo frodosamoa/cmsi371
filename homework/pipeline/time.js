@@ -30,6 +30,12 @@
         vertexPosition,
         vertexColor,
 
+        // Variables for canvas width and height.
+        width,
+        height,
+        widthRatio,
+        heightRatio,
+
         // Function to make a clock object.
         clock,
 
@@ -83,6 +89,8 @@
 
     // This function returns a clock object with all of the information
     // necessary to be passed to WebGL.
+
+    // Work on ability for clock to pas another clock as an object.
     clock = function () {
 
         clock = { currentDate: new Date() };
@@ -100,7 +108,7 @@
 
         // Depending on if it is day ot night time in a certain region,
         // change the colors of the clock. TODO
-        var day = false;
+        var day = true;
         if (day) {    
             clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
             clock.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
@@ -197,16 +205,6 @@
         clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
         drawScene();
     }
-
-    nullObject = Shapes.toRawTriangleArray(
-                    {
-                        vertices: [0],
-                        indices: [0]
-                    }
-                );
-
-
-    var clock1 = clock();
 
     /**
      *  Helper function for computing tick transforms.
@@ -380,6 +378,15 @@
         return clockObject;
     };
 
+    nullObject = Shapes.toRawTriangleArray(
+                {
+                    vertices: [0],
+                    indices: [0]
+                }
+            );
+
+    var clock1 = clock();
+
     objectsToDraw = [
         {
             name: "Clock Array",
@@ -481,7 +488,6 @@
             inheritedTransformMatrix = new Matrix4x4 ();
 
         for (i = 0; i < objectsToDraw.length; i += 1) {
-
             // This if statement check to see if the object that is about to be drawn has any transforms.
             if (objectsToDraw[i].transforms) {
 
@@ -543,7 +549,7 @@
                 Matrix4x4.getRotationMatrix(currentYRotation / 4, 0, 1, 0).columnOrder()
             )
         );
-
+        
         // Display the objects.
         drawObjects(objectsToDraw);
 
@@ -559,10 +565,15 @@
             new Vector (0, 1, 0)
         ).columnOrder()));
     
+    // width = canvas.width;
+    // height = canvas.height;
+    // widthRatio = width/height;
+    // heightRatio = height/width;
+
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1.5, 1.5, -1, 1, -3, 5).columnOrder()
+            Matrix4x4.getOrthoMatrix(-2, 2, -2, 2, -3, 5).columnOrder()
         )
     );
 
