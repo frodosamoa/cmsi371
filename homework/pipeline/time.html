@@ -13,30 +13,6 @@
             </canvas>
         </center>
 
-        <script type="text/javascript">
-            var canvas,
-                gl;
-
-            function resizeCanvas() {
-                if (canvas.width != canvas.clientWidth ||
-                    canvas.height != canvas.clientHeight) {
-                        canvas.width = canvas.clientWidth;
-                        canvas.height = canvas.clientHeight;
-                }
-            } 
-
-            function main () {
-                canvas = document.getElementById('time');
-                gl = canvas.getContext('experimental-webgl');
-                resizeCanvas();
-
-                gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-            }
-
-            window.addEventListener('load', main);
-            //window.addEventListener('resize', resizeCanvas);
-        </script>
-
         <!-- jQuery makes some things more convenient. -->
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
