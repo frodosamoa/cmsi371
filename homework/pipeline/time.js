@@ -199,6 +199,13 @@
      */ 
 
     setClock = function (clock, date) {
+        // JD: This is the right direction, with your code updating relevant
+        //     values that change with the current time.  However, your code
+        //     does not go far enough (yet)---the issue here is that WebGL
+        //     doesn't *see* secondAngle, minuteAngle, and hourAngle.  You
+        //     need to follow your code to where these values end up affecting
+        //     something that WebGL *does* see, then refactor your code so that
+        //     *those* updates are taking place in here also.
         clock.currentDate = date;
         clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
         clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
@@ -528,10 +535,26 @@
 
     };
 
+    // JD: I appreciate that you pulled this code from samples off the web;
+    //     but ideally you should adapt these to their jQuery equivalents, so
+    //     that they more closely resemble the mouse handling code at the
+    //     bottom. (for that matter, this code, being a part of the controller,
+    //     has better context if placed at the bottom)
     function resizeCanvas() {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-    } 
+        // JD: This code does change the canvas width and height...but does
+        //     nothing to the WebGL viewport or projection.  Remember that
+        //     those are affected by a canvas size change as well.  You need
+        //     to figure out how those are supposed to change with the canvas
+        //     dimensions, then add the code that changes those in here.
+        //     (viewport is already below; it's just the projection that
+        //     you're missing)
+        //
+        //     Also, you're wondering why the clock disappears.  My response
+        //     question...are you drawing it immediately after changing the
+        //     canvas dimensions?
+    }
 
     function main () {
         resizeCanvas();
