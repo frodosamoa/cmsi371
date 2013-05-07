@@ -593,7 +593,7 @@
     }, 1000);
 
     // Draw the initial scene.
-    $(window).load(function (event) {
+    $(window).load(function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
@@ -602,7 +602,7 @@
     });
 
     // When the window is resized, change the canvas width and height.
-    $(window).resize(function (canvas) {
+    $(window).resize(function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
