@@ -256,7 +256,7 @@ var Shapes = {
      * The vector computations involved here mean that the Vector module must be
      * loaded up for this function to work.
      *
-     * Taken from GitHub user Dondi's bazaar/light-more/shapes.js file. Thanks Dondi!
+     * Taken from GitHub user Dondi's bazaar/light-more-wegbgl/shapes.js file. Thanks Dondi!
      */
     toNormalArray: function (indexedVertices) {
         var result = [],
