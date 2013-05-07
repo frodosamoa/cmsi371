@@ -84,6 +84,7 @@
     // This function returns a clock object with all of the information
     // necessary to be passed to WebGL.
     clock = function () {
+
         clock = { currentDate: new Date() };
 
         // Information about the clock.
@@ -255,7 +256,6 @@
         clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
         clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
         drawScene();
-        console.log(clock.secondAngle);
     }
 
     /**
