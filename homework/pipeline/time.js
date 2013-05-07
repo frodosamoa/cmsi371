@@ -374,7 +374,7 @@
 
         // Add the ticks to the array of clock objects.
         // clockObject.push(clockFaceWebGL);
-
+        console.log(clockObject);
         return clockObject;
     };
 
@@ -528,6 +528,22 @@
 
     };
 
+    function resizeCanvas() {
+        if (canvas.width != canvas.clientWidth ||
+            canvas.height != canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+        }
+    } 
+
+    function main () {
+        resizeCanvas();
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    }
+
+    window.addEventListener('load', main);
+    window.addEventListener('resize', resizeCanvas);
+
     /*
      * Displays the scene.
      */
@@ -565,15 +581,15 @@
             new Vector (0, 1, 0)
         ).columnOrder()));
     
-    // width = canvas.width;
-    // height = canvas.height;
-    // widthRatio = width/height;
-    // heightRatio = height/width;
+    width = canvas.width;
+    height = canvas.height;
+    widthRatio = width * 0.01;
+    heightRatio = height * 0.01;
 
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-2, 2, -2, 2, -3, 5).columnOrder()
+            Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
         )
     );
 
