@@ -52,6 +52,37 @@ var NanoshopNeighborhood = {
         ];
     },
 
+    /*
+     * A basic "averager"---this one returns the average of all the pixels in the
+     * given neighborhood.
+     */
+
+    minimum: function (rgbaNeighborhood) {
+        var rTotal = 0,
+            gTotal = 0,
+            bTotal = 0,
+            aTotal = 0,
+            i;
+
+        for (i = 0; i < 9; i += 1) {
+            if (rTotal < rgbaNeighborhood[i].r) {
+                rTotal = rgbaNeighborhood[i].r;
+            }
+
+            if (gTotal < rgbaNeighborhood[i].g) {
+                gTotal = rgbaNeighborhood[i].g;
+            }
+
+            if (bTotal < rgbaNeighborhood[i].g) {
+                bTotal = rgbaNeighborhood[i].g;
+            }
+
+            aTotal += rgbaNeighborhood[i].a;
+        }
+
+        return [ rTotal, gTotal, bTotal, aTotal / 9 ];
+    },
+
 
     /*
      * A basic "averager"---this one returns the average of all the pixels in the
