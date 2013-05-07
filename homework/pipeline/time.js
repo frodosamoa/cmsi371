@@ -186,6 +186,18 @@
         return clock;
     }
 
+    /**
+     * This function allows us to set the clock to any given date.
+     */ 
+
+    setClock = function (clock, date) {
+        clock.currentDate = date;
+        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
+        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
+        clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
+        drawScene();
+    }
+
     nullObject = Shapes.toRawTriangleArray(
                     {
                         vertices: [0],
@@ -246,17 +258,7 @@
         return tickObjects;
     };
 
-    /**
-     * This function allows us to set the clock to any given date.
-     */ 
 
-    setClock = function (clock, date) {
-        clock.currentDate = date;
-        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
-        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
-        clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
-        drawScene();
-    }
 
     /**
      *  Returns a minute hand ready to be drawn by WebGL.
