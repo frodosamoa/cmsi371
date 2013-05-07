@@ -535,34 +535,6 @@
 
     };
 
-    // JD: I appreciate that you pulled this code from samples off the web;
-    //     but ideally you should adapt these to their jQuery equivalents, so
-    //     that they more closely resemble the mouse handling code at the
-    //     bottom. (for that matter, this code, being a part of the controller,
-    //     has better context if placed at the bottom)
-    function resizeCanvas() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-        // JD: This code does change the canvas width and height...but does
-        //     nothing to the WebGL viewport or projection.  Remember that
-        //     those are affected by a canvas size change as well.  You need
-        //     to figure out how those are supposed to change with the canvas
-        //     dimensions, then add the code that changes those in here.
-        //     (viewport is already below; it's just the projection that
-        //     you're missing)
-        //
-        drawScene();
-    }
-
-    function main () {
-        resizeCanvas();
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    }
-
-    window.addEventListener('load', main);
-    window.addEventListener('resize', resizeCanvas);
-
-
     /*
      * Displays the scene.
      */
@@ -615,12 +587,29 @@
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);
 
-    // Draw the initial scene.
-    drawScene();
 
     window.setInterval(function () {
         setClock(clock1, new Date())
     }, 1000);
+
+    // Draw the initial scene.
+    $(window).load(function (event) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        drawScene();
+    });
+
+    // When the window is resized, change the canvas width and height.
+    $(window).resize(function (canvas) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        // Projection TODO
+
+        drawScene();
+    });
 
     // Rotate the canvas based on user input.
     $(canvas).mousedown(function (event) {
