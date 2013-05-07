@@ -529,11 +529,8 @@
     };
 
     function resizeCanvas() {
-        if (canvas.width != canvas.clientWidth ||
-            canvas.height != canvas.clientHeight) {
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-        }
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
     } 
 
     function main () {
@@ -543,6 +540,7 @@
 
     window.addEventListener('load', main);
     window.addEventListener('resize', resizeCanvas);
+
 
     /*
      * Displays the scene.
