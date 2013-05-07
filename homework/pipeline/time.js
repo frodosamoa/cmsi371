@@ -109,18 +109,20 @@
         }
 
         // Clock width, length, and depth ratios according to the radius.
-        clock.handDepth = 0.005;
-        clock.secondhandDepth;
-        clock.minuteHandDepth;
-        clock.hourHandDepth;
+        clock.clockFaceZDepth = -0.1;
+        clock.clockFaceDepth = 0.2;
+        clock.handDepth = 0.013;
+        clock.secondHandDepth = (clock.handDepth * 3) + 0.005;
+        clock.minuteHandDepth = (clock.handDepth * 2) + 0.005;
+        clock.hourHandDepth = (clock.handDepth / 2) + 0.005;
 
         // Clock width ratios.
-        clock.secondHandWidth = clock.diameter * 0.015;
+        clock.secondHandWidth = clock.diameter * 0.012;
         clock.minuteTickWidth = clock.diameter * 0.009;
         clock.hourMinuteAndTickWidth = clock.diameter * 0.039;
 
         // Clock length ratios.
-        clock.secondHandLength = clock.diameter * 0.41;
+        clock.secondHandLength = clock.diameter * 0.44;
         clock.hourHandLength = clock.diameter * 0.397;
         clock.minuteHandLength = clock.diameter * 0.57;
 
@@ -129,7 +131,7 @@
 
         // Clock radii ratios.
         clock.secondHandBigCircleRadius = clock.radius * 0.075;
-        clock.secondHandSmallCircleRadius = clock.radius * 0.02;
+        clock.secondHandSmallCircleRadius = clock.radius * 0.03;
 
         // Clock offset ratios.
         clock.tickOffset = clock.diameter * 0.02;
@@ -140,7 +142,7 @@
         // Vertices of all of the parts of the clock.
         clock.clockFaceVertices = Shapes.toRawTriangleArray(
                                     Shapes.cylinder(
-                                        clock.radius, 0.2, 80
+                                        clock.radius, clock.clockFaceDepth, 80
                                     )
                                   );
         clock.hourTickVertices = Shapes.toRawTriangleArray(
@@ -158,16 +160,16 @@
                                             clock.secondHandWidth, clock.secondHandLength, clock.handDepth
                                         )
                                     );
-        clock.secondHandBigCircle = Shapes.toRawTriangleArray(
-                                        Shapes.cylinder(
-                                            clock.secondHandBigCircleRadius, clock.handDepth * 2, 30
-                                        )
-                                    );
-        clock.secondHandSmallCircle = Shapes.toRawTriangleArray(
-                                            Shapes.cylinder(
-                                                clock.secondHandSmallCircleRadius, clock.handDepth, 30
-                                            )
-                                        );
+        clock.secondHandBigCircleVertices = Shapes.toRawTriangleArray(
+                                               Shapes.cylinder(
+                                                    clock.secondHandBigCircleRadius, clock.handDepth * 2, 30
+                                                )
+                                            );
+        clock.secondHandSmallCircleVertices = Shapes.toRawTriangleArray(
+                                                  Shapes.cylinder(
+                                                       clock.secondHandSmallCircleRadius, clock.handDepth, 30
+                                                 )
+                                               );
         clock.minuteHandVertices = Shapes.toRawTriangleArray(
                                         Shapes.hexahedron(
                                             clock.hourMinuteAndTickWidth, clock.minuteHandLength, clock.handDepth
@@ -182,7 +184,6 @@
 
         return clock;
     }
-
 
     nullObject = Shapes.toRawTriangleArray(
                     {
@@ -203,6 +204,7 @@
 
         tickTransform = {
             tx: radius,
+            tz: clock.handDepth / 2,
             angle: i * 6,
             rotationVector: clock.zAxisVector
         };
@@ -244,6 +246,19 @@
     };
 
     /**
+     * This function allows us to set the clock to any given date.
+     */ 
+
+    setClock = function (clock, date) {
+        clock.currentDate = date;
+        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
+        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
+        clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
+        drawScene();
+        console.log(clock.secondAngle);
+    }
+
+    /**
      *  Returns a minute hand ready to be drawn by WebGL.
      */     
 
@@ -255,7 +270,7 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: clock.radius - (clock.minuteHandLength / 2) - clock.minuteHandOffset,
-                tz: 0.06,
+                tz: clock.minuteHandDepth,
                 angle: clock.minuteAngle,
                 rotationVector: clock.zAxisVector
             }
@@ -274,7 +289,7 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: clock.radius - (clock.hourHandLength / 2) - clock.hourHandOffset,
-                tz: 0.03,
+                tz: clock.hourHandDepth,
                 angle: clock.hourAngle,
                 rotationVector: clock.zAxisVector
             }
@@ -293,20 +308,30 @@
             mode: gl.TRIANGLES,
             transforms: {
                 ty: clock.radius - (clock.secondHandLength / 2) - clock.secondHandOffset,
-                tz: 0.1,
+                tz: clock.secondHandDepth,
                 angle: clock.secondAngle,
                 rotationVector: clock.zAxisVector
             },
             children: [
                 {
-                    name: "Red Circle",
+                    name: "Big Red Circle",
                     color: clock.secondHandColor,
-                    vertices: clock.secondHandBigCircle,
+                    vertices: clock.secondHandBigCircleVertices,
                     mode: gl.TRIANGLES,
                     transforms: {
                         ty: clock.secondHandLength / 2
                     }
-                }           
+                },
+
+                {
+                    name: "Small Red Circle",
+                    color: clock.secondHandColor,
+                    vertices: clock.secondHandSmallCircleVertices,
+                    mode: gl.TRIANGLES,
+                    transforms: {
+                        ty: -(clock.radius - (clock.secondHandLength / 2) - clock.secondHandOffset)
+                    }
+                }          
             ]
         };
     };
@@ -322,7 +347,7 @@
             vertices: clock.clockFaceVertices,
             mode: gl.TRIANGLES,
             transforms: {
-                tz: -0.1
+                tz: clock.clockFaceZDepth
             },
         }
     };
@@ -347,9 +372,8 @@
         // Add the second hand to the array of clock objects.
         clockObject.push(secondHandWebGL(clock));
 
-
         // Add the ticks to the array of clock objects.
-        //clockObject.push(clockFaceWebGL);
+        // clockObject.push(clockFaceWebGL);
 
         return clockObject;
     };
@@ -528,7 +552,7 @@
     // Here is the camera matrix.
     gl.uniformMatrix4fv(cameraMatrix, gl.FALSE, new Float32Array(
         Matrix4x4.getLookAtMatrix(
-            new Vector (0, 0, 1),
+            new Vector (0, 0, 0.8),
             new Vector (0, 0, -1),
             new Vector (0, 1, 0)
         ).columnOrder()));
@@ -536,7 +560,7 @@
     // We now can "project" our scene to whatever way we want.
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
         new Float32Array(
-            Matrix4x4.getOrthoMatrix(-1, 1, -1, 1, -1, 2).columnOrder()
+            Matrix4x4.getOrthoMatrix(-1.5, 1.5, -1, 1, -3, 5).columnOrder()
         )
     );
 
@@ -545,6 +569,10 @@
 
     // Draw the initial scene.
     drawScene();
+
+    window.setInterval(function () {
+        setClock(clock1, new Date())
+    }, 1000);
 
     // Rotate the canvas based on user input.
     $(canvas).mousedown(function (event) {
