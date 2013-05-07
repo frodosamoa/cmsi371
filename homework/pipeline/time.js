@@ -551,9 +551,7 @@
         //     (viewport is already below; it's just the projection that
         //     you're missing)
         //
-        //     Also, you're wondering why the clock disappears.  My response
-        //     question...are you drawing it immediately after changing the
-        //     canvas dimensions?
+        drawScene();
     }
 
     function main () {
