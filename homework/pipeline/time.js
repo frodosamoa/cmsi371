@@ -254,12 +254,16 @@
         clock.setClock(new Date());
         objectsToDraw = clock.clockWebGL();
         vertexify(objectsToDraw);
-    }, 1000);
+        drawScene();
+    }, 100);
 
     /**
      *  This function resizes the canvas and updates the porjection matrix.
      */
-    resize = function (canvas) {
+    redraw = function (canvas) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
         widthRatio = ((canvas.width/canvas.height) + 1);
         heightRatio = ((canvas.height/canvas.width) + 1);
 
@@ -278,18 +282,12 @@
 
     // Draw the initial scene.
     $(window).load(function () {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-
-        resize(canvas);
+        redraw(canvas);
     });
 
     // When the window is resized, update the scene.
     $(window).resize(function () {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-
-        resize(canvas);
+        redraw(canvas);
     });
 
     // Rotate the canvas based on user input.
