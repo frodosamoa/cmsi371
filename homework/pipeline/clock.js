@@ -3,14 +3,18 @@ var Clock = (function () {
 	// Define the constructor.
 	var clock = function (gl) {
 
-		// Information about the clock.
+		// Time information about the clock.
         this.currentDate = new Date();
         this.secondAngle = (this.currentDate.getSeconds() + this.currentDate.getMilliseconds() * 0.001) * 6;
         this.minuteAngle = ((this.currentDate.getMinutes() + (this.currentDate.getSeconds() / 60)) * 6);
         this.hourAngle = (this.minuteAngle / 12) + (this.currentDate.getHours() * 30);
         this.zAxisVector = new Vector (0, 0, -1);
+
+        // Radius and diameter, used for all of the ratios.
         this.radius = 1;
         this.diameter = this.radius * 2;
+
+        // A gl context must be passed for the mode of the WebGL objects.
        	this.gl = gl;
 
         // Colors of the clock.
