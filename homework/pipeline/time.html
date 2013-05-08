@@ -31,6 +31,10 @@
         <!-- Matrix4x4 is a matrix library that has many matrix function. -->
         <script src="matrix4x4/matrix4x4.js"></script>
 
+        <!-- Clock is a library for creating clock object and making them ready
+             for WebGL drawing. -->
+        <script src="clock.js"></script>
+
         <!-- Set up shaders: we've placed the source in script elements for
             simplicity.  Shaders are ideally kept in separate files for easier
             maintenance, but in that situation, additional code and security
@@ -46,6 +50,9 @@
             attribute vec3 vertexPosition;
             attribute vec3 vertexColor;
 
+            // Normal vector.
+            attribute vec3 normalVector;
+
             // Matrices for projection.
             uniform mat4 projectionMatrix;
             uniform mat4 cameraMatrix;
@@ -59,6 +66,10 @@
 
             // We are outputting color.
             varying vec4 finalVertexColor;
+
+            // ...but we need light to calculate them.
+            uniform vec3 lightPosition;
+            uniform vec3 lightDiffuse;
 
             void main(void) {
                 gl_Position = projectionMatrix * cameraMatrix *
