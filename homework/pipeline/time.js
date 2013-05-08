@@ -30,11 +30,16 @@
         vertexPosition,
         vertexColor,
 
-        // Variables for canvas width and height.
+        // Variables for canvas width and height, and their ratios.
         width,
         height,
         widthRatio,
         heightRatio,
+
+        // For emphasis, we separate the variables that involve lighting.
+        normalVector,
+        lightPosition,
+        lightDiffuse,
 
         // Function to make a clock object.
         clock,
@@ -381,7 +386,6 @@
 
         // Add the ticks to the array of clock objects.
         // clockObject.push(clockFaceWebGL);
-        console.log(clockObject);
         return clockObject;
     };
 
@@ -477,12 +481,19 @@
     gl.enableVertexAttribArray(vertexPosition);
     vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
+    normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
+    gl.enableVertexAttribArray(normalVector);
+
+    // Out projection, mouse movement rotation, and camera matrices are "hooked".
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
-    rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     cameraMatrix = gl.getUniformLocation(shaderProgram, "cameraMatrix");
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
     xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
+
+    // Lighting matrices now hooked.
+    lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
+    lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
 
     /*
      * Displays all of the objects, including any children an object has.
@@ -572,42 +583,56 @@
             new Vector (0, 1, 0)
         ).columnOrder()));
     
-    width = canvas.width;
-    height = canvas.height;
-    widthRatio = width * 0.01;
-    heightRatio = height * 0.01;
-
-    // We now can "project" our scene to whatever way we want.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
-        new Float32Array(
-            Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
-        )
-    );
-
     // Send the vertices to WebGL.
     vertexify(objectsToDraw);
-
 
     window.setInterval(function () {
         setClock(clock1, new Date())
     }, 1000);
+
 
     // Draw the initial scene.
     $(window).load(function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
+        // These ratios allow for a preservation of 
+        widthRatio = canvas.width/canvas.height + 1;
+        heightRatio = canvas.height/canvas.width + 1;
+
+        // We now can "project" our scene to whatever way we want.
+        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
+            )
+        );
+
+        // Set the viewport.
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // Draw the initial scene.
         drawScene();
     });
 
-    // When the window is resized, change the canvas width and height.
+
+    // When the window is resized, change the canvas width and height and reset the projection matrix.
     $(window).resize(function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
-        // Projection TODO
+        widthRatio = canvas.width/canvas.height + 1;
+        heightRatio = canvas.height/canvas.width + 1;
 
+        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
+            new Float32Array(
+                Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
+            )
+        );
+
+        // Reset the viewport.
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        // Redraw the scene.
         drawScene();
     });
 
