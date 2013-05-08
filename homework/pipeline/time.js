@@ -22,7 +22,6 @@
         abort = false,
 
         // Important state variables.
-        currentInterval,
         projectionMatrix,
         transformMatrix,
         rotationMatrix,
@@ -37,11 +36,6 @@
         heightRatio,
         resize,
 
-        // For emphasis, we separate the variables that involve lighting.
-        normalVector,
-        lightPosition,
-        lightDiffuse,
-
         // Function to make a clock object.
         clock,
 
@@ -53,6 +47,7 @@
         hourHandWebGl,
         clockFaceWebGL,
         clockWebGL,
+        handPinWebGL,
 
         // Variables for mouse rotation.
         isRotating = false,
@@ -66,9 +61,6 @@
 
         // The big "draw scene" function.
         drawScene,
-
-        // Variables to hold object positions.
-        secondHandCoords,
 
         // Reusable loop variables.
         i,
@@ -111,6 +103,7 @@
 
         // Colors of the clock.
         clock.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
+        clock.handPinColor = { r: 0.03, g: 0.03, b: 0.03 };
 
         // Depending on if it is day ot night time in a certain region,
         // change the colors of the clock. TODO
@@ -123,13 +116,14 @@
             clock.tickAndOtherHandsColor = { r: 0.878, g: 0.878, b: 0.878 }; 
         }
 
-        // Clock width, length, and depth ratios according to the radius.
+        // Clock depth ratios;
         clock.clockFaceZDepth = -0.1;
         clock.clockFaceDepth = 0.2;
         clock.handDepth = 0.013;
-        clock.secondHandDepth = (clock.handDepth * 3) + 0.005;
-        clock.minuteHandDepth = (clock.handDepth * 2) + 0.005;
-        clock.hourHandDepth = (clock.handDepth / 2) + 0.005;
+        clock.secondHandDepth = (clock.handDepth * 3) + 0.01;
+        clock.minuteHandDepth = (clock.handDepth * 1.75) + 0.01;
+        clock.hourHandDepth = (clock.handDepth / 2) + 0.01;
+        clock.handPinDepth = clock.radius * 0.04;
 
         // Clock width ratios.
         clock.secondHandWidth = clock.diameter * 0.012;
@@ -140,13 +134,13 @@
         clock.secondHandLength = clock.diameter * 0.44;
         clock.hourHandLength = clock.diameter * 0.397;
         clock.minuteHandLength = clock.diameter * 0.57;
-
         clock.hourTickLength = clock.diameter * 0.113;
         clock.minuteTickLength = clock.diameter * 0.053;
 
         // Clock radii ratios.
         clock.secondHandBigCircleRadius = clock.radius * 0.075;
         clock.secondHandSmallCircleRadius = clock.radius * 0.03;
+        clock.handPinRadius = clock.radius * 0.008;
 
         // Clock offset ratios.
         clock.tickOffset = clock.diameter * 0.02;
@@ -190,12 +184,16 @@
                                             clock.hourMinuteAndTickWidth, clock.minuteHandLength, clock.handDepth
                                         )
                                     );
-
         clock.hourHandVertices = Shapes.toRawTriangleArray(
                                     Shapes.hexahedron(
                                         clock.hourMinuteAndTickWidth, clock.hourHandLength, clock.handDepth
                                     )
                                 );
+        clock.handPinVertices = Shapes.toRawTriangleArray(
+                                    Shapes.cylinder(
+                                       clock.handPinRadius, clock.handPinDepth, 15
+                                    )
+                               );
 
         return clock;
     }
@@ -269,8 +267,6 @@
         return tickObjects;
     };
 
-
-
     /**
      *  Returns a minute hand ready to be drawn by WebGL.
      */     
@@ -312,7 +308,6 @@
     /**
      *  Returns a second hand ready to be drawn by WebGL.
      */  
-
     secondHandWebGL = function (clock) {
         return {
             name: "Second Hand",
@@ -350,7 +345,30 @@
     };
 
     /**
-     *  Returns a minute hand ready to be drawn by WebGL.
+     *  Returns a hand pin ready to be drawn by WebGL.
+     */  
+
+    handPinWebGL = function (clock) {
+        return {
+            name: "Hand Pin",
+            color: clock.handPinColor,
+            vertices: clock.handPinVertices,
+            mode: gl.TRIANGLES,
+            transforms: {
+                tz: clock.handPinDepth
+            }/*,
+            children: [
+                {
+                    name: "White Border",
+                    color: { r: 1.0, g: 1.0, b: 1.0 },
+                    vertices: Shapes.toRawTriangleArray(Shapes.cylinder(0.01, 0.04, 15))
+                }
+            ]*/
+        }
+    };
+
+    /**
+     *  Returns a clock face ready to be drawn by WebGL.
      */  
 
     clockFaceWebGL = function (clock) {
@@ -371,10 +389,20 @@
      */
 
     clockWebGL = function (clock) {
-        var clockObject = [];
+        var clockObject = [],
+            tickObjects;
 
         // Add the clock face to the array of clock objects.
         clockObject.push(clockFaceWebGL(clock));
+
+        clockObject.push(handPinWebGL(clock));
+
+        // Add the ticks to the array of clock objects.
+        tickObjects = tickObjectsWebGL(clock);
+
+        for (i = 0; i < tickObjects.length; i++) {
+            clockObject.push(tickObjects[i]);
+        }
 
         // Add the hour hand to the array of clock objects.
         clockObject.push(hourHandWebGl(clock));
@@ -385,8 +413,6 @@
         // Add the second hand to the array of clock objects.
         clockObject.push(secondHandWebGL(clock));
 
-        // Add the ticks to the array of clock objects.
-        // clockObject.push(clockFaceWebGL);
         return clockObject;
     };
 
@@ -399,19 +425,8 @@
 
     var clock1 = clock();
 
-    objectsToDraw = [
-        {
-            name: "Clock Array",
-            vertices: nullObject,
-            children: clockWebGL(clock1)
-        },
+    objectsToDraw = clockWebGL(clock1);
 
-        {
-            name: "Tick Objects",
-            vertices: nullObject,
-            children: tickObjectsWebGL(clock1)
-         }
-    ];
 
     /**
      *  Pass the vertices of all of the objects to WebGL, including any objects' children.
@@ -439,6 +454,7 @@
                 }
             }
 
+            // Color buffer.
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
 
@@ -482,8 +498,6 @@
     gl.enableVertexAttribArray(vertexPosition);
     vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
-    normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
-    gl.enableVertexAttribArray(normalVector);
 
     // Out projection, mouse movement rotation, and camera matrices are "hooked".
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
@@ -491,10 +505,6 @@
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
     xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
-
-    // Lighting matrices now hooked.
-    lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
-    lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
 
     /*
      * Displays all of the objects, including any children an object has.
@@ -544,7 +554,6 @@
                 drawObjects(objectsToDraw[i].children, inheritedTransforms);
             }
         }
-
     };
 
     /*
@@ -588,15 +597,17 @@
     vertexify(objectsToDraw);
 
     window.setInterval(function () {
-        setClock(clock1, new Date())
+        setClock(clock1, new Date());
+        objectsToDraw = clockWebGL(clock1);
+        vertexify(objectsToDraw);
     }, 1000);
 
     /**
      *  This function resizes the canvas and updates the porjection matrix.
      */
     resize = function (canvas) {
-        widthRatio = (canvas.width/canvas.height) + 1;
-        heightRatio = (canvas.height/canvas.width) + 1;
+        widthRatio = ((canvas.width/canvas.height) + 1);
+        heightRatio = ((canvas.height/canvas.width) + 1);
 
         gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
             new Float32Array(
