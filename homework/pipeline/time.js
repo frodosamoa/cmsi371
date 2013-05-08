@@ -35,6 +35,7 @@
         height,
         widthRatio,
         heightRatio,
+        resize,
 
         // For emphasis, we separate the variables that involve lighting.
         normalVector,
@@ -590,17 +591,13 @@
         setClock(clock1, new Date())
     }, 1000);
 
+    /**
+     *  This function resizes the canvas and updates the porjection matrix.
+     */
+    resize = function (canvas) {
+        widthRatio = (canvas.width/canvas.height) + 1;
+        heightRatio = (canvas.height/canvas.width) + 1;
 
-    // Draw the initial scene.
-    $(window).load(function () {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-
-        // These ratios allow for a preservation of 
-        widthRatio = canvas.width/canvas.height + 1;
-        heightRatio = canvas.height/canvas.width + 1;
-
-        // We now can "project" our scene to whatever way we want.
         gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
             new Float32Array(
                 Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
@@ -610,30 +607,24 @@
         // Set the viewport.
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-        // Draw the initial scene.
+        // Draw the scene.
         drawScene();
+    }
+
+    // Draw the initial scene.
+    $(window).load(function () {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        resize(canvas);
     });
 
-
-    // When the window is resized, change the canvas width and height and reset the projection matrix.
+    // When the window is resized, update the scene.
     $(window).resize(function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
-        widthRatio = canvas.width/canvas.height + 1;
-        heightRatio = canvas.height/canvas.width + 1;
-
-        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
-            new Float32Array(
-                Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
-            )
-        );
-
-        // Reset the viewport.
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-        // Redraw the scene.
-        drawScene();
+        resize(canvas);
     });
 
     // Rotate the canvas based on user input.
