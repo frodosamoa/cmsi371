@@ -255,7 +255,7 @@
         objectsToDraw = clock.clockWebGL();
         vertexify(objectsToDraw);
         drawScene();
-    }, 100);
+    }, 1000);
 
     /**
      *  This function resizes the canvas and updates the porjection matrix.
