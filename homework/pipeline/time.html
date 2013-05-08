@@ -50,9 +50,6 @@
             attribute vec3 vertexPosition;
             attribute vec3 vertexColor;
 
-            // Normal vector.
-            attribute vec3 normalVector;
-
             // Matrices for projection.
             uniform mat4 projectionMatrix;
             uniform mat4 cameraMatrix;
@@ -67,11 +64,9 @@
             // We are outputting color.
             varying vec4 finalVertexColor;
 
-            // ...but we need light to calculate them.
-            uniform vec3 lightPosition;
-            uniform vec3 lightDiffuse;
 
             void main(void) {
+
                 gl_Position = projectionMatrix * cameraMatrix *
                               xRotationMatrix * yRotationMatrix * 
                               transformMatrix * vec4(vertexPosition, 1.0);
