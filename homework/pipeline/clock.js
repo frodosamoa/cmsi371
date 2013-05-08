@@ -1,140 +1,130 @@
 var Clock = (function () {
 	
+	// Define the constructor.
+	var clock = function (gl) {
 
-	 var clock = function () {
-
-        clock = { currentDate: new Date() };
-
-        // Information about the clock.
-        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
-        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
-        clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
-        clock.zAxisVector = new Vector (0, 0, -1);
-        clock.radius = 1;
-        clock.diameter = clock.radius * 2;
+		// Information about the clock.
+        this.currentDate = new Date();
+        this.secondAngle = (this.currentDate.getSeconds() + this.currentDate.getMilliseconds() * 0.001) * 6;
+        this.minuteAngle = ((this.currentDate.getMinutes() + (this.currentDate.getSeconds() / 60)) * 6);
+        this.hourAngle = (this.minuteAngle / 12) + (this.currentDate.getHours() * 30);
+        this.zAxisVector = new Vector (0, 0, -1);
+        this.radius = 1;
+        this.diameter = this.radius * 2;
+       	this.gl = gl;
 
         // Colors of the clock.
-        clock.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
+        this.secondHandColor = { r: 0.803, g: 0.113, b: 0.113 };
 
         // Depending on if it is day ot night time in a certain region,
-        // change the colors of the clock. TODO
+        // change the colors of the this. TODO
         var day = true;
         if (day) {    
-            clock.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
-            clock.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+            this.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
+            this.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
         } else {
-            clock.clockFaceColor = { r: 0.062, g: 0.062, b: 0.062 };
-            clock.tickAndOtherHandsColor = { r: 0.878, g: 0.878, b: 0.878 }; 
+            this.clockFaceColor = { r: 0.062, g: 0.062, b: 0.062 };
+            this.tickAndOtherHandsColor = { r: 0.878, g: 0.878, b: 0.878 }; 
         }
 
-        // Clock width, length, and depth ratios according to the radius.
-        clock.clockFaceZDepth = -0.1;
-        clock.clockFaceDepth = 0.2;
-        clock.handDepth = 0.013;
-        clock.secondHandDepth = (clock.handDepth * 3) + 0.005;
-        clock.minuteHandDepth = (clock.handDepth * 2) + 0.005;
-        clock.hourHandDepth = (clock.handDepth / 2) + 0.005;
+        // this.width, length, and depth ratios according to the radius.
+        this.clockFaceZDepth = -0.1;
+        this.clockFaceDepth = 0.2;
+        this.handDepth = 0.013;
+        this.secondHandDepth = (this.handDepth * 3) + 0.005;
+        this.minuteHandDepth = (this.handDepth * 2) + 0.005;
+        this.hourHandDepth = (this.handDepth / 2) + 0.005;
 
         // Clock width ratios.
-        clock.secondHandWidth = clock.diameter * 0.012;
-        clock.minuteTickWidth = clock.diameter * 0.009;
-        clock.hourMinuteAndTickWidth = clock.diameter * 0.039;
+        this.secondHandWidth = this.diameter * 0.012;
+        this.minuteTickWidth = this.diameter * 0.009;
+        this.hourMinuteAndTickWidth = this.diameter * 0.039;
 
         // Clock length ratios.
-        clock.secondHandLength = clock.diameter * 0.44;
-        clock.hourHandLength = clock.diameter * 0.397;
-        clock.minuteHandLength = clock.diameter * 0.57;
+        this.secondHandLength = this.diameter * 0.44;
+        this.hourHandLength = this.diameter * 0.397;
+        this.minuteHandLength = this.diameter * 0.57;
 
-        clock.hourTickLength = clock.diameter * 0.113;
-        clock.minuteTickLength = clock.diameter * 0.053;
+        this.hourTickLength = this.diameter * 0.113;
+        this.minuteTickLength = this.diameter * 0.053;
 
         // Clock radii ratios.
-        clock.secondHandBigCircleRadius = clock.radius * 0.075;
-        clock.secondHandSmallCircleRadius = clock.radius * 0.03;
+        this.secondHandBigCircleRadius = this.radius * 0.075;
+        this.secondHandSmallCircleRadius = this.radius * 0.03;
 
         // Clock offset ratios.
-        clock.tickOffset = clock.diameter * 0.02;
-        clock.hourHandOffset = clock.diameter * 0.25;
-        clock.minuteHandOffset = clock.diameter * 0.076;
-        clock.secondHandOffset = clock.diameter * 0.19;
+        this.tickOffset = this.diameter * 0.02;
+        this.hourHandOffset = this.diameter * 0.25;
+        this.minuteHandOffset = this.diameter * 0.076;
+        this.secondHandOffset = this.diameter * 0.19;
 
         // Vertices of all of the parts of the clock.
-        clock.clockFaceVertices = Shapes.toRawTriangleArray(
+        this.clockFaceVertices = Shapes.toRawTriangleArray(
                                     Shapes.cylinder(
-                                        clock.radius, clock.clockFaceDepth, 80
+                                        this.radius, this.clockFaceDepth, 80
                                     )
                                   );
-        clock.hourTickVertices = Shapes.toRawTriangleArray(
+        this.hourTickVertices = Shapes.toRawTriangleArray(
                                     Shapes.hexahedron(
-                                        clock.hourTickLength, clock.hourMinuteAndTickWidth, clock.handDepth
+                                        this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth
                                     )
                                 );
-        clock.minuteTickVertices = Shapes.toRawTriangleArray(
+        this.minuteTickVertices = Shapes.toRawTriangleArray(
                                         Shapes.hexahedron(
-                                            clock.minuteTickLength, clock.minuteTickWidth, clock.handDepth
+                                            this.minuteTickLength, this.minuteTickWidth, this.handDepth
                                         )
                                     );
-        clock.secondHandVertices = Shapes.toRawTriangleArray(
+        this.secondHandVertices = Shapes.toRawTriangleArray(
                                         Shapes.hexahedron(
-                                            clock.secondHandWidth, clock.secondHandLength, clock.handDepth
+                                            this.secondHandWidth, this.secondHandLength, this.handDepth
                                         )
                                     );
-        clock.secondHandBigCircleVertices = Shapes.toRawTriangleArray(
+        this.secondHandBigCircleVertices = Shapes.toRawTriangleArray(
                                                Shapes.cylinder(
-                                                    clock.secondHandBigCircleRadius, clock.handDepth * 2, 30
+                                                    this.secondHandBigCircleRadius, this.handDepth * 2, 30
                                                 )
                                             );
-        clock.secondHandSmallCircleVertices = Shapes.toRawTriangleArray(
+        this.secondHandSmallCircleVertices = Shapes.toRawTriangleArray(
                                                   Shapes.cylinder(
-                                                       clock.secondHandSmallCircleRadius, clock.handDepth, 30
+                                                       this.secondHandSmallCircleRadius, this.handDepth, 30
                                                  )
                                                );
-        clock.minuteHandVertices = Shapes.toRawTriangleArray(
+        this.minuteHandVertices = Shapes.toRawTriangleArray(
                                         Shapes.hexahedron(
-                                            clock.hourMinuteAndTickWidth, clock.minuteHandLength, clock.handDepth
+                                            this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth
                                         )
                                     );
 
-        clock.hourHandVertices = Shapes.toRawTriangleArray(
+        this.hourHandVertices = Shapes.toRawTriangleArray(
                                     Shapes.hexahedron(
-                                        clock.hourMinuteAndTickWidth, clock.hourHandLength, clock.handDepth
+                                        this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth
                                     )
                                 );
-
-        return clock;
     }
 
     /**
      * This function allows us to set the clock to any given date.
      */ 
 
-    clock.prototype.setClock = function (clock, date) {
-        // JD: This is the right direction, with your code updating relevant
-        //     values that change with the current time.  However, your code
-        //     does not go far enough (yet)---the issue here is that WebGL
-        //     doesn't *see* secondAngle, minuteAngle, and hourAngle.  You
-        //     need to follow your code to where these values end up affecting
-        //     something that WebGL *does* see, then refactor your code so that
-        //     *those* updates are taking place in here also.
-        clock.currentDate = date;
-        clock.secondAngle = (clock.currentDate.getSeconds() + clock.currentDate.getMilliseconds() * 0.001) * 6;
-        clock.minuteAngle = ((clock.currentDate.getMinutes() + (clock.currentDate.getSeconds() / 60)) * 6);
-        clock.hourAngle = (clock.minuteAngle / 12) + (clock.currentDate.getHours() * 30);
-        drawScene();
+    clock.prototype.setClock = function (date) {
+        this.currentDate = date;
+        this.secondAngle = (this.currentDate.getSeconds() + this.currentDate.getMilliseconds() * 0.001) * 6;
+        this.minuteAngle = ((this.currentDate.getMinutes() + (this.currentDate.getSeconds() / 60)) * 6);
+        this.hourAngle = (this.minuteAngle / 12) + (this.currentDate.getHours() * 30);
     }
 
     /**
      *  Helper function for computing tick transforms.
      */
 
-    clock.prototype.tickTransform = function (clock, i, radius) {
+    clock.prototype.tickTransform = function (i, radius) {
         var tickTransform = {};
 
         tickTransform = {
             tx: radius,
-            tz: clock.handDepth / 2,
+            tz: this.handDepth / 2,
             angle: i * 6,
-            rotationVector: clock.zAxisVector
+            rotationVector: this.zAxisVector
         };
 
         return tickTransform;
@@ -144,27 +134,27 @@ var Clock = (function () {
      *  Returns an array of tick objects ready to be drawn by WebGL.
      */  
 
-    clock.prototype.tickObjectsWebGL = function (clock) {
+    clock.prototype.tickObjectsWebGL = function () {
         var tickObjects = [],
             tickObject = {};
 
         for (i = 1; i < 61; i ++) {
             // Since every tick object has the same color and mode, assign it here.
             tickObject = {
-                color: clock.tickAndOtherHandsColor,
-                mode: gl.TRIANGLES
+                color: this.tickAndOtherHandsColor,
+                mode: this.gl.TRIANGLES
             };
 
             if (i % 5 !== 0) {
                 tickObject.name = i.toString() + " Minute Tick",
-                tickObject.vertices = clock.minuteTickVertices;
-                tickObject.transforms = tickTransform(clock, i, 
-                        clock.radius - (clock.minuteTickLength / 2) - clock.tickOffset);
+                tickObject.vertices = this.minuteTickVertices;
+                tickObject.transforms = this.tickTransform(i, 
+                        this.radius - (this.minuteTickLength / 2) - this.tickOffset);
             } else {
                 tickObject.name = (i / 5).toString() + " Hour Tick",
-                tickObject.vertices = clock.hourTickVertices;
-                tickObject.transforms = tickTransform(clock, i,
-                        clock.radius - (clock.hourTickLength / 2) - clock.tickOffset);
+                tickObject.vertices = this.hourTickVertices;
+                tickObject.transforms = this.tickTransform(i,
+                        this.radius - (this.hourTickLength / 2) - this.tickOffset);
             }
 
             tickObjects.push(tickObject);
@@ -179,17 +169,17 @@ var Clock = (function () {
      *  Returns a minute hand ready to be drawn by WebGL.
      */     
 
-    clock.prototype.minuteHandWebGl = function (clock) {
+    clock.prototype.minuteHandWebGl = function () {
         return {
             name: "Minute Hand",
-            color: clock.tickAndOtherHandsColor,
-            vertices: clock.minuteHandVertices,
-            mode: gl.TRIANGLES,
+            color: this.tickAndOtherHandsColor,
+            vertices: this.minuteHandVertices,
+            mode: this.gl.TRIANGLES,
             transforms: {
-                ty: clock.radius - (clock.minuteHandLength / 2) - clock.minuteHandOffset,
-                tz: clock.minuteHandDepth,
-                angle: clock.minuteAngle,
-                rotationVector: clock.zAxisVector
+                ty: this.radius - (this.minuteHandLength / 2) - this.minuteHandOffset,
+                tz: this.minuteHandDepth,
+                angle: this.minuteAngle,
+                rotationVector: this.zAxisVector
             }
         }
     };
@@ -198,17 +188,17 @@ var Clock = (function () {
      *  Returns an hour hand ready to be drawn by WebGL.
      */  
 
-    clock.prototype.hourHandWebGl = function (clock) {
+    clock.prototype.hourHandWebGl = function () {
         return {
             name: "Hour Hand",
-            color: clock.tickAndOtherHandsColor,
-            vertices: clock.hourHandVertices,
-            mode: gl.TRIANGLES,
+            color: this.tickAndOtherHandsColor,
+            vertices: this.hourHandVertices,
+            mode: this.gl.TRIANGLES,
             transforms: {
-                ty: clock.radius - (clock.hourHandLength / 2) - clock.hourHandOffset,
-                tz: clock.hourHandDepth,
-                angle: clock.hourAngle,
-                rotationVector: clock.zAxisVector
+                ty: this.radius - (this.hourHandLength / 2) - this.hourHandOffset,
+                tz: this.hourHandDepth,
+                angle: this.hourAngle,
+                rotationVector: this.zAxisVector
             }
         }
     };
@@ -217,36 +207,36 @@ var Clock = (function () {
      *  Returns a second hand ready to be drawn by WebGL.
      */  
 
-    clock.prototype.secondHandWebGL = function (clock) {
+    clock.prototype.secondHandWebGL = function () {
         return {
             name: "Second Hand",
-            color: clock.secondHandColor,
-            vertices: clock.secondHandVertices,
-            mode: gl.TRIANGLES,
+            color: this.secondHandColor,
+            vertices: this.secondHandVertices,
+            mode: this.gl.TRIANGLES,
             transforms: {
-                ty: clock.radius - (clock.secondHandLength / 2) - clock.secondHandOffset,
-                tz: clock.secondHandDepth,
-                angle: clock.secondAngle,
-                rotationVector: clock.zAxisVector
+                ty: this.radius - (this.secondHandLength / 2) - this.secondHandOffset,
+                tz: this.secondHandDepth,
+                angle: this.secondAngle,
+                rotationVector: this.zAxisVector
             },
             children: [
                 {
                     name: "Big Red Circle",
-                    color: clock.secondHandColor,
-                    vertices: clock.secondHandBigCircleVertices,
-                    mode: gl.TRIANGLES,
+                    color: this.secondHandColor,
+                    vertices: this.secondHandBigCircleVertices,
+                    mode: this.gl.TRIANGLES,
                     transforms: {
-                        ty: clock.secondHandLength / 2
+                        ty: this.secondHandLength / 2
                     }
                 },
 
                 {
                     name: "Small Red Circle",
-                    color: clock.secondHandColor,
-                    vertices: clock.secondHandSmallCircleVertices,
-                    mode: gl.TRIANGLES,
+                    color: this.secondHandColor,
+                    vertices: this.secondHandSmallCircleVertices,
+                    mode: this.gl.TRIANGLES,
                     transforms: {
-                        ty: -(clock.radius - (clock.secondHandLength / 2) - clock.secondHandOffset)
+                        ty: -(this.radius - (this.secondHandLength / 2) - this.secondHandOffset)
                     }
                 }          
             ]
@@ -257,15 +247,15 @@ var Clock = (function () {
      *  Returns a minute hand ready to be drawn by WebGL.
      */  
 
-    clock.prototype.clockFaceWebGL = function (clock) {
+    clock.prototype.clockFaceWebGL = function () {
         return {
             name: "Clock Face",
-            color: clock.clockFaceColor,
-            vertices: clock.clockFaceVertices,
-            mode: gl.TRIANGLES,
+            color: this.clockFaceColor,
+            vertices: this.clockFaceVertices,
+            mode: this.gl.TRIANGLES,
             transforms: {
-                tz: clock.clockFaceZDepth
-            },
+                tz: this.clockFaceZDepth
+            }
         }
     };
 
@@ -274,23 +264,31 @@ var Clock = (function () {
      * object with all of the necessary information to draw the object.
      */
 
-    clock.prototype.clockWebGL = function (clock) {
+    clock.prototype.clockWebGL = function () {
         var clockObject = [];
 
         // Add the clock face to the array of clock objects.
-        clockObject.push(clockFaceWebGL(clock));
-
-        // Add the hour hand to the array of clock objects.
-        clockObject.push(hourHandWebGl(clock));
-
-        // Add the minute hand to the array of clock objects.
-        clockObject.push(minuteHandWebGl(clock));
-
-        // Add the second hand to the array of clock objects.
-        clockObject.push(secondHandWebGL(clock));
+        clockObject.push(this.clockFaceWebGL());
 
         // Add the ticks to the array of clock objects.
-        // clockObject.push(clockFaceWebGL);
+        tickObjects = this.tickObjectsWebGL();
+
+        for (i = 0; i < tickObjects.length; i++) {
+            clockObject.push(tickObjects[i]);
+        }
+
+        // Add the hour hand to the array of clock objects.
+        clockObject.push(this.hourHandWebGl());
+
+        // Add the minute hand to the array of clock objects.
+        clockObject.push(this.minuteHandWebGl());
+
+        // Add the second hand to the array of clock objects.
+        clockObject.push(this.secondHandWebGL());
+
         return clockObject;
     };
+
+    return clock;
+
 })();
