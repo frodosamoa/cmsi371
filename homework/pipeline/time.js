@@ -77,7 +77,6 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     var clock = new Clock (gl);
-
     objectsToDraw = clock.clockWebGL();
 
     /**
@@ -119,6 +118,7 @@
             }
         }
     };  
+
 
     // Initialize the shaders.
     shaderProgram = GLSLUtilities.initSimpleShaderProgram(
