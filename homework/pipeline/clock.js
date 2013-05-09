@@ -63,13 +63,13 @@ var Clock = (function () {
 
         // Meshes of all of the parts of the clock.
         this.clockFaceMesh = Shapes.cylinder(this.radius, this.clockFaceDepth, 80);
-        this.hourTickMesh = Shapes.hexahedron(this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth));
-        this.minuteTickMesh = Shapes.hexahedron(this.minuteTickLength, this.minuteTickWidth, this.handDepth));
-        this.secondHandMesh = Shapes.hexahedron(this.secondHandWidth, this.secondHandLength, this.handDepth));
-        this.secondHandBigCircleMesh = Shapes.cylinder(this.secondHandBigCircleRadius, this.handDepth * 2, 30));
-        this.secondHandSmallCircleMesh = Shapes.cylinder(this.secondHandSmallCircleRadius, this.handDepth, 30));
-        this.minuteHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth));
-        this.hourHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth));
+        this.hourTickMesh = Shapes.hexahedron(this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth);
+        this.minuteTickMesh = Shapes.hexahedron(this.minuteTickLength, this.minuteTickWidth, this.handDepth);
+        this.secondHandMesh = Shapes.hexahedron(this.secondHandWidth, this.secondHandLength, this.handDepth);
+        this.secondHandBigCircleMesh = Shapes.cylinder(this.secondHandBigCircleRadius, this.handDepth * 2, 30);
+        this.secondHandSmallCircleMesh = Shapes.cylinder(this.secondHandSmallCircleRadius, this.handDepth, 30);
+        this.minuteHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth);
+        this.hourHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth);
 
         // Vertices of all of the parts of the clock.
         this.clockFaceVertices = Shapes.toRawTriangleArray(this.clockFaceMesh);
