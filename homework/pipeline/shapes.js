@@ -28,18 +28,18 @@ var Shapes = {
             ],
 
             indices: [
-                [ 0, 1, 3 ],
-                [ 2, 3, 1 ],
-                [ 0, 3, 4 ],
-                [ 7, 4, 3 ],
-                [ 0, 4, 1 ],
-                [ 5, 1, 4 ],
-                [ 1, 5, 6 ],
-                [ 2, 1, 6 ],
-                [ 2, 7, 3 ],
-                [ 6, 7, 2 ],
-                [ 4, 7, 6 ],
-                [ 5, 4, 6 ]
+                [ 0, 3, 1 ],
+                [ 2, 1, 3 ],
+                [ 0, 4, 3 ],
+                [ 7, 3, 4 ],
+                [ 0, 1, 4 ],
+                [ 5, 4, 1 ],
+                [ 1, 6, 5 ],
+                [ 2, 6, 1 ],
+                [ 2, 3, 7 ],
+                [ 6, 2, 7 ],
+                [ 4, 6, 7 ],
+                [ 5, 6, 4 ]
             ]
         };
     },
@@ -76,25 +76,27 @@ var Shapes = {
         }
 
         for (i = 1; i < radiusSegments + 1; i += 1) {
-            indices.push([0, (i * 2), ((i * 2) + 2) % radiusSegments]);
-            indices.push([1, (i * 2) + 1, ((i * 2) + 3) % radiusSegments]);
+            indices.push([0, ((i * 2) % (radiusSegments * 2) + 2), (i * 2)]);
+            indices.push([1, (i * 2) + 1, ((i * 2) % (radiusSegments * 2) + 3)]);
         }
 
         for (i = 2; i < radiusSegments * 2 + 2; i += 1) {
             if (i >= radiusSegments * 2) {
                 if (i % 2 === 0) {
-                    indices.push([i, (i+2) % radiusSegments, (i+1)]);
+                    indices.push([i, (i+1), (i+2) % radiusSegments]);
                 } else {
-                    indices.push([i, (i+1) % radiusSegments, (i+2) % radiusSegments]);
+                    indices.push([i, (i+2) % radiusSegments, (i+1) % radiusSegments]);
                 } 
             } else {
                 if (i % 2 === 0) {
-                    indices.push([i, (i+2), (i+1)]);
-                } else {
                     indices.push([i, (i+1), (i+2)]);
+                } else {
+                    indices.push([i, (i+2), (i+1)]);
                 }
             }
         }
+
+        console.log(indices);
 
         cylinderData.vertices = vertices;
         cylinderData.indices = indices;
