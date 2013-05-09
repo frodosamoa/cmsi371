@@ -49,6 +49,7 @@
             // Color and position.
             attribute vec3 vertexPosition;
             attribute vec3 vertexColor;
+            attribute vec3 normalVector;
 
             // Matrices for projection.
             uniform mat4 projectionMatrix;
@@ -63,6 +64,10 @@
 
             // We are outputting color.
             varying vec4 finalVertexColor;
+
+            // ...but we need light to calculate them.
+            uniform vec3 lightPosition;
+            uniform vec3 lightDiffuse;
 
             void main(void) {
 
