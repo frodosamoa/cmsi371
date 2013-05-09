@@ -106,6 +106,10 @@
                 }
             }
 
+            // Normal buffer.
+            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].normals);
+
             // Color buffer.
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
@@ -198,6 +202,10 @@
                 }
             }
 
+            // Set the varying normal vectors.
+            gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].normalBuffer);
+            gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
+
             // Set the varying colors.
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].colorBuffer);
             gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
@@ -283,6 +291,10 @@
         // Draw the scene.
         drawScene();
     }
+
+    // Set up our one light source and color.  Note the uniform3fv function.
+    gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
+    gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
 
     // Draw the initial scene.
     $(window).load(function () {
