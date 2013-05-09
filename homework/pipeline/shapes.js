@@ -65,7 +65,7 @@ var Shapes = {
         vertices.push([0, 0, depthHalf]);
         vertices.push([0, 0, -depthHalf]);
 
-        for (i = 0; i < radiusSegments + 1; i += 1) {
+        for (i = 0; i < radiusSegments; i += 1) {
             phi = (i * 2 * Math.PI) / radiusSegments;
             x = radius * Math.cos(phi);
             y = radius * Math.sin(phi);
@@ -76,13 +76,24 @@ var Shapes = {
         }
 
         for (i = 1; i < radiusSegments + 1; i += 1) {
-            indices.push([0, (i * 2), (i * 2) + 2]);
-            indices.push([1, (i * 2) + 1, (i * 2) + 3]);
+            indices.push([0, (i * 2), ((i * 2) + 2) % radiusSegments]);
+            indices.push([1, (i * 2) + 1, ((i * 2) + 3) % radiusSegments]);
         }
 
-        for (i = 0; i < radiusSegments * 2 + 1; i += 1) {
-            indices.push([i, i+1, i+2]);
-            indices.push([i+2, i+3, i+4]);
+        for (i = 2; i < radiusSegments * 2 + 2; i += 1) {
+            if (i >= radiusSegments * 2) {
+                if (i % 2 === 0) {
+                    indices.push([i, (i+2) % radiusSegments, (i+1)]);
+                } else {
+                    indices.push([i, (i+1) % radiusSegments, (i+2) % radiusSegments]);
+                } 
+            } else {
+                if (i % 2 === 0) {
+                    indices.push([i, (i+2), (i+1)]);
+                } else {
+                    indices.push([i, (i+1), (i+2)]);
+                }
+            }
         }
 
         cylinderData.vertices = vertices;
