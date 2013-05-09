@@ -36,6 +36,11 @@
         heightRatio,
         resize,
 
+        // For emphasis, we separate the variables that involve lighting.
+        normalVector,
+        lightPosition,
+        lightDiffuse,
+
         // Variables for mouse rotation.
         isRotating = false,
         currentXRotation = 0,
@@ -152,6 +157,8 @@
     transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
     xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
+
+
 
     /*
      * Displays all of the objects, including any children an object has.
