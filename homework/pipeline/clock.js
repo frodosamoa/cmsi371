@@ -293,6 +293,26 @@ var Clock = (function () {
         return clockObject;
     };
 
+        /**
+     * This creates a clock object ready to be sent to WegGl. It takes in a clock
+     * object with all of the necessary information to draw the object.
+     */
+
+    clock.prototype.clockHandsWebGL = function () {
+        var clockHands = [];
+
+        // Add the hour hand to the array of clock objects.
+        clockHands.push(this.hourHandWebGl());
+
+        // Add the minute hand to the array of clock objects.
+        clockHands.push(this.minuteHandWebGl());
+
+        // Add the second hand to the array of clock objects.
+        clockHands.push(this.secondHandWebGL());
+
+        return clockHands;
+    };
+
     return clock;
 
 })();
