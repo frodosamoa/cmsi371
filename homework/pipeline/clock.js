@@ -5,7 +5,8 @@ var Clock = (function () {
 
 		// Time information about the clock.
         this.currentDate = new Date();
-        this.secondAngle = (this.currentDate.getSeconds() + this.currentDate.getMilliseconds() * 0.001) * 6;
+        // this.secondAngle = (this.currentDate.getSeconds() + this.currentDate.getMilliseconds() * 0.001) * 6;
+        this.secondAngle = this.currentDate.getSeconds() * 6;
         this.minuteAngle = ((this.currentDate.getMinutes() + (this.currentDate.getSeconds() / 60)) * 6);
         this.hourAngle = (this.minuteAngle / 12) + (this.currentDate.getHours() * 30);
         this.zAxisVector = new Vector (0, 0, -1);
@@ -62,22 +63,14 @@ var Clock = (function () {
         this.secondHandOffset = this.diameter * 0.19;
 
         // Meshes of all of the parts of the clock.
-        this.clockFaceMesh = Shapes.cylinder(this.radius, this.clockFaceDepth, 80);
+        this.clockFaceMesh = Shapes.cylinder(this.radius, this.clockFaceDepth, 100);
         this.hourTickMesh = Shapes.hexahedron(this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth);
         this.minuteTickMesh = Shapes.hexahedron(this.minuteTickLength, this.minuteTickWidth, this.handDepth);
         this.secondHandMesh = Shapes.hexahedron(this.secondHandWidth, this.secondHandLength, this.handDepth);
-        this.secondHandBigCircleMesh = Shapes.cylinder(this.secondHandBigCircleRadius, this.handDepth * 2, 30);
-        this.secondHandSmallCircleMesh = Shapes.cylinder(this.secondHandSmallCircleRadius, this.handDepth, 30);
+        this.secondHandBigCircleMesh = Shapes.cylinder(this.secondHandBigCircleRadius, this.handDepth * 1.001, 30);
+        this.secondHandSmallCircleMesh = Shapes.cylinder(this.secondHandSmallCircleRadius, this.handDepth * 1.001, 30);
         this.minuteHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth);
         this.hourHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth);
-
-        for (i = 0; i < this.clockFaceMesh.indices.length; i++) {
-        	if (this.clockFaceMesh.indices[i][0] > this.clockFaceMesh.vertices.length ||
-        		this.clockFaceMesh.indices[i][1] > this.clockFaceMesh.vertices.length ||
-        		this.clockFaceMesh.indices[i][2] > this.clockFaceMesh.vertices.length) {
-        		console.log("We have a vertice that is too large.");
-        	}
-        }
 
         // Vertices of all of the parts of the clock.
         this.clockFaceVertices = Shapes.toRawTriangleArray(this.clockFaceMesh);
@@ -215,6 +208,7 @@ var Clock = (function () {
             color: this.secondHandColor,
             vertices: this.secondHandVertices,
             mode: this.gl.TRIANGLES,
+            normals: this.secondHandNormals,
             transforms: {
                 ty: this.radius - (this.secondHandLength / 2) - this.secondHandOffset,
                 tz: this.secondHandDepth,
