@@ -62,48 +62,35 @@ var Clock = (function () {
         this.minuteHandOffset = this.diameter * 0.076;
         this.secondHandOffset = this.diameter * 0.19;
 
-        // Vertices of all of the parts of the clock.
-        this.clockFaceVertices = Shapes.toRawTriangleArray(
-                                    Shapes.cylinder(
-                                        this.radius, this.clockFaceDepth, 80
-                                    )
-                                  );
-        this.hourTickVertices = Shapes.toRawTriangleArray(
-                                    Shapes.hexahedron(
-                                        this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth
-                                    )
-                                );
-        this.minuteTickVertices = Shapes.toRawTriangleArray(
-                                        Shapes.hexahedron(
-                                            this.minuteTickLength, this.minuteTickWidth, this.handDepth
-                                        )
-                                    );
-        this.secondHandVertices = Shapes.toRawTriangleArray(
-                                        Shapes.hexahedron(
-                                            this.secondHandWidth, this.secondHandLength, this.handDepth
-                                        )
-                                    );
-        this.secondHandBigCircleVertices = Shapes.toRawTriangleArray(
-                                               Shapes.cylinder(
-                                                    this.secondHandBigCircleRadius, this.handDepth * 2, 30
-                                                )
-                                            );
-        this.secondHandSmallCircleVertices = Shapes.toRawTriangleArray(
-                                                  Shapes.cylinder(
-                                                       this.secondHandSmallCircleRadius, this.handDepth, 30
-                                                 )
-                                               );
-        this.minuteHandVertices = Shapes.toRawTriangleArray(
-                                        Shapes.hexahedron(
-                                            this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth
-                                        )
-                                    );
+        // Meshes of all of the parts of the clock.
+        this.clockFaceMesh = Shapes.cylinder(this.radius, this.clockFaceDepth, 80);
+        this.hourTickMesh = Shapes.hexahedron(this.hourTickLength, this.hourMinuteAndTickWidth, this.handDepth));
+        this.minuteTickMesh = Shapes.hexahedron(this.minuteTickLength, this.minuteTickWidth, this.handDepth));
+        this.secondHandMesh = Shapes.hexahedron(this.secondHandWidth, this.secondHandLength, this.handDepth));
+        this.secondHandBigCircleMesh = Shapes.cylinder(this.secondHandBigCircleRadius, this.handDepth * 2, 30));
+        this.secondHandSmallCircleMesh = Shapes.cylinder(this.secondHandSmallCircleRadius, this.handDepth, 30));
+        this.minuteHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth));
+        this.hourHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth));
 
-        this.hourHandVertices = Shapes.toRawTriangleArray(
-                                    Shapes.hexahedron(
-                                        this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth
-                                    )
-                                );
+        // Vertices of all of the parts of the clock.
+        this.clockFaceVertices = Shapes.toRawTriangleArray(this.clockFaceMesh);
+        this.hourTickVertices = Shapes.toRawTriangleArray(this.hourTickMesh);
+        this.minuteTickVertices = Shapes.toRawTriangleArray(this.minuteTickMesh);
+        this.secondHandVertices = Shapes.toRawTriangleArray(this.secondHandMesh);
+        this.secondHandBigCircleVertices = Shapes.toRawTriangleArray(this.secondHandBigCircleMesh);
+        this.secondHandSmallCircleVertices = Shapes.toRawTriangleArray(this.secondHandSmallCircleMesh);
+        this.minuteHandVertices = Shapes.toRawTriangleArray(this.minuteHandMesh);
+        this.hourHandVertices = Shapes.toRawTriangleArray(this.hourHandMesh);
+
+        // Normals for all of the shapes of the clock.
+        this.clockFaceNormals = Shapes.toNormalArray(this.clockFaceMesh);
+        this.hourTickNormals = Shapes.toNormalArray(this.hourTickMesh);
+        this.minuteTickNormals = Shapes.toNormalArray(this.minuteTickMesh);
+        this.secondHandNormals = Shapes.toNormalArray(this.secondHandMesh);
+        this.secondHandBigCircleNormals = Shapes.toNormalArray(this.secondHandBigCircleMesh);
+        this.secondHandSmallCircleNormals = Shapes.toNormalArray(this.secondHandSmallCircleMesh);
+        this.minuteHandNormals = Shapes.toNormalArray(this.minuteHandMesh);
+        this.hourHandNormals = Shapes.toNormalArray(this.hourHandMesh);
     }
 
     /**
