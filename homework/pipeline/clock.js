@@ -48,7 +48,6 @@ var Clock = (function () {
         this.secondHandLength = this.diameter * 0.44;
         this.hourHandLength = this.diameter * 0.397;
         this.minuteHandLength = this.diameter * 0.57;
-
         this.hourTickLength = this.diameter * 0.113;
         this.minuteTickLength = this.diameter * 0.053;
 
@@ -139,11 +138,13 @@ var Clock = (function () {
             if (i % 5 !== 0) {
                 tickObject.name = i.toString() + " Minute Tick",
                 tickObject.vertices = this.minuteTickVertices;
+                tickObject.normals = this.minuteTickNormals;
                 tickObject.transforms = this.tickTransform(i, 
                         this.radius - (this.minuteTickLength / 2) - this.tickOffset);
             } else {
                 tickObject.name = (i / 5).toString() + " Hour Tick",
                 tickObject.vertices = this.hourTickVertices;
+                tickObject.normals = this.hourTickNormals;
                 tickObject.transforms = this.tickTransform(i,
                         this.radius - (this.hourTickLength / 2) - this.tickOffset);
             }
@@ -166,6 +167,7 @@ var Clock = (function () {
             color: this.tickAndOtherHandsColor,
             vertices: this.minuteHandVertices,
             mode: this.gl.TRIANGLES,
+            normals: this.minuteHandNormals,
             transforms: {
                 ty: this.radius - (this.minuteHandLength / 2) - this.minuteHandOffset,
                 tz: this.minuteHandDepth,
@@ -185,6 +187,7 @@ var Clock = (function () {
             color: this.tickAndOtherHandsColor,
             vertices: this.hourHandVertices,
             mode: this.gl.TRIANGLES,
+            normals: this.hourHandNormals,
             transforms: {
                 ty: this.radius - (this.hourHandLength / 2) - this.hourHandOffset,
                 tz: this.hourHandDepth,
@@ -216,6 +219,7 @@ var Clock = (function () {
                     color: this.secondHandColor,
                     vertices: this.secondHandBigCircleVertices,
                     mode: this.gl.TRIANGLES,
+                    normals: this.secondHandBigCircleNormals,
                     transforms: {
                         ty: this.secondHandLength / 2
                     }
@@ -226,6 +230,7 @@ var Clock = (function () {
                     color: this.secondHandColor,
                     vertices: this.secondHandSmallCircleVertices,
                     mode: this.gl.TRIANGLES,
+                    normals: this.secondHandSmallCircleNormals,
                     transforms: {
                         ty: -(this.radius - (this.secondHandLength / 2) - this.secondHandOffset)
                     }
@@ -244,6 +249,7 @@ var Clock = (function () {
             color: this.clockFaceColor,
             vertices: this.clockFaceVertices,
             mode: this.gl.TRIANGLES,
+            normals: this.clockFaceNormals,
             transforms: {
                 tz: this.clockFaceZDepth
             }
