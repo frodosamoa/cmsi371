@@ -71,6 +71,14 @@ var Clock = (function () {
         this.minuteHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.minuteHandLength, this.handDepth);
         this.hourHandMesh = Shapes.hexahedron(this.hourMinuteAndTickWidth, this.hourHandLength, this.handDepth);
 
+        for (i = 0; i < this.clockFaceMesh.indices.length; i++) {
+        	if (this.clockFaceMesh.indices[i][0] > this.clockFaceMesh.vertices.length ||
+        		this.clockFaceMesh.indices[i][1] > this.clockFaceMesh.vertices.length ||
+        		this.clockFaceMesh.indices[i][2] > this.clockFaceMesh.vertices.length) {
+        		console.log("We have a vertice that is too large.");
+        	}
+        }
+
         // Vertices of all of the parts of the clock.
         this.clockFaceVertices = Shapes.toRawTriangleArray(this.clockFaceMesh);
         this.hourTickVertices = Shapes.toRawTriangleArray(this.hourTickMesh);
