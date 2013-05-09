@@ -71,13 +71,6 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    nullObject = Shapes.toRawTriangleArray(
-                {
-                    vertices: [0],
-                    indices: [0]
-                }
-            );
-
     var clock = new Clock (gl);
 
     objectsToDraw = clock.clockWebGL();
@@ -254,7 +247,7 @@
         clock.setClock(new Date());
         objectsToDraw = clock.clockWebGL();
         vertexify(objectsToDraw);
-        drawScene();
+        drawObjects(objectsToDraw);
     }, 1000);
 
     /**
