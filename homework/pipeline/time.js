@@ -281,7 +281,7 @@
 
         gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
             new Float32Array(
-                Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -3, 5).columnOrder()
+                Matrix4x4.getOrthoMatrix(-widthRatio, widthRatio, -heightRatio, heightRatio, -2, 2).columnOrder()
             )
         );
 
