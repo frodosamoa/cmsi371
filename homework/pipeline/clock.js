@@ -26,7 +26,8 @@ var Clock = (function () {
         var day = true;
         if (day) {    
             this.clockFaceColor = { r: 0.863, g: 0.863, b: 0.863 };
-            this.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+            // this.tickAndOtherHandsColor = { r: 0.196, g: 0.196, b: 0.196 };
+            this.tickAndOtherHandsColor = { r: 0.122, g: 0.122, b: 0.122 };
         } else {
             this.clockFaceColor = { r: 0.062, g: 0.062, b: 0.062 };
             this.tickAndOtherHandsColor = { r: 0.878, g: 0.878, b: 0.878 }; 
@@ -83,7 +84,7 @@ var Clock = (function () {
         this.hourHandVertices = Shapes.toRawTriangleArray(this.hourHandMesh);
 
         // Normals for all of the shapes of the clock.
-        this.clockFaceNormals = Shapes.toNormalArray(this.clockFaceMesh);
+        this.clockFaceNormals = Shapes.toVertexNormalArray(this.clockFaceMesh);
         this.hourTickNormals = Shapes.toNormalArray(this.hourTickMesh);
         this.minuteTickNormals = Shapes.toNormalArray(this.minuteTickMesh);
         this.secondHandNormals = Shapes.toNormalArray(this.secondHandMesh);
@@ -288,7 +289,7 @@ var Clock = (function () {
         return clockObject;
     };
 
-        /**
+    /**
      * This creates a clock object ready to be sent to WegGl. It takes in a clock
      * object with all of the necessary information to draw the object.
      */
