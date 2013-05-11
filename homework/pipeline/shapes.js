@@ -28,18 +28,18 @@ var Shapes = {
             ],
 
             indices: [
-                [ 0, 3, 1 ],
-                [ 2, 1, 3 ],
-                [ 0, 4, 3 ],
-                [ 7, 3, 4 ],
-                [ 0, 1, 4 ],
-                [ 5, 4, 1 ],
-                [ 1, 6, 5 ],
-                [ 2, 6, 1 ],
-                [ 2, 3, 7 ],
-                [ 6, 2, 7 ],
-                [ 4, 6, 7 ],
-                [ 5, 6, 4 ]
+                [ 0, 1, 3 ],
+                [ 2, 3, 1 ],
+                [ 0, 3, 4 ],
+                [ 7, 4, 3 ],
+                [ 0, 4, 1 ],
+                [ 5, 1, 4 ],
+                [ 1, 5, 6 ],
+                [ 2, 1, 6 ],
+                [ 2, 7, 3 ],
+                [ 6, 7, 2 ],
+                [ 4, 7, 6 ],
+                [ 5, 4, 6 ]
             ]
         };
     },
@@ -76,7 +76,7 @@ var Shapes = {
         }
 
         for (i = 1; i < radiusSegments + 1; i += 1) {
-            indices.push([0, ((i * 2) % (radiusSegments * 2) + 2), (i * 2)]);
+            indices.push([0, (i * 2), ((i * 2) % (radiusSegments * 2) + 2)]);
             indices.push([1, (i * 2) + 1, ((i * 2) % (radiusSegments * 2) + 3)]);
         }
 
@@ -95,8 +95,6 @@ var Shapes = {
                 }
             }
         }
-
-        console.log(indices);
 
         cylinderData.vertices = vertices;
         cylinderData.indices = indices;
@@ -309,5 +307,34 @@ var Shapes = {
 
         return result;
     },
+
+    /*
+     * Another utility function for computing normals, this time just converting
+     * every vertex into its unit vector version.  This works mainly for objects
+     * that are centered around the origin.
+     */
+    toVertexNormalArray: function (indexedVertices) {
+        var result = [],
+            i,
+            j,
+            maxi,
+            maxj,
+            p,
+            normal;
+
+        // For each face...
+        for (i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            // For each vertex in that face...
+            for (j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+                p = indexedVertices.vertices[indexedVertices.indices[i][j]];
+                normal = new Vector(p[0], p[1], p[2]).unit();
+                result = result.concat(
+                    [ normal.x(), normal.y(), normal.z() ]
+                );
+            }
+        }
+
+        return result;
+    }
 
 };
