@@ -201,7 +201,6 @@
                     );
                 }
             }
-
             // Set the varying normal vectors.
             gl.bindBuffer(gl.ARRAY_BUFFER, objectsToDraw[i].normalBuffer);
             gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
@@ -276,8 +275,8 @@
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
-        widthRatio = ((canvas.width/canvas.height) + 1) * 0.9;
-        heightRatio = ((canvas.height/canvas.width) + 1) * 0.9;
+        widthRatio = ((canvas.width/canvas.height) + 1) * 0.7;
+        heightRatio = ((canvas.height/canvas.width) + 1) * 0.7;
 
         gl.uniformMatrix4fv(projectionMatrix, gl.FALSE,
             new Float32Array(
@@ -293,7 +292,7 @@
     }
 
     // Set up our one light source and color.  Note the uniform3fv function.
-    gl.uniform3fv(lightPosition, [0.5, 0.5, 1.5]);
+    gl.uniform3fv(lightPosition, [0.0, 0.0, -1.0]);
     gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
 
     // Draw the initial scene.
