@@ -162,7 +162,8 @@ var Clock = (function () {
     /**
      *  Returns a minute hand ready to be drawn by WebGL.
      */     
-
+    // JD: Make a choice and stick with it---is it "GL" or "Gl"?
+    //     Consistency is a key element of readable code.
     clock.prototype.minuteHandWebGl = function () {
         return {
             name: "Minute Hand",

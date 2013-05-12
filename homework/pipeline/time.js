@@ -263,7 +263,12 @@
 
     window.setInterval(function () {
         clock.setClock(new Date());
+        // JD: Yikes---it's a whole new clock, every single second!!!
         objectsToDraw = clock.clockWebGL();
+
+        // JD: When you see how not to replace objectsToDraw every
+        //     time, you will also find that vertexify will no longer
+        //     be necessary.
         vertexify(objectsToDraw);
         drawObjects(objectsToDraw);
     }, 1000);
